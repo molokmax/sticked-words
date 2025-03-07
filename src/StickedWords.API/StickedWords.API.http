@@ -1,0 +1,6 @@
+@StickedWords.API_HostAddress = http://localhost:5206
+
+GET {{StickedWords.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
