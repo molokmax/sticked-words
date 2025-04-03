@@ -1,6 +1,11 @@
-@StickedWords.API_HostAddress = http://localhost:5206
+@StickedWords.API_HostAddress = https://localhost:7268
 
-GET {{StickedWords.API_HostAddress}}/weatherforecast/
+GET {{StickedWords.API_HostAddress}}/flash-cards
+Accept: application/json
+
+###
+
+GET {{StickedWords.API_HostAddress}}/flash-cards?skip=1&take=1&includeTotal=false
 Accept: application/json
 
 ###
