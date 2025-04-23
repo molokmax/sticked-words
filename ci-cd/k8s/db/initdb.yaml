@@ -1,0 +1,19 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: sticked-words-migrations
+spec:
+  template:
+    metadata:
+      name: sticked-words-migrations
+    spec:
+      restartPolicy: Never
+      containers:
+      - image: molokmax/sticked-words-migrations:0.0.4
+        name: sticked-words
+        env:
+        - name: ConnectionStrings__StickedWordsDbContext
+          valueFrom:
+            secretKeyRef:
+              name: sticked-words-secret
+              key: DbConnectionString

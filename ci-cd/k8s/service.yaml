@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: sticked-words
+  name: sticked-words
+spec:
+  ports:
+  - port: 8080
+  selector:
+    app: sticked-words
+  type: NodePort

@@ -17,7 +17,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StickedWords.Application", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StickedWords.Infrastructure", "src\StickedWords.Infrastructure\StickedWords.Infrastructure.csproj", "{43465B07-17E2-48C4-BB8C-D89BAA028526}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StickedWords.DbMigrations", "src\StickedWords.DbMigrations\StickedWords.DbMigrations.csproj", "{26F1A57C-6BB5-4CEE-9DEF-D2F886208F14}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StickedWords.Infrastructure.Sqlite", "src\StickedWords.Infrastructure.Sqlite\StickedWords.Infrastructure.Sqlite.csproj", "{3F41A3EA-3D0A-4F0A-B747-2E806E285D4E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StickedWords.Infrastructure.Postgres", "src\StickedWords.Infrastructure.Postgres\StickedWords.Infrastructure.Postgres.csproj", "{93A83932-DA2A-4D50-AB38-CEE409716742}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StickedWords.DbMigrations.Sqlite", "src\StickedWords.DbMigrations.Sqlite\StickedWords.DbMigrations.Sqlite.csproj", "{B29A727C-F59A-4A6F-B0AF-7A3F70DA2923}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StickedWords.DbMigrations.Postgres", "src\StickedWords.DbMigrations.Postgres\StickedWords.DbMigrations.Postgres.csproj", "{F0F9C965-64A9-4F9C-AB89-398FA02C5C96}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,10 +51,22 @@ Global
 		{43465B07-17E2-48C4-BB8C-D89BAA028526}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{43465B07-17E2-48C4-BB8C-D89BAA028526}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{43465B07-17E2-48C4-BB8C-D89BAA028526}.Release|Any CPU.Build.0 = Release|Any CPU
-		{26F1A57C-6BB5-4CEE-9DEF-D2F886208F14}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{26F1A57C-6BB5-4CEE-9DEF-D2F886208F14}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{26F1A57C-6BB5-4CEE-9DEF-D2F886208F14}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{26F1A57C-6BB5-4CEE-9DEF-D2F886208F14}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3F41A3EA-3D0A-4F0A-B747-2E806E285D4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F41A3EA-3D0A-4F0A-B747-2E806E285D4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F41A3EA-3D0A-4F0A-B747-2E806E285D4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F41A3EA-3D0A-4F0A-B747-2E806E285D4E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{93A83932-DA2A-4D50-AB38-CEE409716742}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93A83932-DA2A-4D50-AB38-CEE409716742}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93A83932-DA2A-4D50-AB38-CEE409716742}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93A83932-DA2A-4D50-AB38-CEE409716742}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B29A727C-F59A-4A6F-B0AF-7A3F70DA2923}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B29A727C-F59A-4A6F-B0AF-7A3F70DA2923}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B29A727C-F59A-4A6F-B0AF-7A3F70DA2923}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B29A727C-F59A-4A6F-B0AF-7A3F70DA2923}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F0F9C965-64A9-4F9C-AB89-398FA02C5C96}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F0F9C965-64A9-4F9C-AB89-398FA02C5C96}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F0F9C965-64A9-4F9C-AB89-398FA02C5C96}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F0F9C965-64A9-4F9C-AB89-398FA02C5C96}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -59,6 +77,9 @@ Global
 		{2718D2D0-B64F-48FA-AEF0-880788A1A54E} = {0720995C-9B78-445C-A458-8B00BB424A7E}
 		{5E50BAF8-F905-4DB7-A489-FB8C4208EAFD} = {0720995C-9B78-445C-A458-8B00BB424A7E}
 		{43465B07-17E2-48C4-BB8C-D89BAA028526} = {0720995C-9B78-445C-A458-8B00BB424A7E}
-		{26F1A57C-6BB5-4CEE-9DEF-D2F886208F14} = {0720995C-9B78-445C-A458-8B00BB424A7E}
+		{3F41A3EA-3D0A-4F0A-B747-2E806E285D4E} = {0720995C-9B78-445C-A458-8B00BB424A7E}
+		{93A83932-DA2A-4D50-AB38-CEE409716742} = {0720995C-9B78-445C-A458-8B00BB424A7E}
+		{B29A727C-F59A-4A6F-B0AF-7A3F70DA2923} = {0720995C-9B78-445C-A458-8B00BB424A7E}
+		{F0F9C965-64A9-4F9C-AB89-398FA02C5C96} = {0720995C-9B78-445C-A458-8B00BB424A7E}
 	EndGlobalSection
 EndGlobal

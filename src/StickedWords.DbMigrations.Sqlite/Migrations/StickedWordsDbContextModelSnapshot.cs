@@ -7,7 +7,7 @@ using StickedWords.Infrastructure;
 
 #nullable disable
 
-namespace StickedWords.DbMigrations.Migrations
+namespace StickedWords.DbMigrations.Migrations.Sqlite
 {
     [DbContext(typeof(StickedWordsDbContext))]
     partial class StickedWordsDbContextModelSnapshot : ModelSnapshot

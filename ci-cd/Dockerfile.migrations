@@ -1,0 +1,27 @@
+FROM mcr.microsoft.com/dotnet/runtime:9.0-alpine AS base
+USER $APP_UID
+WORKDIR /app
+
+
+FROM mcr.microsoft.com/dotnet/sdk:9.0-alpine AS build
+ENV PATH="${PATH}:/root/.dotnet/tools"
+RUN dotnet tool install --global dotnet-ef
+WORKDIR /src
+COPY ["src/StickedWords.Domain/StickedWords.Domain.csproj", "./src/StickedWords.Domain/"]
+COPY ["src/StickedWords.DbMigrations.Postgres/StickedWords.DbMigrations.Postgres.csproj", "./src/StickedWords.DbMigrations.Postgres/"]
+COPY ["src/StickedWords.Infrastructure/StickedWords.Infrastructure.csproj", "./src/StickedWords.Infrastructure/"]
+COPY ["src/StickedWords.Infrastructure.Sqlite/StickedWords.Infrastructure.Sqlite.csproj", "./src/StickedWords.Infrastructure.Sqlite/"]
+COPY ["src/StickedWords.Infrastructure.Postgres/StickedWords.Infrastructure.Postgres.csproj", "./src/StickedWords.Infrastructure.Postgres/"]
+COPY ["src/StickedWords.Application/StickedWords.Application.csproj", "./src/StickedWords.Application/"]
+COPY ["src/StickedWords.API/StickedWords.API.csproj", "./src/StickedWords.API/"]
+COPY ["StickedWords.sln", "./"]
+COPY ["Directory.Build.props", "./"]
+RUN dotnet restore "./src/StickedWords.DbMigrations.Postgres/StickedWords.DbMigrations.Postgres.csproj"
+COPY . .
+RUN cd ./src/StickedWords.DbMigrations.Postgres/ && dotnet ef migrations bundle --self-contained --output /app/efbundle
+
+FROM base AS final
+WORKDIR /app
+COPY --from=build /app/efbundle ./efbundle
+
+ENTRYPOINT ["/app/efbundle"]

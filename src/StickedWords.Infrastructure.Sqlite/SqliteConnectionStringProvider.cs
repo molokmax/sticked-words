@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 
-namespace StickedWords.Infrastructure;
+namespace StickedWords.Infrastructure.Sqlite;
 
 public static class SqliteConnectionStringProvider
 {
