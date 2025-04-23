@@ -1,9 +1,10 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace StickedWords.DbMigrations.Migrations
+namespace StickedWords.DbMigrations.Postgres.Migrations
 {
     /// <inheritdoc />
     public partial class InitialCreate : Migration
@@ -15,11 +16,11 @@ namespace StickedWords.DbMigrations.Migrations
                 name: "FlashCards",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Word = table.Column<string>(type: "TEXT", nullable: false),
-                    Translation = table.Column<string>(type: "TEXT", nullable: false),
-                    CreatedAt = table.Column<DateTimeOffset>(type: "TEXT", nullable: false)
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Word = table.Column<string>(type: "text", nullable: false),
+                    Translation = table.Column<string>(type: "text", nullable: false),
+                    CreatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {

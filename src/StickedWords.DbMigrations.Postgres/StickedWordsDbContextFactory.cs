@@ -1,19 +1,17 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using StickedWords.Infrastructure;
 
-namespace StickedWords.DbMigrations;
+namespace StickedWords.DbMigrations.Postgres;
 
 public class StickedWordsDbContextFactory : IDesignTimeDbContextFactory<StickedWordsDbContext>
 {
     public StickedWordsDbContext CreateDbContext(string[] args)
     {
         var configuration = GetAppConfiguration(args);
-        var connectionString = SqliteConnectionStringProvider.Get(configuration, nameof(StickedWordsDbContext));
         var optionsBuilder = new DbContextOptionsBuilder<StickedWordsDbContext>();
-        optionsBuilder.UseSqlite(connectionString, ConfigureSqliteOptions);
+        ConfigurePostgres(optionsBuilder, configuration);
 
         return new(optionsBuilder.Options);
     }
@@ -21,11 +19,16 @@ public class StickedWordsDbContextFactory : IDesignTimeDbContextFactory<StickedW
     private static IConfiguration GetAppConfiguration(string[] args)
     {
         var builder = new ConfigurationBuilder()
+            .AddEnvironmentVariables()
             .AddCommandLine(args);
 
         return builder.Build();
     }
 
-    private static void ConfigureSqliteOptions(SqliteDbContextOptionsBuilder options) =>
-        options.MigrationsAssembly(AssemblyReference.Assembly);
+    private static void ConfigurePostgres(
+        DbContextOptionsBuilder<StickedWordsDbContext> optionsBuilder, IConfiguration configuration)
+    {
+        var connectionString = configuration.GetConnectionString(nameof(StickedWordsDbContext));
+        optionsBuilder.UseNpgsql(connectionString, opts => opts.MigrationsAssembly(AssemblyReference.Assembly));
+    }
 }

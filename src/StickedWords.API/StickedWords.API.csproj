@@ -1,4 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <UserSecretsId>15668276-f768-4bfe-a258-ab708f0b730b</UserSecretsId>
+  </PropertyGroup>
   <ItemGroup>
     <Compile Remove="logs\**" />
     <Content Remove="logs\**" />
@@ -12,6 +15,10 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\StickedWords.Application\StickedWords.Application.csproj" />
+    <ProjectReference Include="..\StickedWords.DbMigrations.Postgres\StickedWords.DbMigrations.Postgres.csproj" />
+    <ProjectReference Include="..\StickedWords.DbMigrations.Sqlite\StickedWords.DbMigrations.Sqlite.csproj" />
+    <ProjectReference Include="..\StickedWords.Infrastructure.Postgres\StickedWords.Infrastructure.Postgres.csproj" />
+    <ProjectReference Include="..\StickedWords.Infrastructure.Sqlite\StickedWords.Infrastructure.Sqlite.csproj" />
     <ProjectReference Include="..\StickedWords.Infrastructure\StickedWords.Infrastructure.csproj" />
   </ItemGroup>
 </Project>

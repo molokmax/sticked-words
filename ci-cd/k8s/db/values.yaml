@@ -1,0 +1,8 @@
+auth:
+  username: "app-user"
+  password: "mypass"
+  database: "sticked-words"
+  
+primary:
+  persistence:
+    size: 1Gi

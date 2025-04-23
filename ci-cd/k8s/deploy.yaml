@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: sticked-words
+  name: sticked-words
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sticked-words
+  template:
+    metadata:
+      labels:
+        app: sticked-words
+    spec:
+      containers:
+      - image: molokmax/sticked-words:0.0.4
+        name: sticked-words
+        env:
+          - name: ApplyMigrations
+            valueFrom:
+              configMapKeyRef:
+                name: sticked-words-config
+                key: ApplyMigrations
+          - name: ConnectionStrings__StickedWordsDbContext
+            valueFrom:
+              secretKeyRef:
+                name: sticked-words-secret
+                key: DbConnectionString
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          periodSeconds: 10
+          initialDelaySeconds: 5
+          failureThreshold: 1
+          successThreshold: 1
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          periodSeconds: 10
+          initialDelaySeconds: 10
+          failureThreshold: 5
+          successThreshold: 1
