@@ -1,4 +1,5 @@
 ﻿using StickedWords.API.Models;
+using StickedWords.Application.Commands.FlashCards;
 using StickedWords.Domain.Models;
 
 namespace StickedWords.API.Mappers;
@@ -9,6 +10,13 @@ internal static class FlashCardMapper
         new()
         {
             Id = source.Id,
+            Word = source.Word,
+            Translation = source.Translation
+        };
+
+    public static CreateFlashCardCommand ToCommand(this CreateFlashCardRequestDto source) =>
+        new()
+        {
             Word = source.Word,
             Translation = source.Translation
         };

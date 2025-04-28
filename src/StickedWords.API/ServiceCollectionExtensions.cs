@@ -19,6 +19,15 @@ public static class ServiceCollectionExtensions
         return services;
     }
 
+    public static IApplicationBuilder RegisterSpa(this IApplicationBuilder app)
+    {
+        app.UseDefaultFiles();
+        app.UseStaticFiles();
+        app.UseSpa(opts => opts.Options.DefaultPageStaticFileOptions = new());
+
+        return app;
+    }
+
     public static IServiceProvider ApplyMigrations(this IServiceProvider services)
     {
         using (var scope = services.CreateScope())

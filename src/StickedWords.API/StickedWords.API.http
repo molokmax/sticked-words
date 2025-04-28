@@ -1,4 +1,4 @@
-@StickedWords.API_HostAddress = https://localhost:7268
+﻿@StickedWords.API_HostAddress = http://localhost:5206/api
 
 GET {{StickedWords.API_HostAddress}}/flash-cards
 Accept: application/json
@@ -9,3 +9,12 @@ GET {{StickedWords.API_HostAddress}}/flash-cards?skip=1&take=1&includeTotal=fals
 Accept: application/json
 
 ###
+
+POST {{StickedWords.API_HostAddress}}/flash-cards
+Accept: application/json
+Content-Type: application/json
+
+{
+    "word": "Shcool",
+    "translation": "Школа"
+}

@@ -5,11 +5,11 @@ using StickedWords.Domain.Repositories;
 
 namespace StickedWords.Application.Queries.FlashCards;
 
-internal sealed class GetFlashCardsHandler : IRequestHandler<GetFlashCardsQuery, PageResult<FlashCard>>
+internal sealed class GetFlashCardsQueryHandler : IRequestHandler<GetFlashCardsQuery, PageResult<FlashCard>>
 {
     private readonly IFlashCardRepository _repository;
 
-    public GetFlashCardsHandler(IFlashCardRepository repository)
+    public GetFlashCardsQueryHandler(IFlashCardRepository repository)
     {
         _repository = repository;
     }
