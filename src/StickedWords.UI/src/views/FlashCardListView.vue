@@ -49,7 +49,10 @@ onMounted(initView);
 
 <template>
   <main class="flash-card-list-view">
-    <div class="flash-card-list-view__words-count">Words: {{ total }}</div>
+    <div class="flash-card-list-view__header">
+      <RouterLink to="/add" class="flash-card-list-view__add-word">Add</RouterLink>
+      <div class="flash-card-list-view__words-count">Words: {{ total }}</div>
+    </div>
     <div class="scroll-container" @scrollend="onScrolled">
       <div v-for="card of data" :key="card.id" class="flash-card-list-view__flash-card">
         <div class="flash-card-list-view__flash-card-title">
@@ -81,13 +84,13 @@ onMounted(initView);
     font-size: 1.2rem;
   }
 
-  &__words-count {
+  &__header {
     height: 3rem;
     margin-top: 5px;
     margin-bottom: 5px;
     display: flex;
     align-items: center;
-    justify-content: flex-end;
+    justify-content: space-between;
     border: 1px solid var(--color-border);
     padding: 0 1rem;
   }

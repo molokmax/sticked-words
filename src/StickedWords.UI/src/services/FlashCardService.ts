@@ -2,6 +2,7 @@ import type { PageQuery } from "@/models/PageQuery";
 import { FlashCardShort } from "@/models/FlashCardShort";
 import { PageResult } from "@/models/PageResult";
 import { environments } from "@/environments";
+import type { CreateFlashCardRequest } from "@/models/CreateFlashCardRequest";
 
 export class FlashCardService {
 
@@ -17,6 +18,23 @@ export class FlashCardService {
     const json = await response.json();
 
     return PageResult.fromJson<FlashCardShort>(json, FlashCardShort.fromJson);
+  }
+
+  async add(request: CreateFlashCardRequest): Promise<FlashCardShort> {
+    const response = await fetch(this._baseUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(request)
+    });
+    if (!response.ok) {
+      throw new Error(`Response status: ${response.status}`);
+    }
+
+    const json = await response.json();
+
+    return FlashCardShort.fromJson(json);
   }
 
   private queryToParams(query: PageQuery): URLSearchParams {
