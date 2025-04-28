@@ -6,6 +6,7 @@ on:
 
 env:
   DOTNET_VERSION: '9.0'
+  PROJECT_PATH: 'src/StickedWords.API'
   RUNTIME_IDENTIFIER: 'linux-arm64'  # или linux-x64
   OUTPUT_DIR: 'publish'
 
@@ -30,7 +31,7 @@ jobs:
 
     - name: Publish Self-Contained
       run: |
-        dotnet publish \
+        dotnet publish ${{ env.PROJECT_PATH }} \
           --configuration Release \
           --output ${{ env.OUTPUT_DIR }} \
           --runtime ${{ env.RUNTIME_IDENTIFIER }} \
