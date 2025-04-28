@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import FlashCardListView from '@/views/FlashCardListView.vue'
+import AddFlashCardView from '@/views/AddFlashCardView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -9,6 +10,11 @@ const router = createRouter({
       name: 'home',
       component: FlashCardListView,
     },
+    {
+      path: '/add',
+      name: 'add-card',
+      component: AddFlashCardView,
+    }
     // {
     //   path: '/about',
     //   name: 'about',

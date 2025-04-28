@@ -12,6 +12,7 @@ public static class FlashCardEndpoints
         var group = builder.MapGroup("/api/flash-cards");
 
         group.MapGet("/", GetFlashCardList);
+        group.MapPost("/", AddFlashCard);
 
         return builder;
     }
@@ -23,8 +24,18 @@ public static class FlashCardEndpoints
     {
         var request = new GetFlashCardsQuery(query.ToDomain());
         var page = await mediator.Send(request, cancellationToken);
-
         var result = page.ToDto(FlashCardMapper.ToShortDto);
+
+        return result;
+    }
+
+    private static async Task<FlashCardShortDto> AddFlashCard(
+        CreateFlashCardRequestDto request,
+        IMediator mediator,
+        CancellationToken cancellationToken)
+    {
+        var card = await mediator.Send(request.ToCommand(), cancellationToken);
+        var result = card.ToShortDto();
 
         return result;
     }

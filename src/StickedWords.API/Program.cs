@@ -15,8 +15,7 @@ if (app.Configuration.GetValue("ApplyMigrations", false))
 }
 
 app.UseHttpsRedirection();
-app.UseDefaultFiles();
-app.UseStaticFiles();
+app.RegisterSpa();
 
 app.RegisterFlashCardEndpoints();
 
