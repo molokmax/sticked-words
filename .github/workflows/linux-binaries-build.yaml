@@ -37,7 +37,7 @@ jobs:
           --self-contained true
 
     - name: Upload Artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: sticked-words-${{ env.RUNTIME_IDENTIFIER }}
         path: ${{ env.OUTPUT_DIR }}/
