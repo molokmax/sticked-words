@@ -7,7 +7,7 @@ on:
 env:
   DOTNET_VERSION: '9.0'
   PROJECT_PATH: 'src/StickedWords.API'
-  RUNTIME_IDENTIFIER: 'linux-arm64'  # или linux-x64
+  RUNTIME_IDENTIFIER: 'linux-arm'
   OUTPUT_DIR: 'publish'
 
 jobs:

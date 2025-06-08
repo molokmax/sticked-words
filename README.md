@@ -67,3 +67,17 @@ minikube tunnel
 
 К сервису теперь можно обращаться через http://sticked-words.local
 
+## Деплой на Orange Pi
+
+Устанавливаем Ubuntu 24 на Orange Pi (так как бинарники собираются в github actions, нужна соответствующая версия ОС на orange pi, иначе возникает ошибка отсутствия нужной версии библиотек). Скачать можно здесь - https://www.armbian.com/orange-pi-one/.
+
+Записываем на SD-карту. Например, при помощи rufus
+
+Генерируем сертификат, чтобы можно было подключаться без пароля:
+`ssh-keygen -m PEM -t rsa -b 2048`
+
+В Orange Pi добавляем публичный ключ в файл ~/.ssh/authorized_keys. Проверяем права на каталог .ssh (700) и файл authorized_keys (600).
+
+Команда подключения по ssh с использованием сертификата:
+`ssh -i "%USERPROFILE%\.ssh\orangepi_rsa" USERNAME@ORANGEPI_IP`
+
