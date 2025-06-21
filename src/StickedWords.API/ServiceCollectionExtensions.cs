@@ -11,8 +11,8 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddServices(this IServiceCollection services)
     {
-        // services.AddSqliteDb<StickedWordsDbContext>(opts => opts.MigrationsAssembly(AssemblyReference.Assembly));
-        services.AddPostgresDb<StickedWordsDbContext>(opts => opts.MigrationsAssembly(AssemblyReference.Assembly));
+        services.AddSqliteDb<StickedWordsDbContext>(opts => opts.MigrationsAssembly(AssemblyReference.Assembly));
+        // services.AddPostgresDb<StickedWordsDbContext>(opts => opts.MigrationsAssembly(AssemblyReference.Assembly));
         services.AddRepositories();
         services.AddApplication();
 

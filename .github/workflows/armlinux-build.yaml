@@ -6,7 +6,9 @@ on:
 
 env:
   DOTNET_VERSION: '9.0'
-  PROJECT_PATH: 'src/StickedWords.API'
+  NODE_VERSION: '22.14'
+  API_PROJECT_PATH: 'src/StickedWords.API'
+  UI_PROJECT_PATH: 'src/StickedWords.UI'
   RUNTIME_IDENTIFIER: 'linux-arm'
   OUTPUT_DIR: 'publish'
 
@@ -17,6 +19,18 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+
+    - name: Build UI
+      working-directory: ${{ env.API_PROJECT_PATH }}
+      run: |
+        npm install
+        npm run build
 
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
@@ -31,7 +45,7 @@ jobs:
 
     - name: Publish Self-Contained
       run: |
-        dotnet publish ${{ env.PROJECT_PATH }} \
+        dotnet publish ${{ env.API_PROJECT_PATH }} \
           --configuration Release \
           --output ${{ env.OUTPUT_DIR }} \
           --runtime ${{ env.RUNTIME_IDENTIFIER }} \
