@@ -19,7 +19,7 @@ rm -rf $bin_dir/*
 unzip $artifact_path -d $bin_dir
 chmod +x $bin_dir/StickedWords.API
 
-echo "Starting service ..."
+echo "Starting service $service_name ..."
 systemctl start $service_name
 
-echo "Done"
+echo "Service started"
