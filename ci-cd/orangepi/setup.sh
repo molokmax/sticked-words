@@ -1,6 +1,6 @@
 username="sticked-words"
 groupname="sticked-words"
-openpass=$1
+openpass="$1"
 
 if [ -z $1 ]
     then
@@ -19,6 +19,8 @@ chown $username:$groupname "/home/$username/.ssh/" || exit 1
 chown $username:$groupname "/home/$username/.ssh/authorized_keys" || exit 1
 chmod 700 "/home/$username/.ssh/" || exit 1
 chmod 600 "/home/$username/.ssh/authorized_keys" || exit 1
+# I don't figured out why it doesn't work
+# setcap CAP_NET_BIND_SERVICE=+eip /home/$username/app/StickedWords.API
 
 echo "Creating dir structure ..."
 mkdir -p "/home/$username/deploy/" || exit 1

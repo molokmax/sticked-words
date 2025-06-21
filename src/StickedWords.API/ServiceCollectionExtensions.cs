@@ -1,5 +1,4 @@
 ﻿using StickedWords.Application;
-using StickedWords.DbMigrations.Postgres;
 using StickedWords.Infrastructure;
 using StickedWords.Infrastructure.Sqlite;
 using StickedWords.Infrastructure.Postgres;
@@ -11,8 +10,8 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddServices(this IServiceCollection services)
     {
-        services.AddSqliteDb<StickedWordsDbContext>(opts => opts.MigrationsAssembly(AssemblyReference.Assembly));
-        // services.AddPostgresDb<StickedWordsDbContext>(opts => opts.MigrationsAssembly(AssemblyReference.Assembly));
+        services.AddSqliteDb<StickedWordsDbContext>(opts => opts.MigrationsAssembly(DbMigrations.Sqlite.AssemblyReference.Assembly));
+        // services.AddPostgresDb<StickedWordsDbContext>(opts => opts.MigrationsAssembly(DbMigrations.Postgres.AssemblyReference.Assembly));
         services.AddRepositories();
         services.AddApplication();
 
