@@ -3,6 +3,7 @@ name: Build Sticked-Words for self-contained deploy
 on:
   push:
     branches: [ "main" ]
+  workflow_dispatch:
 
 env:
   DOTNET_VERSION: '9.0'
@@ -19,15 +20,16 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-
+      
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
         node-version: ${{ env.NODE_VERSION }}
         cache: 'npm'
+        cache-dependency-path: ${{ env.UI_PROJECT_PATH }}/package-lock.json
 
     - name: Build UI
-      working-directory: ${{ env.API_PROJECT_PATH }}
+      working-directory: ${{ env.UI_PROJECT_PATH }}
       run: |
         npm install
         npm run build
