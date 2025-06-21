@@ -1,0 +1,10 @@
+[Unit]
+Description=Sticke Words Service
+After=network.target
+
+[Service]
+WorkingDirectory=/home/sticked-words/app/
+ExecStart=/home/sticked-words/app/StickedWords.API
+User=sticked-words
+Group=sticked-words
+Environment=ASPNETCORE_ENVIRONMENT=OrangePi
