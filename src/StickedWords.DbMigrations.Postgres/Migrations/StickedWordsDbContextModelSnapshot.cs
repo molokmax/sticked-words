@@ -33,6 +33,9 @@ namespace StickedWords.DbMigrations.Postgres.Migrations
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<int>("Rate")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Translation")
                         .IsRequired()
                         .HasColumnType("text");
@@ -44,6 +47,171 @@ namespace StickedWords.DbMigrations.Postgres.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("FlashCards");
+                });
+
+            modelBuilder.Entity("StickedWords.Domain.Models.Guess", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<long>("FlashCardId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("Result")
+                        .HasColumnType("integer");
+
+                    b.Property<long>("SessionStageId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FlashCardId");
+
+                    b.HasIndex("SessionStageId");
+
+                    b.ToTable("Guesses");
+                });
+
+            modelBuilder.Entity("StickedWords.Domain.Models.LearningSession", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<DateTimeOffset>("ExpiringAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset>("StartedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("State")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("LearningSessions");
+                });
+
+            modelBuilder.Entity("StickedWords.Domain.Models.SessionFlashCard", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<long>("FlashCardId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("LearningSessionId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FlashCardId");
+
+                    b.HasIndex("LearningSessionId");
+
+                    b.ToTable("SessionFlashCards");
+                });
+
+            modelBuilder.Entity("StickedWords.Domain.Models.SessionStage", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<long?>("CurrentFlashCardId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("ExerciseType")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<long>("LearningSessionId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("OrdNumber")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CurrentFlashCardId");
+
+                    b.HasIndex("LearningSessionId");
+
+                    b.ToTable("SessionStages");
+                });
+
+            modelBuilder.Entity("StickedWords.Domain.Models.Guess", b =>
+                {
+                    b.HasOne("StickedWords.Domain.Models.FlashCard", "FlashCard")
+                        .WithMany()
+                        .HasForeignKey("FlashCardId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("StickedWords.Domain.Models.SessionStage", "SessionStage")
+                        .WithMany()
+                        .HasForeignKey("SessionStageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("FlashCard");
+
+                    b.Navigation("SessionStage");
+                });
+
+            modelBuilder.Entity("StickedWords.Domain.Models.SessionFlashCard", b =>
+                {
+                    b.HasOne("StickedWords.Domain.Models.FlashCard", "FlashCard")
+                        .WithMany()
+                        .HasForeignKey("FlashCardId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("StickedWords.Domain.Models.LearningSession", "LearningSession")
+                        .WithMany("FlashCards")
+                        .HasForeignKey("LearningSessionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("FlashCard");
+
+                    b.Navigation("LearningSession");
+                });
+
+            modelBuilder.Entity("StickedWords.Domain.Models.SessionStage", b =>
+                {
+                    b.HasOne("StickedWords.Domain.Models.SessionFlashCard", "CurrentFlashCard")
+                        .WithMany()
+                        .HasForeignKey("CurrentFlashCardId");
+
+                    b.HasOne("StickedWords.Domain.Models.LearningSession", "LearningSession")
+                        .WithMany("Stages")
+                        .HasForeignKey("LearningSessionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CurrentFlashCard");
+
+                    b.Navigation("LearningSession");
+                });
+
+            modelBuilder.Entity("StickedWords.Domain.Models.LearningSession", b =>
+                {
+                    b.Navigation("FlashCards");
+
+                    b.Navigation("Stages");
                 });
 #pragma warning restore 612, 618
         }

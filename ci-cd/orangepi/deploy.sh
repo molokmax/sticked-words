@@ -1,14 +1,13 @@
-artifact_version=$1
+artifact_version="$1"
 service_name="sticked-words"
 releases_dir="/home/sticked-words/deploy/"
 bin_dir="/home/sticked-words/app"
 artifact_name="sticked-words-linux-arm.$artifact_version.zip"
 artifact_path="$releases_dir/$artifact_name"
 
-if [ -z $1 ]
-    then
-        echo "Usage: $0 {version}"
-        exit 1
+if [ -z $artifact_version ] ; then
+    echo "Usage: $0 {version}"
+    exit 1
 fi
 
 echo "Stopping service ..."

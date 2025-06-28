@@ -8,3 +8,6 @@ ExecStart=/home/sticked-words/app/StickedWords.API
 User=sticked-words
 Group=sticked-words
 Environment="ASPNETCORE_ENVIRONMENT=OrangePi"
+
+[Install]
+WantedBy=multi-user.target

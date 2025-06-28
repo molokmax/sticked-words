@@ -1,8 +1,8 @@
+openpass="$1"
 username="sticked-words"
 groupname="sticked-words"
-openpass="$1"
 
-if [ -z $1 ]
+if [ -z $openpass ]
     then
         echo "Usage: $0 {password}"
         exit 1
@@ -30,10 +30,10 @@ mkdir -p "/home/$username/logs/" || exit 1
 chown -R $username:$groupname "/home/$username/" || exit 1
 
 echo "Configuring service ..."
-cp ./10-sticked-words.rules /etc/polkit-1/rules.d/10-sticked-words.rules
-chmod 755 /etc/polkit-1/rules.d/
-chmod 644 /etc/polkit-1/rules.d/10-sticked-words.rules
-cp ./sticked-words.service /etc/systemd/system/sticked-words.service
-systemctl daemon-reload
+cp ./10-sticked-words.rules /etc/polkit-1/rules.d/10-sticked-words.rules || exit 1
+chmod 755 /etc/polkit-1/rules.d/ || exit 1
+chmod 644 /etc/polkit-1/rules.d/10-sticked-words.rules || exit 1
+cp ./sticked-words.service /etc/systemd/system/sticked-words.service || exit 1
+systemctl daemon-reload || exit 1
 
 echo "Done"

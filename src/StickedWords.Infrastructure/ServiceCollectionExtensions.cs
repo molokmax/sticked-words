@@ -9,6 +9,7 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddRepositories(this IServiceCollection services)
     {
         services.AddTransient<IFlashCardRepository, FlashCardRepository>();
+        services.AddTransient<ILearningSessionRepository, LearningSessionRepository>();
 
         return services;
     }

@@ -3,17 +3,29 @@ using StickedWords.Infrastructure;
 using StickedWords.Infrastructure.Sqlite;
 using StickedWords.Infrastructure.Postgres;
 using Microsoft.EntityFrameworkCore;
+using StickedWords.API.Endpoints;
+using System.Text.Json.Serialization;
 
 namespace StickedWords.API;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddServices(this IServiceCollection services)
+    public static IHostApplicationBuilder AddServices(this IHostApplicationBuilder builder)
     {
-        services.AddSqliteDb<StickedWordsDbContext>(opts => opts.MigrationsAssembly(DbMigrations.Sqlite.AssemblyReference.Assembly));
+        builder.Services.AddSqliteDb<StickedWordsDbContext>(opts => opts.MigrationsAssembly(DbMigrations.Sqlite.AssemblyReference.Assembly));
         // services.AddPostgresDb<StickedWordsDbContext>(opts => opts.MigrationsAssembly(DbMigrations.Postgres.AssemblyReference.Assembly));
-        services.AddRepositories();
-        services.AddApplication();
+        builder.Services.AddRepositories();
+        builder.AddApplication();
+
+        return builder;
+    }
+
+    public static IServiceCollection ConfigureHttp(this IServiceCollection services)
+    {
+        services.ConfigureHttpJsonOptions(options =>
+        {
+            options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
+        });
 
         return services;
     }
@@ -23,6 +35,16 @@ public static class ServiceCollectionExtensions
         app.UseDefaultFiles();
         app.UseStaticFiles();
         app.UseSpa(opts => opts.Options.DefaultPageStaticFileOptions = new());
+
+        return app;
+    }
+
+    public static IEndpointRouteBuilder RegisterEndpoints(this IEndpointRouteBuilder app)
+    {
+        app.RegisterFlashCardEndpoints();
+        app.RegisterLearningSessionEndpoints();
+        app.RegisterTranslateToNativeExerciseEndpoints();
+        app.RegisterTranslateToForeignExerciseEndpoints();
 
         return app;
     }

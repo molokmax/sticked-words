@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import FlashCardListView from '@/views/FlashCardListView.vue'
 import AddFlashCardView from '@/views/AddFlashCardView.vue'
+import LearningSessionView from '@/views/LearningSessionView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -8,13 +9,22 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: FlashCardListView,
+      component: FlashCardListView
     },
     {
       path: '/add',
       name: 'add-card',
-      component: AddFlashCardView,
+      component: AddFlashCardView
+    },
+    {
+      path: '/session',
+      name: 'learning-session',
+      component: LearningSessionView
     }
+
+    // TODO: создать компонент сессии
+    // TODO: при загрузке приложения нужно отправить запрос getActive, если есть сессия - открываем страницу с сессией
+
     // {
     //   path: '/about',
     //   name: 'about',

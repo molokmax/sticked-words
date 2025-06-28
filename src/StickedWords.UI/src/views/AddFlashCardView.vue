@@ -72,7 +72,9 @@ const onAddClicked = async () => {
 </template>
 
 <style scoped lang="scss">
+
 .add-flash-card-view {
+
   display: flex;
   flex-direction: column;
   overflow: hidden;
