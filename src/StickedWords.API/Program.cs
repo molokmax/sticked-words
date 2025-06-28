@@ -1,11 +1,11 @@
 ﻿using StickedWords.API;
-using StickedWords.API.Endpoints;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddLogger();
 builder.Services.AddHealthChecks();
-builder.Services.AddServices();
+builder.AddServices();
+builder.Services.ConfigureHttp();
 
 var app = builder.Build();
 
@@ -17,7 +17,7 @@ if (app.Configuration.GetValue("ApplyMigrations", false))
 app.UseHttpsRedirection();
 app.RegisterSpa();
 
-app.RegisterFlashCardEndpoints();
+app.RegisterEndpoints();
 
 app.MapHealthChecks("/health");
 

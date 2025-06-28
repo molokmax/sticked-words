@@ -26,6 +26,9 @@ namespace StickedWords.DbMigrations.Migrations.Sqlite
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("Rate")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Translation")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -37,6 +40,163 @@ namespace StickedWords.DbMigrations.Migrations.Sqlite
                     b.HasKey("Id");
 
                     b.ToTable("FlashCards");
+                });
+
+            modelBuilder.Entity("StickedWords.Domain.Models.Guess", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("FlashCardId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Result")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("SessionStageId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FlashCardId");
+
+                    b.HasIndex("SessionStageId");
+
+                    b.ToTable("Guesses");
+                });
+
+            modelBuilder.Entity("StickedWords.Domain.Models.LearningSession", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTimeOffset>("ExpiringAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTimeOffset>("StartedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("State")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("LearningSessions");
+                });
+
+            modelBuilder.Entity("StickedWords.Domain.Models.SessionFlashCard", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("FlashCardId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("LearningSessionId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FlashCardId");
+
+                    b.HasIndex("LearningSessionId");
+
+                    b.ToTable("SessionFlashCards");
+                });
+
+            modelBuilder.Entity("StickedWords.Domain.Models.SessionStage", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long?>("CurrentFlashCardId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("ExerciseType")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("LearningSessionId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("OrdNumber")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CurrentFlashCardId");
+
+                    b.HasIndex("LearningSessionId");
+
+                    b.ToTable("SessionStages");
+                });
+
+            modelBuilder.Entity("StickedWords.Domain.Models.Guess", b =>
+                {
+                    b.HasOne("StickedWords.Domain.Models.FlashCard", "FlashCard")
+                        .WithMany()
+                        .HasForeignKey("FlashCardId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("StickedWords.Domain.Models.SessionStage", "SessionStage")
+                        .WithMany()
+                        .HasForeignKey("SessionStageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("FlashCard");
+
+                    b.Navigation("SessionStage");
+                });
+
+            modelBuilder.Entity("StickedWords.Domain.Models.SessionFlashCard", b =>
+                {
+                    b.HasOne("StickedWords.Domain.Models.FlashCard", "FlashCard")
+                        .WithMany()
+                        .HasForeignKey("FlashCardId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("StickedWords.Domain.Models.LearningSession", "LearningSession")
+                        .WithMany("FlashCards")
+                        .HasForeignKey("LearningSessionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("FlashCard");
+
+                    b.Navigation("LearningSession");
+                });
+
+            modelBuilder.Entity("StickedWords.Domain.Models.SessionStage", b =>
+                {
+                    b.HasOne("StickedWords.Domain.Models.SessionFlashCard", "CurrentFlashCard")
+                        .WithMany()
+                        .HasForeignKey("CurrentFlashCardId");
+
+                    b.HasOne("StickedWords.Domain.Models.LearningSession", "LearningSession")
+                        .WithMany("Stages")
+                        .HasForeignKey("LearningSessionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CurrentFlashCard");
+
+                    b.Navigation("LearningSession");
+                });
+
+            modelBuilder.Entity("StickedWords.Domain.Models.LearningSession", b =>
+                {
+                    b.Navigation("FlashCards");
+
+                    b.Navigation("Stages");
                 });
 #pragma warning restore 612, 618
         }
