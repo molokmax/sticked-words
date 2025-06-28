@@ -51,6 +51,7 @@ onMounted(initView);
   <main class="flash-card-list-view">
     <div class="flash-card-list-view__header">
       <RouterLink to="/add" class="flash-card-list-view__add-word">Add</RouterLink>
+      <RouterLink to="/session" class="flash-card-list-view__start-session">Learn</RouterLink>
       <div class="flash-card-list-view__words-count">Words: {{ total }}</div>
     </div>
     <div class="scroll-container" @scrollend="onScrolled">
@@ -64,7 +65,9 @@ onMounted(initView);
 </template>
 
 <style scoped lang="scss">
+
 .flash-card-list-view {
+
   display: flex;
   flex-direction: column;
   overflow: hidden;

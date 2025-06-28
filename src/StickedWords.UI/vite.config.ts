@@ -8,7 +8,10 @@ import vueDevTools from 'vite-plugin-vue-devtools'
 export default defineConfig({
   build: {
     outDir: '../StickedWords.API/wwwroot',
-    emptyOutDir: true
+    emptyOutDir: true,
+    // watch: true,    // Включить watch-режим
+    minify: false,  // Отключить минификацию
+    sourcemap: true, // Включить sourcemaps
   },
   plugins: [
     vue(),
