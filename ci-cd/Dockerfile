@@ -24,7 +24,7 @@ COPY . .
 RUN dotnet build "./src/StickedWords.API/StickedWords.API.csproj" -c $BUILD_CONFIGURATION -o /app/build
 RUN dotnet publish "./src/StickedWords.API/StickedWords.API.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
-FROM node:23-slim AS frontend-build
+FROM node:24-slim AS frontend-build
 WORKDIR /src/StickedWords.UI
 COPY ["src/StickedWords.UI/package.json", "./"]
 COPY ["src/StickedWords.UI/package-lock.json", "./"]

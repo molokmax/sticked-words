@@ -6,7 +6,8 @@ metadata:
   name: sticked-words
 spec:
   ports:
-  - port: 8080
+  - name: web
+    port: 8080
   selector:
     app: sticked-words
   type: NodePort

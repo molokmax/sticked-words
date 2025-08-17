@@ -15,7 +15,7 @@ spec:
         app: sticked-words
     spec:
       containers:
-      - image: molokmax/sticked-words:0.0.4
+      - image: molokmax/sticked-words:0.0.5
         name: sticked-words
         env:
           - name: ApplyMigrations

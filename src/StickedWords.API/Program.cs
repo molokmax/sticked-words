@@ -1,9 +1,13 @@
-﻿using StickedWords.API;
+﻿using Prometheus;
+using StickedWords.API;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddLogger();
 builder.Services.AddHealthChecks();
+
+builder.Services.UseHttpClientMetrics();
+
 builder.AddServices();
 builder.Services.ConfigureHttp();
 
@@ -17,7 +21,11 @@ if (app.Configuration.GetValue("ApplyMigrations", false))
 app.UseHttpsRedirection();
 app.RegisterSpa();
 
+app.UseHttpMetrics();
+
 app.RegisterEndpoints();
+
+app.MapMetrics("/metrics");
 
 app.MapHealthChecks("/health");
 

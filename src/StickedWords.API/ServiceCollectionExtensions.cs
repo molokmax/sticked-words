@@ -13,7 +13,7 @@ public static class ServiceCollectionExtensions
     public static IHostApplicationBuilder AddServices(this IHostApplicationBuilder builder)
     {
         builder.Services.AddSqliteDb<StickedWordsDbContext>(opts => opts.MigrationsAssembly(DbMigrations.Sqlite.AssemblyReference.Assembly));
-        // services.AddPostgresDb<StickedWordsDbContext>(opts => opts.MigrationsAssembly(DbMigrations.Postgres.AssemblyReference.Assembly));
+        // builder.Services.AddPostgresDb<StickedWordsDbContext>(opts => opts.MigrationsAssembly(DbMigrations.Postgres.AssemblyReference.Assembly));
         builder.Services.AddRepositories();
         builder.AddApplication();
 

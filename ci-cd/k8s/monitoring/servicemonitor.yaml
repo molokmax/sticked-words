@@ -1,0 +1,14 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: sticked-words-monitor
+  labels:
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: sticked-words
+  endpoints:
+  - interval: 15s
+    port: web
+    path: /metrics

@@ -9,7 +9,7 @@ spec:
     spec:
       restartPolicy: Never
       containers:
-      - image: molokmax/sticked-words-migrations:0.0.4
+      - image: molokmax/sticked-words-migrations:0.0.5
         name: sticked-words
         env:
         - name: ConnectionStrings__StickedWordsDbContext
