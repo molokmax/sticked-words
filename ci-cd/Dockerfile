@@ -9,7 +9,7 @@ EXPOSE 8082
 FROM mcr.microsoft.com/dotnet/sdk:9.0-alpine AS backend-build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["src/StickedWords.Domain/StickedWords.Shared.csproj", "./src/StickedWords.Shared/"]
+COPY ["src/StickedWords.Shared/StickedWords.Shared.csproj", "./src/StickedWords.Shared/"]
 COPY ["src/StickedWords.Domain/StickedWords.Domain.csproj", "./src/StickedWords.Domain/"]
 COPY ["src/StickedWords.DbMigrations.Sqlite/StickedWords.DbMigrations.Sqlite.csproj", "./src/StickedWords.DbMigrations.Sqlite/"]
 COPY ["src/StickedWords.DbMigrations.Postgres/StickedWords.DbMigrations.Postgres.csproj", "./src/StickedWords.DbMigrations.Postgres/"]

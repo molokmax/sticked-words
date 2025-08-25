@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/runtime:9.0-alpine AS base
+FROM mcr.microsoft.com/dotnet/runtime-deps:9.0-alpine AS base
 USER $APP_UID
 WORKDIR /app
 
@@ -7,7 +7,7 @@ FROM mcr.microsoft.com/dotnet/sdk:9.0-alpine AS build
 ENV PATH="${PATH}:/root/.dotnet/tools"
 RUN dotnet tool install --global dotnet-ef
 WORKDIR /src
-COPY ["src/StickedWords.Domain/StickedWords.Shared.csproj", "./src/StickedWords.Shared/"]
+COPY ["src/StickedWords.Shared/StickedWords.Shared.csproj", "./src/StickedWords.Shared/"]
 COPY ["src/StickedWords.Domain/StickedWords.Domain.csproj", "./src/StickedWords.Domain/"]
 COPY ["src/StickedWords.DbMigrations.Postgres/StickedWords.DbMigrations.Postgres.csproj", "./src/StickedWords.DbMigrations.Postgres/"]
 COPY ["src/StickedWords.Infrastructure/StickedWords.Infrastructure.csproj", "./src/StickedWords.Infrastructure/"]
