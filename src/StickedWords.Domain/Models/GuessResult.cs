@@ -3,6 +3,6 @@
 public enum GuessResult
 {
     None,
-    Correct, // rename?
+    Correct,
     Wrong
 }

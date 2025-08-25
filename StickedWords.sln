@@ -25,6 +25,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StickedWords.DbMigrations.S
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StickedWords.DbMigrations.Postgres", "src\StickedWords.DbMigrations.Postgres\StickedWords.DbMigrations.Postgres.csproj", "{F0F9C965-64A9-4F9C-AB89-398FA02C5C96}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StickedWords.Shared", "src\StickedWords.Shared\StickedWords.Shared.csproj", "{E1D2F9C0-1A2B-4C3D-9F8E-764321156789}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -67,6 +69,10 @@ Global
 		{F0F9C965-64A9-4F9C-AB89-398FA02C5C96}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F0F9C965-64A9-4F9C-AB89-398FA02C5C96}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F0F9C965-64A9-4F9C-AB89-398FA02C5C96}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E1D2F9C0-1A2B-4C3D-9F8E-764321156789}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E1D2F9C0-1A2B-4C3D-9F8E-764321156789}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E1D2F9C0-1A2B-4C3D-9F8E-764321156789}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E1D2F9C0-1A2B-4C3D-9F8E-764321156789}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -81,5 +87,6 @@ Global
 		{93A83932-DA2A-4D50-AB38-CEE409716742} = {0720995C-9B78-445C-A458-8B00BB424A7E}
 		{B29A727C-F59A-4A6F-B0AF-7A3F70DA2923} = {0720995C-9B78-445C-A458-8B00BB424A7E}
 		{F0F9C965-64A9-4F9C-AB89-398FA02C5C96} = {0720995C-9B78-445C-A458-8B00BB424A7E}
+		{E1D2F9C0-1A2B-4C3D-9F8E-764321156789} = {0720995C-9B78-445C-A458-8B00BB424A7E}
 	EndGlobalSection
 EndGlobal

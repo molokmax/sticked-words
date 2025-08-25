@@ -1,4 +1,6 @@
 import { environments } from "@/environments";
+import { TranslateGuess } from "@/models/exercises/TranslateGuess";
+import { TranslateGuessResult } from "@/models/exercises/TranslateGuessResult";
 import { TranslateExercise } from "@/models/TranslateExercise";
 
 export class TranslateNativeToForeignExerciseService {
@@ -17,5 +19,22 @@ export class TranslateNativeToForeignExerciseService {
     const json = await response.json();
 
     return TranslateExercise.fromJson(json);
+  }
+
+  async check(request: TranslateGuess): Promise<TranslateGuessResult> {
+    const response = await fetch(this._baseUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(request)
+    });
+    if (!response.ok) {
+      throw new Error(`Response status: ${response.status}`);
+    }
+
+    const json = await response.json();
+
+    return TranslateGuessResult.fromJson(json);
   }
 }

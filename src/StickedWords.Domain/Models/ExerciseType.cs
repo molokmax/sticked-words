@@ -3,6 +3,6 @@
 public enum ExerciseType
 {
     None,
-    TranslateForeignToNative, // TODO: добавить термины в словарь терминов
+    TranslateForeignToNative,
     TranslateNativeToForeign
 }
