@@ -49,15 +49,17 @@ onMounted(initView);
       <div v-if="exerciseType === ExerciseType.TranslateForeignToNative">
         <TranslateForeignToNativeExerciseView
           :flashCardId="flashCardId"
+          @next="loadData()"
         ></TranslateForeignToNativeExerciseView>
       </div>
       <div v-else-if="exerciseType === ExerciseType.TranslateNativeToForeign">
         <TranslateNativeToForeignExerciseView
           :flashCardId="flashCardId"
+          @next="loadData()"
         ></TranslateNativeToForeignExerciseView>
       </div>
       <div v-else>
-        None
+        Unknown Exercise
       </div>
     </div>
   </main>

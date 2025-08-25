@@ -1,30 +1,54 @@
 <script setup lang="ts">
+import { TranslateGuess } from '@/models/exercises/TranslateGuess';
+import { GuessResult, TranslateGuessResult } from '@/models/exercises/TranslateGuessResult';
 import { ErrorHandler } from '@/services/ErrorHandler';
 import { TranslateForeignToNativeExerciseService } from '@/services/exercises/TranslateForeignToNativeExerciseService';
-import { onMounted, ref } from 'vue';
-
-// TODO: реализовать получение результата
-// TODO: реализовать отображение результата
+import { computed, onMounted, ref, watch } from 'vue';
 
 const props = defineProps({
   flashCardId: { type: Number, required: true }
 });
 
+const emit = defineEmits(['next']);
+
 const service = new TranslateForeignToNativeExerciseService();
 const word = ref<string>("");
 const answer = ref<string>("");
+const correctAnswer = ref<string | null>(null);
 const loading = ref(false);
+const isGuessChecked = ref(false);
+const isGuessCorrect = ref(false);
 const error = ref<string | null>(null);
 
+const isFormValid = computed(() => answer.value.trim().length > 0);
+
 const initView = async () => {
-  await loadData();
+  await loadData(props.flashCardId);
 }
 
-const loadData = async () => {
+watch(() => props.flashCardId, async (newFlashCardId, _) => {
+  await loadData(newFlashCardId);
+})
+
+const resetForm = () => {
+  answer.value = '';
+  isGuessChecked.value = false;
+  isGuessCorrect.value = false;
+  correctAnswer.value = null;
+}
+
+const setCheckResult = (result: TranslateGuessResult) => {
+  isGuessChecked.value = true;
+  isGuessCorrect.value = result.result === GuessResult.Correct;
+  correctAnswer.value = result.correctTranslation ?? null;
+}
+
+const loadData = async (flashCardId: number) => {
   try {
     loading.value = true;
 
-    const exercise = await service.get(props.flashCardId);
+    resetForm();
+    const exercise = await service.get(flashCardId);
     word.value = exercise.word;
   } catch (err) {
     word.value = "";
@@ -33,6 +57,30 @@ const loadData = async () => {
     loading.value = false;
   }
 }
+
+const onCheckClicked = async () => {
+  if (!isFormValid) {
+    return;
+  }
+  try {
+    loading.value = true;
+    const request : TranslateGuess = {
+      flashCardId: props.flashCardId,
+      answer: answer.value
+    };
+    const response = await service.check(request);
+    if (response.result === GuessResult.None) {
+      throw new Error(`Guess result '${response.result}' is not supported`);
+    }
+    setCheckResult(response);
+  } catch (err) {
+    error.value = ErrorHandler.getMessage(err);
+  } finally {
+    loading.value = false;
+  }
+}
+
+const onNextClicked = () => emit('next');
 
 onMounted(initView);
 
@@ -46,10 +94,43 @@ onMounted(initView);
     <div class="translate-foreign-to-native-exercise-view__word">
       {{ word }}
     </div>
-    <input class="translate-foreign-to-native-exercise-view__answer" v-model="answer">
+    <input
+      class="translate-foreign-to-native-exercise-view__answer"
+      :disabled="isGuessChecked"
+      v-model="answer"
+    >
+    <div class="translate-foreign-to-native-exercise-view__results">
+      <div
+        v-if="isGuessChecked && isGuessCorrect"
+        class="translate-foreign-to-native-exercise-view__correct-result"
+      >
+        <div class="translate-foreign-to-native-exercise-view__result-label">&check; Right!</div>
+      </div>
+      <div
+        v-else-if="isGuessChecked && !isGuessCorrect"
+        class="translate-foreign-to-native-exercise-view__wrong-result"
+      >
+        <div class="translate-foreign-to-native-exercise-view__result-label">&cross; Wrong</div>
+        <div class="translate-foreign-to-native-exercise-view__result-label translate-foreign-to-native-exercise-view__correct-answer">
+          {{ correctAnswer }}
+        </div>
+      </div>
+    </div>
     <div class="translate-foreign-to-native-exercise-view__buttons">
-      <button class="translate-foreign-to-native-exercise-view__send-button primary">
-        Send
+      <button
+        v-if="isGuessChecked"
+        class="translate-foreign-to-native-exercise-view__check-button primary"
+        @click="onNextClicked()"
+      >
+        Next
+      </button>
+      <button
+        v-else
+        class="translate-foreign-to-native-exercise-view__check-button primary"
+        :disabled="!isFormValid"
+        @click="onCheckClicked()"
+      >
+        Check
       </button>
     </div>
   </main>
@@ -77,6 +158,33 @@ onMounted(initView);
 
   &__answer {
     width: 100%;
+  }
+
+  &__results {
+    height: 60px;
+  }
+
+  &__correct-result,
+  &__wrong-result {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 10px;
+    font-size: 0.8em;
+  }
+
+  &__correct-result &__result-label {
+    color: var(--color-text-good);
+  }
+
+  &__wrong-result &__result-label {
+    color: var(--color-text-bad);
+  }
+
+  &__wrong-result &__correct-answer {
+    font-size: 1.5em;
+    font-style: italic;
+    color: var(--color-text-good);
   }
 
   &__buttons {
