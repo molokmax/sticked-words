@@ -11,15 +11,18 @@ internal sealed class StartLearningSessionCommandHandler : IRequestHandler<Start
 {
     private readonly ILearningSessionRepository _sessionRepository;
     private readonly IFlashCardRepository _flashCardRepository;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly LearningSessionOptions _options;
 
     public StartLearningSessionCommandHandler(
         ILearningSessionRepository sessionRepository,
         IFlashCardRepository flashCardRepository,
+        IUnitOfWork unitOfWork,
         IOptions<LearningSessionOptions> options)
     {
         _sessionRepository = sessionRepository;
         _flashCardRepository = flashCardRepository;
+        _unitOfWork = unitOfWork;
         _options = options.Value;
     }
 
@@ -35,7 +38,8 @@ internal sealed class StartLearningSessionCommandHandler : IRequestHandler<Start
         var flashCards = await _flashCardRepository.GetByQuery(new() { Take = _options.FlashCardCount }, cancellationToken);
         var learningSession = LearningSession.Create(flashCards.Data);
         learningSession.Start(_options.ExpireAfter);
-        await _sessionRepository.Add(learningSession, cancellationToken);
+        _sessionRepository.Add(learningSession);
+        await _unitOfWork.SaveChanges(cancellationToken);
 
         return learningSession;
     }

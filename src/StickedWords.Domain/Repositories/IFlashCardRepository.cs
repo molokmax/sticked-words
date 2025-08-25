@@ -9,5 +9,5 @@ public interface IFlashCardRepository
 
     Task<PageResult<FlashCard>> GetByQuery(PageQuery pageQuery, CancellationToken cancellationToken);
 
-    Task Add(FlashCard flashCard, CancellationToken cancellationToken);
+    void Add(FlashCard flashCard);
 }

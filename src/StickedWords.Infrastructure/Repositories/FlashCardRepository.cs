@@ -35,10 +35,9 @@ internal class FlashCardRepository : IFlashCardRepository
         return new(data, total);
     }
 
-    public async Task Add(FlashCard flashCard, CancellationToken cancellationToken)
+    public void Add(FlashCard flashCard)
     {
         _context.FlashCards.Add(flashCard);
-        await _context.SaveChangesAsync(cancellationToken); // TODO: коммит нужно делать за пределами репозитория
     }
 
     private static async ValueTask<int?> GetTotal(

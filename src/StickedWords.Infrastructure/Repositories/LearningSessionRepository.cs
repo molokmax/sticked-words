@@ -17,13 +17,20 @@ internal class LearningSessionRepository : ILearningSessionRepository
     {
         return await _context.LearningSessions
             .Include(x => x.Stages)
+            .ThenInclude(x => x.Guesses)
             .Include(x => x.FlashCards)
+            .ThenInclude(x => x.FlashCard)
             .FirstOrDefaultAsync(x => x.State == LearningSessionState.Active);
     }
 
-    public async Task Add(LearningSession learningSession, CancellationToken cancellationToken)
+    public void Add(LearningSession learningSession)
     {
         _context.LearningSessions.Add(learningSession);
-        await _context.SaveChangesAsync(cancellationToken); // TODO: коммит нужно делать за пределами репозитория
+    }
+
+    public void Update(LearningSession learningSession)
+    {
+        _context.Attach(learningSession);
+        _context.Entry(learningSession).State = EntityState.Modified;
     }
 }

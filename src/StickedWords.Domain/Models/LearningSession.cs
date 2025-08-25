@@ -1,4 +1,7 @@
-﻿namespace StickedWords.Domain.Models;
+﻿using StickedWords.Domain.Exceptions;
+using StickedWords.Domain.Repositories;
+
+namespace StickedWords.Domain.Models;
 
 public record LearningSession
 {
@@ -10,11 +13,11 @@ public record LearningSession
 
     public DateTimeOffset ExpiringAt { get; private set; }
 
-    public LearningSessionState State { get; private set; } // TODO: как экспайрить?
+    public LearningSessionState State { get; private set; } // TODO: how to expire session?
 
     public List<SessionStage> Stages { get; private set; } = [];
 
-    public List<SessionFlashCard> FlashCards { get; private set; } = []; // TODO: как сделать коллекцию неизменяемой?
+    public List<SessionFlashCard> FlashCards { get; private set; } = []; // TODO: how to make this collection readonly?
 
     public void Start(TimeSpan expireAfter)
     {
@@ -26,23 +29,48 @@ public record LearningSession
         stage.Activate(FlashCards);
     }
 
+    public SessionStage? GetActiveStage() => Stages.FirstOrDefault(x => x.IsActive);
+
+    public bool TryMoveToNextFlashCard(GuessResult guessResult)
+    {
+        var activeStage = GetActiveStage();
+        if (activeStage is null)
+        {
+            throw new ActiveStageNotFoundException();
+        }
+        activeStage.AddGuessResult(guessResult);
+        if (activeStage.TryMoveToNextFlashCard(FlashCards))
+        {
+            return true;
+        }
+        if (TryMoveToNextSessionStage(activeStage))
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    private bool TryMoveToNextSessionStage(SessionStage sessionStage)
+    {
+        var stage = Stages.FirstOrDefault(x => x.OrdNumber == sessionStage.OrdNumber + 1);
+        if (stage is null)
+        {
+            return false;
+        }
+        sessionStage.Unactivate();
+        stage.Activate(FlashCards);
+
+        return true;
+    }
+
     public static LearningSession Create(IEnumerable<FlashCard> flashCards)
     {
         var session = new LearningSession();
         session.Stages = // TODO: types and ord numbers take from options. think about it
         [
-            new()
-            {
-                OrdNumber = 0,
-                ExerciseType = ExerciseType.TranslateForeignToNative,
-                LearningSession = session
-            },
-            new()
-            {
-                OrdNumber = 1,
-                ExerciseType = ExerciseType.TranslateNativeToForeign,
-                LearningSession = session
-            }
+            SessionStage.Create(0, ExerciseType.TranslateForeignToNative, session),
+            SessionStage.Create(1, ExerciseType.TranslateNativeToForeign, session)
         ];
         session.FlashCards = flashCards
             .Select(x => new SessionFlashCard { FlashCard = x, LearningSession = session })

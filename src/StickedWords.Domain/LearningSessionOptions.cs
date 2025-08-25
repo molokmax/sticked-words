@@ -1,8 +1,10 @@
-﻿namespace StickedWords.Domain;
+﻿using StickedWords.Shared;
 
-public record LearningSessionOptions
+namespace StickedWords.Domain;
+
+public record LearningSessionOptions : IConfigurationOptions
 {
-    public const string SectionName = "LearningSession";
+    public static string SectionName => "LearningSession";
 
     public TimeSpan ExpireAfter { get; init; } = TimeSpan.FromHours(3);
 
