@@ -1,98 +1,58 @@
-# sticked-words
-Сервис для запоминания иностранных слов
+# Sticked Words
+Сервис для запоминания иностранных слов.
+
 
 ## Общая информация
+Сервис позволяет заучивать иностранные слова, выполняя различные упражнения. Пользователь добавляет слова в свой список. Сервис через определенные интервалы времени предлагает повторить слова (предполагается реализовать Spaced Repetition System). Набор упражнений пока содержит только перевод с иностранного и перевод на иностранный с использованием текстового ввода. Набор упражнений будет расширяться.
 
 - [Словарь терминов](./docs/glossary.md)
 
-## Работа с миграциями
 
-Есть 2 проекта с миграциями - один для Sqlite (StickedWords.DbMigrations.Sqlite), другой - для Postgres (StickedWords.DbMigrations.Postgres). Их приходится вести раздельно, так как для разных баз данных генерируются разные миграции.
+## Как запустить
 
-### Добавить миграцию
+- Для разработки необходим dotnet sdk 9
+- Node.js - рекомендуемая версия не ниже v22.14.0
 
-Запускать из каталога проекта /src/StickedWords.DbMigrations.*
-```
-dotnet ef migrations add InitialCreate
-```
+1. **Установите переменные окружения:**
+   - `ConnectionStrings__StickedWordsDbContext` - строка подключения к базе данных
 
-### Применить миграции
-Для локальной Sqlite базы:
-```
-dotnet ef database update -- --ConnectionStrings:StickedWordsDbContext "Data Source=|DataDirectory|stickedwords.db"
-```
+2. **Сборка frontend:**
+   - Перейдите в директорию `src/StickedWords.UI`
+   - Установите пакеты: `npm i`
+   - Запустите сборку проекта с пересборкой при изменении файлов: `npm run watch`
+   - Это выполнит сборку клиентской части и поместит файлы в каталог `src/StickedWords.API/wwwroot`, куда нацелено приложение для предоставления статики.
 
-Запускать из каталога проекта /src/StickedWords.DbMigrations.Sqlite.
+3. **Запуск backend:**
+   - Перейдите в директорию `src/StickedWords.API`
+   - Запустите проект с помощью команды: `dotnet run`
 
-Для локальной Postgres базы можно запустить аналогично, скорректировав строку подключения.
 
-## Сборка для облака
-Подготовить образ:
-```
-docker build . -t molokmax/sticked-words:0.0.1 -f ./ci-cd/Dockerfile
-docker push molokmax/sticked-words:0.0.1
-docker build . -t molokmax/sticked-words-migrations:0.0.1 -f ./ci-cd/Dockerfile.migrations
-docker push molokmax/sticked-words-migrations:0.0.1
-```
+## Технические детали
 
-Запустить из образа (скорректировать `.env` для sqlite/postgres):
-```
-docker run -d -p 8080:8080 --env-file ./ci-cd/.env molokmax/sticked-words:0.0.1
-```
+### Backend
+**Фреймворк**: ASP.NET Core с использованием Minimal API.
 
-Запустить в Kubernates:
-```
-minikube start
+**Базы данных**: В качестве основной СУБД используется PostgreSQL. При локальной разработке и деплое на Orange Pi пока что используется SQLite (на данный момент для переключения между СУБД необходимы правки в коде. В планах сделать переключение через конфиг). ORM - Entity Framework Core.
 
-# Проверить что плагин ingress включен
-minikube addons enable ingress
+**Архитектура**: Используется Domain-Driven Design (DDD) и Clean Architecture. Модели запросов на чтение и запись разделены паттерном CQRS (Command and Query Responsibility Segregation). Обработчики реализованы на основе Mediatr, но в планах отказаться от использования этой библиотеки по причине изменения лицензии.
 
-# Установить postgresql
-helm install pg oci://registry-1.docker.io/bitnamicharts/postgresql -f ./ci-cd/k8s/dv/values.yaml
+### Frontend
+Клиентская часть построена на Vue.js 3 (Composition API). В планах - переход на React.js.
 
-# Пробросить порты postgres на хостовую машину
-kubectl port-forward --namespace default svc/pg-postgresql 5432:5432
+### Инфраструктура
+Приложение готово к развертыванию в Kubernetes. Есть возможность развернуть сервис на Orange Pi.
 
-# Создать настройки и применить миграции БД
-kubectl apply -f ./ci-cd/k8s/config.yaml
-kubectl apply -f ./ci-cd/k8s/db/initdb.yaml
+### Подробнее
 
-# Запустить само приложение
-kubectl apply -f ./ci-cd/k8s/
+- [Работа с миграциями](./docs/migrations.md)
+- [Деплой](./docs/deploy.md)
+- [Мониторинг](./docs/observability.md)
+- [Road Map](./docs/roadmap.md)
 
-# Создать туннель между кластером k8s и хостовой машиной
-minikube tunnel
-```
-Проверить, что в hosts добавлен alias `127.0.0.1 sticked-words.local`
 
-К сервису теперь можно обращаться через http://sticked-words.local
+## Contributing
+Как принять участие в разработке - читайте [здесь](./CONTRIBUTING.md).
 
-## Деплой на Orange Pi
 
-Артифакт с новой версией сервиса собирается с помощью GitHub Actions - `.github\workflows\armlinux-build.yaml`.
-
-Команда подключения по ssh с использованием сертификата - `ssh -i "%USERPROFILE%\.ssh\id_rsa" USERNAME@ORANGEPI_IP`
-
-### Подготовка Orange Pi к хостингу сервиса
-- Устанновить Ubuntu 24 на Orange Pi (так как бинарники собираются в GitHub Actions, нужна соответствующая версия ОС на orange pi, иначе возникает ошибка отсутствия нужной версии библиотек). Скачать можно здесь - https://www.armbian.com/orange-pi-one/.
-- Записать образ OS на SD-карту. Например, при помощи rufus.
-- Создать на Orange Pi пользователя от имени которого будем выполнять настройку. Это не тот же пользователь, от имени которого будет запущен сервис.
-- Для удобства подключения можно сгенерировать сертификат и подключаться по сертификату без использования пароля. Генерация сертификата выполняется командой `ssh-keygen -m PEM -t rsa -b 2048`. Можно сразу сгенерировать 2 сертификата - для пользователя под которым выполняется администрирование Orange Pi и для пользователя, под которым деплоится и запускается сервис. Дополнительные ссылки - https://lepkov.ru/ssh-login-to-linux-using-certificate/, https://selectel.ru/blog/ssh-authentication/.
-- Запустить скрипт `copy_setup.sh` из каталога `ci-cd\orangepi\`. Этот скрипт скопирует все необходимое для настройки на Orange Pi. Перед запуском проверить настройки в скрипте.
-- Залогиниться на Orange Pi под пользователем для администрирования и запустить скрипт `sudo setup.sh {password}` из каталога `setup`.
-- Выполнить очистку истории команд - `cat /dev/null > ~/.bash_history && history -c` чтобы нельзя было получить пароль из истории.
-- После выполнения настройки можно удалить настроечные скрипты при помощи `clear_setup.sh`.
-
-### Деплой новой версии сервиса
-- Подготовить архив `sticked-words-linux-arm.{version}.zip` в каталоге с артефактами. Файлы должны лежать в корне архива.
-- Для загрузки артефакта на Orange Pi запустить скрипт `upload_artifact.sh {version}`. Перед запуском проверить настройки в скрипте.
-- Для обновления версии сервиса Orange Pi запустить скрипт `deploy_artifact.sh {version}`. Перед запуском проверить настройки в скрипте.
-
-### Observability
-На [этой странице](./docs/observability.md) описана настройка механизмов мониторинга за системой.
-
-### TODO
-- [ ] добавить периодическую задачу для удаления старых артифактов (удалять старше 2 недель, но оставлять минимум 2 версии)
-- [ ] на Orange Pi разделить загрузчик и основную ОС. Загрузчик - на SDCard, Остальное - например на SSD. Нужно для того, чтобы уменьшить интенсивность записи и сохранить ресурс SDCard
-- [ ] добавь секцию Install в сервис и сделай systemctl enable sticked-words
-- [ ] переименовать скрипты для более удобного/короткого использования
+## License
+Проект распространяется под [лицензией MIT](./LICENSE.md).
