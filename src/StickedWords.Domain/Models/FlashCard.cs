@@ -20,7 +20,19 @@ public class FlashCard
 
     public int Rate { get; private set; }
 
+    public DateTimeOffset RepeatAt { get; private set; }
+
+    public long RepeatAtUnixTime { get; private set; }
+
     public DateTimeOffset CreatedAt { get; private set; }
+
+    public void UpdateRate(int rate, LearningSessionOptions options)
+    {
+        Rate = rate;
+        // TODO: Take result history. It should affect to rate and next RepeatAt
+        RepeatAt = DateTimeOffset.UtcNow.Add(options.RepeatFlashCardPeriod);
+        RepeatAtUnixTime = RepeatAt.ToUnixTime();
+    }
 
     public static FlashCard Create(string word, string translation)
     {
@@ -32,6 +44,7 @@ public class FlashCard
             Word = word,
             Translation = translation,
             CreatedAt = DateTimeOffset.UtcNow,
+            RepeatAt = DateTimeOffset.UtcNow,
             Rate = 1000
         };
     }

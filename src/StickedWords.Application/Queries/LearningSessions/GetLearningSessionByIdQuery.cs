@@ -3,4 +3,4 @@ using StickedWords.Domain.Models;
 
 namespace StickedWords.Application.Commands.LearningSessions;
 
-public record GetLearningSessionQuery : IRequest<LearningSession?>;
+public record GetLearningSessionByIdQuery(long LearningSessionId) : IRequest<LearningSession?>;

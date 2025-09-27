@@ -29,6 +29,12 @@ namespace StickedWords.DbMigrations.Migrations.Sqlite
                     b.Property<int>("Rate")
                         .HasColumnType("INTEGER");
 
+                    b.Property<DateTimeOffset>("RepeatAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<long>("RepeatAtUnixTime")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Translation")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -146,7 +152,7 @@ namespace StickedWords.DbMigrations.Migrations.Sqlite
                         .IsRequired();
 
                     b.HasOne("StickedWords.Domain.Models.SessionStage", "SessionStage")
-                        .WithMany()
+                        .WithMany("Guesses")
                         .HasForeignKey("SessionStageId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -197,6 +203,11 @@ namespace StickedWords.DbMigrations.Migrations.Sqlite
                     b.Navigation("FlashCards");
 
                     b.Navigation("Stages");
+                });
+
+            modelBuilder.Entity("StickedWords.Domain.Models.SessionStage", b =>
+                {
+                    b.Navigation("Guesses");
                 });
 #pragma warning restore 612, 618
         }

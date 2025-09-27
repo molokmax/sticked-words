@@ -12,6 +12,8 @@ internal static class LearningSessionMapper
 
         return new()
         {
+            Id = source.Id,
+            State = source.State,
             ExerciseType = activeStage?.ExerciseType ?? ExerciseType.None,
             FlashCardId = activeStage?.CurrentFlashCard?.FlashCardId,
             FlashCardCount = source.FlashCards.Count
@@ -23,4 +25,13 @@ internal static class LearningSessionMapper
         {
             Word = source.Word
         };
+
+    public static LearningSessionResultsDto ToDto(this LearningSessionResults source)
+    {
+        return new()
+        {
+            State = source.State,
+            FlashCardCount = source.FlashCardCount
+        };
+    }
 }
