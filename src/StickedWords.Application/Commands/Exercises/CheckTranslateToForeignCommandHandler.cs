@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.Extensions.Options;
 using StickedWords.Domain;
 using StickedWords.Domain.Exceptions;
 using StickedWords.Domain.Models;
@@ -9,13 +10,16 @@ namespace StickedWords.Application.Commands.Exercises;
 
 internal sealed class CheckTranslateToForeignCommandHandler : IRequestHandler<CheckTranslateToForeignCommand, TranslateGuessResult>
 {
+    private readonly LearningSessionOptions _options;
     private readonly ILearningSessionRepository _sessionRepository;
     private readonly IUnitOfWork _unitOfWork;
 
     public CheckTranslateToForeignCommandHandler(
+        IOptions<LearningSessionOptions> options,
         ILearningSessionRepository sessionRepository,
         IUnitOfWork unitOfWork)
     {
+        _options = options.Value;
         _sessionRepository = sessionRepository;
         _unitOfWork = unitOfWork;
     }
@@ -29,11 +33,6 @@ internal sealed class CheckTranslateToForeignCommandHandler : IRequestHandler<Ch
         }
 
         var activeStage = activeSession.GetActiveStage();
-        if (activeStage is null)
-        {
-            throw new ActiveStageNotFoundException();
-        }
-
         if (activeStage.ExerciseType is not ExerciseType.TranslateNativeToForeign)
         {
             throw new WrongExerciseTypeException();
@@ -47,8 +46,10 @@ internal sealed class CheckTranslateToForeignCommandHandler : IRequestHandler<Ch
         var flashCard = activeStage.CurrentFlashCard.FlashCard;
         var guessResult = GetGuessResult(flashCard, FlashCardWord.Create(command.Answer));
 
-        activeSession.TryMoveToNextFlashCard(guessResult);
-        // TODO: recalculate Rate of flash card
+        if (!activeSession.TryMoveToNextFlashCard(guessResult))
+        {
+            activeSession.Finish(_options);
+        }
 
         await _unitOfWork.SaveChanges(cancellationToken);
 

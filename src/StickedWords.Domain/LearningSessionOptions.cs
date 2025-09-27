@@ -9,4 +9,6 @@ public record LearningSessionOptions : IConfigurationOptions
     public TimeSpan ExpireAfter { get; init; } = TimeSpan.FromHours(3);
 
     public int FlashCardCount { get; init; } = 10;
+
+    public TimeSpan RepeatFlashCardPeriod { get; init; } = TimeSpan.FromDays(7);
 }

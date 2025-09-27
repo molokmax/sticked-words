@@ -4,16 +4,16 @@ using StickedWords.Domain.Repositories;
 
 namespace StickedWords.Application.Commands.LearningSessions;
 
-internal sealed class GetLearningSessionQueryHandler : IRequestHandler<GetLearningSessionQuery, LearningSession?>
+internal sealed class GetActiveLearningSessionQueryHandler : IRequestHandler<GetActiveLearningSessionQuery, LearningSession?>
 {
     private readonly ILearningSessionRepository _sessionRepository;
 
-    public GetLearningSessionQueryHandler(ILearningSessionRepository sessionRepository)
+    public GetActiveLearningSessionQueryHandler(ILearningSessionRepository sessionRepository)
     {
         _sessionRepository = sessionRepository;
     }
 
-    public async Task<LearningSession?> Handle(GetLearningSessionQuery query, CancellationToken cancellationToken)
+    public async Task<LearningSession?> Handle(GetActiveLearningSessionQuery query, CancellationToken cancellationToken)
     {
         return await _sessionRepository.GetActive(cancellationToken);
     }

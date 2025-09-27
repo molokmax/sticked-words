@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import FlashCardListView from '@/views/FlashCardListView.vue'
 import AddFlashCardView from '@/views/AddFlashCardView.vue'
 import LearningSessionView from '@/views/LearningSessionView.vue'
+import LearningSessionResultsView from '@/views/LearningSessionResultsView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -20,6 +21,11 @@ const router = createRouter({
       path: '/session',
       name: 'learning-session',
       component: LearningSessionView
+    },
+    {
+      path: '/session-results',
+      name: 'learning-session-results',
+      component: LearningSessionResultsView
     }
 
     // TODO: создать компонент сессии

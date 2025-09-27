@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.Extensions.Options;
 using StickedWords.Domain;
 using StickedWords.Domain.Exceptions;
 using StickedWords.Domain.Models;
@@ -9,13 +10,16 @@ namespace StickedWords.Application.Commands.Exercises;
 
 internal sealed class CheckTranslateToNativeCommandHandler : IRequestHandler<CheckTranslateToNativeCommand, TranslateGuessResult>
 {
+    private readonly LearningSessionOptions _options;
     private readonly ILearningSessionRepository _sessionRepository;
     private readonly IUnitOfWork _unitOfWork;
 
     public CheckTranslateToNativeCommandHandler(
+        IOptions<LearningSessionOptions> options,
         ILearningSessionRepository sessionRepository,
         IUnitOfWork unitOfWork)
     {
+        _options = options.Value;
         _sessionRepository = sessionRepository;
         _unitOfWork = unitOfWork;
     }
@@ -47,8 +51,10 @@ internal sealed class CheckTranslateToNativeCommandHandler : IRequestHandler<Che
         var flashCard = activeStage.CurrentFlashCard.FlashCard;
         var guessResult = GetGuessResult(flashCard, FlashCardWord.Create(command.Answer));
 
-        activeSession.TryMoveToNextFlashCard(guessResult);
-        // TODO: recalculate Rate of flash card
+        if (!activeSession.TryMoveToNextFlashCard(guessResult))
+        {
+            activeSession.Finish(_options);
+        }
 
         await _unitOfWork.SaveChanges(cancellationToken);
 

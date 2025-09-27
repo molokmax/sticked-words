@@ -13,6 +13,16 @@ internal class LearningSessionRepository : ILearningSessionRepository
         _context = dbContext;
     }
 
+    public async Task<LearningSession?> GetById(long sessionId, CancellationToken cancellationToken)
+    {
+        return await _context.LearningSessions
+            .Include(x => x.Stages)
+            .ThenInclude(x => x.Guesses)
+            .Include(x => x.FlashCards)
+            .ThenInclude(x => x.FlashCard)
+            .FirstOrDefaultAsync(x => x.Id == sessionId, cancellationToken);
+    }
+
     public async Task<LearningSession?> GetActive(CancellationToken cancellationToken)
     {
         return await _context.LearningSessions

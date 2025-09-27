@@ -43,6 +43,7 @@ public record SessionStage
     public void Unactivate()
     {
         IsActive = false;
+        CurrentFlashCard = null;
     }
 
     public void Activate(IReadOnlyList<SessionFlashCard> flashCards)

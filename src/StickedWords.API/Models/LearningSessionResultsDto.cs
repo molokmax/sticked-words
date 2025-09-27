@@ -2,15 +2,9 @@
 
 namespace StickedWords.API.Models;
 
-public record LearningSessionDto
+public record LearningSessionResultsDto
 {
-    public long Id { get; init; }
-
     public LearningSessionState State { get; init; }
-
-    public ExerciseType ExerciseType { get; init; }
-
-    public long? FlashCardId { get; init; }
 
     public int FlashCardCount { get; init; }
 }

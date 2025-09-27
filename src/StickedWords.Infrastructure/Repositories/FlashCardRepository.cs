@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using StickedWords.Domain;
 using StickedWords.Domain.Models;
 using StickedWords.Domain.Models.Paging;
 using StickedWords.Domain.Repositories;
@@ -19,12 +20,18 @@ internal class FlashCardRepository : IFlashCardRepository
         return await _context.FlashCards.FindAsync(id, cancellationToken);
     }
 
+    // TODO: Make special model inherited from PageQuery for FlashCards to filter by fields, for example by RepeatAt.
+    // TODO: Or use specification pattern
     public async Task<PageResult<FlashCard>> GetByQuery(PageQuery pageQuery, CancellationToken cancellationToken)
     {
+        var now = DateTimeOffset.UtcNow.ToUnixTime();
         var query = _context.FlashCards.AsQueryable();
 
         var total = await GetTotal(query, pageQuery, cancellationToken);
-        query = query.OrderByDescending(x => x.Rate).Skip(pageQuery.Skip);
+        query = query
+            .Where(x => x.RepeatAtUnixTime < now)
+            .OrderByDescending(x => x.Rate)
+            .Skip(pageQuery.Skip);
         if (pageQuery.Take is not null)
         {
             query = query.Take(pageQuery.Take.Value);

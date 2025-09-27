@@ -1,5 +1,4 @@
 ﻿using StickedWords.Domain.Exceptions;
-using StickedWords.Domain.Repositories;
 
 namespace StickedWords.Domain.Models;
 
@@ -29,15 +28,29 @@ public record LearningSession
         stage.Activate(FlashCards);
     }
 
-    public SessionStage? GetActiveStage() => Stages.FirstOrDefault(x => x.IsActive);
+    public void Finish(LearningSessionOptions options)
+    {
+        if (State is not LearningSessionState.Active)
+        {
+            throw new LearningSessionNotActiveException();
+        }
+        var activeStage = GetActiveStage();
+        activeStage.Unactivate();
+        State = LearningSessionState.Finished;
+
+        foreach (var flashCard in FlashCards.Select(x => x.FlashCard))
+        {
+            var rate = GetFlashCardRate(flashCard);
+            flashCard.UpdateRate(rate, options);
+        }
+    }
+
+    public SessionStage GetActiveStage() =>
+        Stages.FirstOrDefault(x => x.IsActive) ?? throw new ActiveStageNotFoundException();
 
     public bool TryMoveToNextFlashCard(GuessResult guessResult)
     {
         var activeStage = GetActiveStage();
-        if (activeStage is null)
-        {
-            throw new ActiveStageNotFoundException();
-        }
         activeStage.AddGuessResult(guessResult);
         if (activeStage.TryMoveToNextFlashCard(FlashCards))
         {
@@ -62,6 +75,22 @@ public record LearningSession
         stage.Activate(FlashCards);
 
         return true;
+    }
+
+    private int GetFlashCardRate(FlashCard flashCard)
+    {
+        var correctGuessCount = 0d;
+        foreach (var stage in Stages)
+        {
+            var guess = stage.Guesses.FirstOrDefault(x => x.FlashCardId == flashCard.Id);
+            if (guess?.Result is GuessResult.Correct)
+            {
+                correctGuessCount += 1;
+            }
+        }
+        var rate = Math.Floor(correctGuessCount / Stages.Count * 100);
+
+        return Convert.ToInt32(rate);
     }
 
     public static LearningSession Create(IEnumerable<FlashCard> flashCards)
