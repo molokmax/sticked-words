@@ -1,13 +1,15 @@
 <script setup lang="ts">
-import { ExerciseType, LearningSessionState } from '@/models/LearningSession';
+import { ExerciseType, LearningSession, LearningSessionState } from '@/models/LearningSession';
 import { ErrorHandler } from '@/services/ErrorHandler';
 import { LearningSessionService } from '@/services/LearningSessionService';
 import { computed, onMounted, ref } from 'vue';
 import TranslateForeignToNativeExerciseView from './exercises/TranslateForeignToNativeExerciseView.vue';
 import TranslateNativeToForeignExerciseView from './exercises/TranslateNativeToForeignExerciseView.vue';
 import LearningSessionResultsView from './LearningSessionResultsView.vue';
+import LearningSessionProgress from './LearningSessionProgress.vue';
 
 const service = new LearningSessionService();
+const session = ref<LearningSession | null>(null);
 const cardCount = ref<number>(0);
 const sessionState = ref<LearningSessionState>(LearningSessionState.None);
 const exerciseType = ref<ExerciseType>(ExerciseType.None);
@@ -41,12 +43,12 @@ const loadData = async () => {
   try {
     loading.value = true;
 
-    const session = await loadLearningSession();
-    sessionId.value = session.id;
-    sessionState.value = session.state;
-    flashCardId.value = session.flashCardId;
-    exerciseType.value = session.exerciseType;
-    cardCount.value = session.flashCardCount;
+    session.value = await loadLearningSession();
+    sessionId.value = session.value.id;
+    sessionState.value = session.value.state;
+    flashCardId.value = session.value.flashCardId;
+    exerciseType.value = session.value.exerciseType;
+    cardCount.value = session.value.flashCardCount;
   } catch (err) {
     sessionId.value = -1;
     sessionState.value = LearningSessionState.None;
@@ -71,6 +73,9 @@ onMounted(initView);
       ></LearningSessionResultsView>
     </div>
     <div v-else-if="flashCardId">
+      <LearningSessionProgress v-if="session"
+        :session="session"
+      ></LearningSessionProgress>
       <div v-if="exerciseType === ExerciseType.TranslateForeignToNative">
         <TranslateForeignToNativeExerciseView
           :flashCardId="flashCardId"
