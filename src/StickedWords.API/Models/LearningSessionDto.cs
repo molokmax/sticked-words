@@ -13,4 +13,6 @@ public record LearningSessionDto
     public long? FlashCardId { get; init; }
 
     public int FlashCardCount { get; init; }
+
+    public IReadOnlyCollection<LearningSessionStageDto> Stages { get; init; } = [];
 }

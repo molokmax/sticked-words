@@ -16,7 +16,16 @@ internal static class LearningSessionMapper
             State = source.State,
             ExerciseType = activeStage?.ExerciseType ?? ExerciseType.None,
             FlashCardId = activeStage?.CurrentFlashCard?.FlashCardId,
-            FlashCardCount = source.FlashCards.Count
+            FlashCardCount = source.FlashCards.Count,
+            Stages = source.Stages
+                .OrderBy(x => x.OrdNumber)
+                .Select(x => new LearningSessionStageDto
+                {
+                    Id = x.Id,
+                    OrdNumber = x.OrdNumber,
+                    CompletedFlashCardCount = x.Guesses.Count
+                })
+                .ToArray()
         };
     }
 

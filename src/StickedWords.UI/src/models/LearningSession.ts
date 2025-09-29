@@ -1,9 +1,12 @@
+import { LearningSessionStage } from "./LearningSessionStage";
+
 export class LearningSession {
   id!: number;
   state!: LearningSessionState;
   exerciseType!: ExerciseType;
   flashCardId?: number;
   flashCardCount!: number;
+  stages!: LearningSessionStage[];
 
   static fromJson(json: any): LearningSession {
     const result = new LearningSession();
@@ -13,6 +16,7 @@ export class LearningSession {
     result.exerciseType = LearningSession.mapExerciseType(json.exerciseType);
     result.flashCardId = json.flashCardId ?? null;
     result.flashCardCount = json.flashCardCount ?? 0;
+    result.stages = (json.stages ?? []).map((x: any) => LearningSessionStage.fromJson(x))
 
     return result;
   }
