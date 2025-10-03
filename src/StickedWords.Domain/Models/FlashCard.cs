@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using StickedWords.Domain.Exceptions;
 
 namespace StickedWords.Domain.Models;
 
@@ -18,6 +19,8 @@ public class FlashCard
     /// </summary>
     public string Translation { get; private set; } = string.Empty;
 
+    public int BaseRate { get; private set; }
+
     public int Rate { get; private set; }
 
     public DateTimeOffset RepeatAt { get; private set; }
@@ -26,15 +29,39 @@ public class FlashCard
 
     public DateTimeOffset CreatedAt { get; private set; }
 
-    public void UpdateRate(int rate, LearningSessionOptions options)
+    public void UpdateBaseRate(int rate, LearningSessionOptions options, TimeProvider timeProvider)
     {
+        if (rate < 0 || rate > 100)
+        {
+            throw new RateIsNotValidException(rate);
+        }
+
+        BaseRate = rate;
         Rate = rate;
-        // TODO: Take result history. It should affect to rate and next RepeatAt
-        RepeatAt = DateTimeOffset.UtcNow.Add(options.RepeatFlashCardPeriod);
+
+        var repeatAfterDays = options.RepeatFlashCardPeriod.TotalDays * (rate / 100d);
+        RepeatAt = timeProvider.GetUtcNow().AddDays(Math.Ceiling(repeatAfterDays));
         RepeatAtUnixTime = RepeatAt.ToUnixTime();
     }
 
-    public static FlashCard Create(string word, string translation)
+    public void RefreshRate(LearningSessionOptions options, TimeProvider timeProvider)
+    {
+        if (Rate <= 0)
+        {
+            return;
+        }
+
+        var daySpan = timeProvider.GetUtcNow() - RepeatAt;
+        if (daySpan.TotalDays <= 0)
+        {
+            return;
+        }
+
+        var rateDecrease = daySpan.TotalDays / options.RepeatFlashCardRateFactor;
+        Rate = BaseRate - Convert.ToInt32(Math.Floor(rateDecrease));
+    }
+
+    public static FlashCard Create(string word, string translation, TimeProvider timeProvider)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(word);
         ArgumentException.ThrowIfNullOrWhiteSpace(translation);
@@ -43,9 +70,9 @@ public class FlashCard
         {
             Word = word,
             Translation = translation,
-            CreatedAt = DateTimeOffset.UtcNow,
-            RepeatAt = DateTimeOffset.UtcNow,
-            Rate = 1000
+            CreatedAt = timeProvider.GetUtcNow(),
+            RepeatAt = timeProvider.GetUtcNow(),
+            Rate = 0
         };
     }
 }

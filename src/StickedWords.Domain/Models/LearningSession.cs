@@ -28,7 +28,7 @@ public record LearningSession
         stage.Activate(FlashCards);
     }
 
-    public void Finish(LearningSessionOptions options)
+    public void Finish(LearningSessionOptions options, TimeProvider timeProvider)
     {
         if (State is not LearningSessionState.Active)
         {
@@ -41,7 +41,7 @@ public record LearningSession
         foreach (var flashCard in FlashCards.Select(x => x.FlashCard))
         {
             var rate = GetFlashCardRate(flashCard);
-            flashCard.UpdateRate(rate, options);
+            flashCard.UpdateBaseRate(rate, options, timeProvider);
         }
     }
 

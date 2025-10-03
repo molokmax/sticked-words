@@ -1,10 +1,13 @@
-﻿using StickedWords.Domain;
+﻿using Microsoft.Extensions.Time.Testing;
+using StickedWords.Domain;
 using StickedWords.Domain.Models;
 
 namespace StickedWords.UnitTests;
 
 public class LearningSessionTests
 {
+    private static TimeProvider _timeProvider = new FakeTimeProvider(DateTimeOffset.UtcNow);
+
     [Test]
     public void Finish_StartedSession_StateFinished()
     {
@@ -13,7 +16,7 @@ public class LearningSessionTests
         var options = GetOptions();
 
         // Act
-        session.Finish(options);
+        session.Finish(options, _timeProvider);
 
         // Assert
         Assert.That(session.State, Is.EqualTo(LearningSessionState.Finished));
@@ -27,7 +30,7 @@ public class LearningSessionTests
         var options = GetOptions();
 
         // Act
-        session.Finish(options);
+        session.Finish(options, _timeProvider);
 
         // Assert
         foreach (var stage in session.Stages)
@@ -47,7 +50,7 @@ public class LearningSessionTests
         session.TryMoveToNextFlashCard(GuessResult.Correct);
 
         // Act
-        session.Finish(options);
+        session.Finish(options, _timeProvider);
 
         // Assert
         Assert.That(flashCard.Rate, Is.EqualTo(100));
@@ -64,7 +67,7 @@ public class LearningSessionTests
         session.TryMoveToNextFlashCard(GuessResult.Wrong);
 
         // Act
-        session.Finish(options);
+        session.Finish(options, _timeProvider);
 
         // Assert
         Assert.That(flashCard.Rate, Is.EqualTo(50));
@@ -81,7 +84,7 @@ public class LearningSessionTests
         session.TryMoveToNextFlashCard(GuessResult.Wrong);
 
         // Act
-        session.Finish(options);
+        session.Finish(options, _timeProvider);
 
         // Assert
         Assert.That(flashCard.Rate, Is.EqualTo(0));
@@ -96,7 +99,7 @@ public class LearningSessionTests
         var options = GetOptions();
 
         // Act
-        session.Finish(options);
+        session.Finish(options, _timeProvider);
 
         // Assert
         Assert.That(flashCard.Rate, Is.EqualTo(0));
@@ -110,7 +113,7 @@ public class LearningSessionTests
         return session;
     }
 
-    private static FlashCard GetFlashCard() => FlashCard.Create("word1", "слово1");
+    private static FlashCard GetFlashCard() => FlashCard.Create("word1", "слово1", _timeProvider);
 
     private static LearningSessionOptions GetOptions()
     {
