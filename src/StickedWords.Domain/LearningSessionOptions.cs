@@ -11,4 +11,6 @@ public record LearningSessionOptions : IConfigurationOptions
     public int FlashCardCount { get; init; } = 10;
 
     public TimeSpan RepeatFlashCardPeriod { get; init; } = TimeSpan.FromDays(7);
+
+    public int RepeatFlashCardRateFactor = 1;
 }

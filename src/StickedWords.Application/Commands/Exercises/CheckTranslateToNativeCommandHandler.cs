@@ -13,15 +13,18 @@ internal sealed class CheckTranslateToNativeCommandHandler : IRequestHandler<Che
     private readonly LearningSessionOptions _options;
     private readonly ILearningSessionRepository _sessionRepository;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly TimeProvider _timeProvider;
 
     public CheckTranslateToNativeCommandHandler(
         IOptions<LearningSessionOptions> options,
         ILearningSessionRepository sessionRepository,
-        IUnitOfWork unitOfWork)
+        IUnitOfWork unitOfWork,
+        TimeProvider timeProvider)
     {
         _options = options.Value;
         _sessionRepository = sessionRepository;
         _unitOfWork = unitOfWork;
+        _timeProvider = timeProvider;
     }
 
     public async Task<TranslateGuessResult> Handle(CheckTranslateToNativeCommand command, CancellationToken cancellationToken)
@@ -53,7 +56,7 @@ internal sealed class CheckTranslateToNativeCommandHandler : IRequestHandler<Che
 
         if (!activeSession.TryMoveToNextFlashCard(guessResult))
         {
-            activeSession.Finish(_options);
+            activeSession.Finish(_options, _timeProvider);
         }
 
         await _unitOfWork.SaveChanges(cancellationToken);

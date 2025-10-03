@@ -5,6 +5,7 @@ using StickedWords.Infrastructure.Postgres;
 using Microsoft.EntityFrameworkCore;
 using StickedWords.API.Endpoints;
 using System.Text.Json.Serialization;
+using StickedWords.Background;
 
 namespace StickedWords.API;
 
@@ -12,10 +13,13 @@ public static class ServiceCollectionExtensions
 {
     public static IHostApplicationBuilder AddServices(this IHostApplicationBuilder builder)
     {
+        builder.Services.AddSingleton(TimeProvider.System);
+
         builder.Services.AddSqliteDb<StickedWordsDbContext>(opts => opts.MigrationsAssembly(DbMigrations.Sqlite.AssemblyReference.Assembly));
         // builder.Services.AddPostgresDb<StickedWordsDbContext>(opts => opts.MigrationsAssembly(DbMigrations.Postgres.AssemblyReference.Assembly));
         builder.Services.AddRepositories();
         builder.AddApplication();
+        builder.AddBackground();
 
         return builder;
     }

@@ -1,0 +1,11 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <PackageReference Include="TickerQ" />
+    <PackageReference Include="TickerQ.Dashboard" />
+    <PackageReference Include="TickerQ.EntityFrameworkCore" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\StickedWords.Application\StickedWords.Application.csproj" />
+    <ProjectReference Include="..\StickedWords.Infrastructure\StickedWords.Infrastructure.csproj" />
+  </ItemGroup>
+</Project>

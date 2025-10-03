@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using StickedWords.Domain;
 using StickedWords.Domain.Models;
 using StickedWords.Domain.Models.Paging;
 using StickedWords.Domain.Repositories;
+using StickedWords.Domain.Specifications;
 
 namespace StickedWords.Infrastructure.Repositories;
 
@@ -20,24 +20,20 @@ internal class FlashCardRepository : IFlashCardRepository
         return await _context.FlashCards.FindAsync(id, cancellationToken);
     }
 
-    // TODO: Make special model inherited from PageQuery for FlashCards to filter by fields, for example by RepeatAt.
-    // TODO: Or use specification pattern
-    public async Task<PageResult<FlashCard>> GetByQuery(PageQuery pageQuery, CancellationToken cancellationToken)
+    public async Task<PageResult<FlashCard>> GetBySpecification(
+        ISpecification<FlashCard> specification,
+        bool includeTotal,
+        CancellationToken cancellationToken)
     {
-        var now = DateTimeOffset.UtcNow.ToUnixTime();
         var query = _context.FlashCards.AsQueryable();
 
-        var total = await GetTotal(query, pageQuery, cancellationToken);
-        query = query
-            .Where(x => x.RepeatAtUnixTime < now)
-            .OrderByDescending(x => x.Rate)
-            .Skip(pageQuery.Skip);
-        if (pageQuery.Take is not null)
-        {
-            query = query.Take(pageQuery.Take.Value);
-        }
+        int? total = includeTotal
+            ? await GetTotal(query, specification, cancellationToken)
+            : null;
 
-        var data = await query.ToListAsync(cancellationToken);
+        var data = await query
+            .GetQuery(specification)
+            .ToListAsync(cancellationToken);
 
         return new(data, total);
     }
@@ -47,16 +43,11 @@ internal class FlashCardRepository : IFlashCardRepository
         _context.FlashCards.Add(flashCard);
     }
 
-    private static async ValueTask<int?> GetTotal(
+    private static async Task<int> GetTotal(
         IQueryable<FlashCard> query,
-        PageQuery pageQuery,
+        ISpecification<FlashCard> specification,
         CancellationToken cancellationToken)
     {
-        if (!pageQuery.IncludeTotal)
-        {
-            return null;
-        }
-
-        return await query.CountAsync(cancellationToken);
+        return await query.GetFilteredQuery(specification).CountAsync(cancellationToken);
     }
 }

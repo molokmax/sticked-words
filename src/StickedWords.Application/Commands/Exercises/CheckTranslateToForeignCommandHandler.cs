@@ -13,15 +13,18 @@ internal sealed class CheckTranslateToForeignCommandHandler : IRequestHandler<Ch
     private readonly LearningSessionOptions _options;
     private readonly ILearningSessionRepository _sessionRepository;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly TimeProvider _timeProvider;
 
     public CheckTranslateToForeignCommandHandler(
         IOptions<LearningSessionOptions> options,
         ILearningSessionRepository sessionRepository,
-        IUnitOfWork unitOfWork)
+        IUnitOfWork unitOfWork,
+        TimeProvider timeProvider)
     {
         _options = options.Value;
         _sessionRepository = sessionRepository;
         _unitOfWork = unitOfWork;
+        _timeProvider = timeProvider;
     }
 
     public async Task<TranslateGuessResult> Handle(CheckTranslateToForeignCommand command, CancellationToken cancellationToken)
@@ -48,7 +51,7 @@ internal sealed class CheckTranslateToForeignCommandHandler : IRequestHandler<Ch
 
         if (!activeSession.TryMoveToNextFlashCard(guessResult))
         {
-            activeSession.Finish(_options);
+            activeSession.Finish(_options, _timeProvider);
         }
 
         await _unitOfWork.SaveChanges(cancellationToken);
