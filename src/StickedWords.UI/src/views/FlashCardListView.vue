@@ -4,6 +4,7 @@ import { PageQuery } from '@/models/PageQuery';
 import { ErrorHandler } from '@/services/ErrorHandler';
 import { FlashCardService } from '@/services/FlashCardService';
 import { onMounted, ref } from 'vue';
+import FlashCardListItem from './FlashCardListItem.vue';
 
 const service = new FlashCardService();
 const total = ref(0);
@@ -55,11 +56,12 @@ onMounted(initView);
       <div class="flash-card-list-view__words-count">Words: {{ total }}</div>
     </div>
     <div class="scroll-container" @scrollend="onScrolled">
-      <div v-for="card of data" :key="card.id" class="flash-card-list-view__flash-card">
-        <div class="flash-card-list-view__flash-card-title">
-          {{ card.word }}
-        </div>
-      </div>
+      <FlashCardListItem
+        v-for="card of data"
+        :key="card.id"
+        :flash-card="card"
+        class="flash-card-list-view__flash-card"
+      ></FlashCardListItem>
     </div>
   </main>
 </template>
@@ -74,17 +76,7 @@ onMounted(initView);
   flex: 1;
 
   &__flash-card {
-    height: 3rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid var(--color-border);
     margin-top: 2px;
-  }
-
-  &__flash-card-title {
-    text-wrap: nowrap;
-    font-size: 1.2rem;
   }
 
   &__header {

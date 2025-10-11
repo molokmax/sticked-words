@@ -58,7 +58,7 @@ public class FlashCard
         }
 
         var rateDecrease = daySpan.TotalDays / options.RepeatFlashCardRateFactor;
-        Rate = BaseRate - Convert.ToInt32(Math.Floor(rateDecrease));
+        Rate = Math.Max(BaseRate - Convert.ToInt32(Math.Floor(rateDecrease)), 0);
     }
 
     public static FlashCard Create(string word, string translation, TimeProvider timeProvider)
