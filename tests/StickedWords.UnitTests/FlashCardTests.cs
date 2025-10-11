@@ -57,6 +57,24 @@ public class FlashCardTests
         Assert.That(flashCard.RepeatAt, Is.EqualTo(now.AddDays(2)));
     }
 
+    [Test]
+    public void RefreshRate_RateIs20After30Days_RateIsZero()
+    {
+        // Arrange
+        var now = DateTimeOffset.UtcNow;
+        var timeProvider = GetTimeProvider(now);
+        var options = GetOptions(7);
+        var flashCard = GetFlashCard();
+        flashCard.UpdateBaseRate(20, options, timeProvider);
+        timeProvider = GetTimeProvider(now.AddDays(30));
+
+        // Act
+        flashCard.RefreshRate(options, timeProvider);
+
+        // Assert
+        Assert.That(flashCard.Rate, Is.EqualTo(0));
+    }
+
     private static FlashCard GetFlashCard() =>
         FlashCard.Create("word1", "слово1", GetTimeProvider(DateTimeOffset.UtcNow));
 
