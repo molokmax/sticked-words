@@ -4,6 +4,7 @@ metadata:
   name: sticked-words-config
 data:
   ApplyMigrations: "false"
+  DbProvider: "PostgreSQL"
 ---
 apiVersion: v1
 kind: Secret
