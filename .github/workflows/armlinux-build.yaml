@@ -1,4 +1,4 @@
-name: Build Sticked-Words for self-contained deploy
+name: Build app for self-contained deploy
 
 on:
   push:
