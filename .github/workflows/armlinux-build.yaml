@@ -2,7 +2,7 @@ name: Build app for self-contained deploy
 
 on:
   push:
-    branches: [ "main" ]
+    tags: [ "v*.*.*" ]
   workflow_dispatch:
 
 env:
