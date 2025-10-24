@@ -40,6 +40,7 @@ jobs:
             type=raw,value=latest,enable={{is_default_branch}}
 
       - name: Build and push Docker app image
+        id: docker-build-app
         uses: docker/build-push-action@v6
         with:
           context: .
@@ -60,6 +61,7 @@ jobs:
             type=raw,value=latest,enable={{is_default_branch}}
 
       - name: Build and push Docker migrations image
+        id: docker-build-migrations
         uses: docker/build-push-action@v6
         with:
           context: .
@@ -70,11 +72,14 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - name: Output image metadata
+      - name: Output app image metadata
         run: |
-          echo "Labels (App): ${{ steps.meta-app.outputs.labels }}"
-          echo "Tags (App): ${{ steps.meta-app.outputs.tags }}"
-          echo "Digest (App): ${{ steps.meta-app.outputs.digest }}"
-          echo "Labels (Migrations): ${{ steps.meta-migrations.outputs.labels }}"
-          echo "Tags (Migrations): ${{ steps.meta-migrations.outputs.tags }}"
-          echo "Digest (Migrations): ${{ steps.meta-migrations.outputs.digest }}"
+          echo "Labels: ${{ steps.meta-app.outputs.labels }}"
+          echo "Tags: ${{ steps.meta-app.outputs.tags }}"
+          echo "Digest: ${{ steps.docker-build-app.outputs.digest }}"
+          
+      - name: Output migrations image metadata
+        run: |
+          echo "Labels: ${{ steps.meta-migrations.outputs.labels }}"
+          echo "Tags: ${{ steps.meta-migrations.outputs.tags }}"
+          echo "Digest: ${{ steps.docker-build-migrations.outputs.digest }}"
