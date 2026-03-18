@@ -1,0 +1,59 @@
+
+.app {
+  height: 100%;
+  max-width: 600px; /* TODO: подобрать ширину от размера экрана */
+  max-height: 100vh;
+  margin: 0 auto;
+  padding: 2rem;
+  font-weight: normal;
+  display: flex;
+  flex-direction: column;
+    
+  &__logo {
+    display: block;
+    text-align: center;
+    margin: 0 2rem;
+    font-weight: bold;
+    font-style: italic;
+  }
+
+  &__wrapper {
+    flex: 1;
+  }
+}
+
+header {
+  height: 3rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  border: 1px solid var(--color-border);
+}
+
+nav {
+  text-align: center;
+
+  a {
+    display: inline-block;
+    text-wrap: nowrap;
+    padding: 0 1rem;
+    border-left: 1px solid var(--color-border);
+
+    &.active {
+      color: var(--color-text);
+    }
+
+    &.active:hover {
+      background-color: transparent;
+    }
+
+    &:hover {
+      color: var(--color-heading);
+      background-color: var(--color-background-hover);
+    }
+
+    &:first-of-type {
+      border: 0;
+    }
+  }
+}

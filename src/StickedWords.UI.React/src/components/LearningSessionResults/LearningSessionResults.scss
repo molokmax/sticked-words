@@ -1,0 +1,23 @@
+.learning-session-results {
+
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  flex: 1;
+
+  &__title {
+    font-weight: 600;
+  }
+
+  &__description {
+    margin-top: 10px;
+    margin-bottom: 30px;
+  }
+
+  &__buttons {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+  }
+}

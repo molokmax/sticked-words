@@ -1,0 +1,12 @@
+.learning-session {
+  
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  flex: 1;
+
+  border: 1px solid var(--color-border);
+  margin-top: 2px;
+  padding: 30px;
+  align-items: center;
+}
