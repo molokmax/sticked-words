@@ -1,0 +1,22 @@
+.flash-card-list {
+  
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  flex: 1;
+
+  &__flash-card {
+    margin-top: 2px;
+  }
+
+  &__header {
+    height: 3rem;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid var(--color-border);
+    padding: 0 1rem;
+  }
+}

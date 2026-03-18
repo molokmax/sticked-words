@@ -1,0 +1,28 @@
+.flash-card-list-item {
+
+  height: 3rem;
+  padding: 0px 30px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--color-border);
+
+  &__space {
+    flex: 1;
+  }
+
+  &__title {
+    text-wrap: nowrap;
+    font-size: 1.2rem;
+  }
+
+  &__rate {
+    display: flex;
+
+    img {
+      height: 1.5rem;
+      width: 1.5rem;
+    }
+  }
+}

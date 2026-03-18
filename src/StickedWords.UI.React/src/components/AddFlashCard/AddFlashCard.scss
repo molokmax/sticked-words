@@ -1,0 +1,32 @@
+.add-flash-card {
+
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  flex: 1;
+
+  &__form {
+    margin: 10px 20px;
+  }
+
+  &__form-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-bottom: 20px;
+  }
+
+  &__form-field {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__form-buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    gap: 3px;
+  }
+}
