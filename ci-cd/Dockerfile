@@ -36,7 +36,9 @@ RUN npm run build
 FROM backend-base AS final
 WORKDIR /app
 COPY --from=backend-build /app/publish .
-COPY --from=frontend-build /src/StickedWords.API/wwwroot ./wwwroot/
+# COPY --from=frontend-build /src/StickedWords.API/wwwroot ./wwwroot/
+# file .env ignored for docker so build forder is default
+COPY --from=frontend-build /src/StickedWords.UI.React/build ./wwwroot/
 ENV ASPNETCORE_HTTP_PORTS=80;8080;8082
 
 ENTRYPOINT ["dotnet", "StickedWords.API.dll"]
