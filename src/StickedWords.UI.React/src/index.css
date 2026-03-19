@@ -95,15 +95,6 @@ a,
   padding: 3px;
 }
 
-button {
-  height: 28px;
-  min-width: 70px;
-  padding: 5px 20px;
-  cursor: pointer;
-  border: none;
-  background: inherit;
-}
-
 input {
   border: 1px solid var(--color-heading);
   height: 28px;
@@ -112,6 +103,15 @@ input {
 input:focus-visible {
   outline: none;
   border: 1px solid var(--color-text);
+}
+
+button {
+  height: 28px;
+  min-width: 70px;
+  padding: 5px 20px;
+  cursor: pointer;
+  border: none;
+  background: inherit;
 }
 
 button.primary {
@@ -130,7 +130,8 @@ button.secondary:hover {
   background: var(--color-background-hover);
 }
 
-button.disabled {
+button.disabled,
+button[disabled] {
   color: var(--vt-c-text-light-3);
   pointer-events: none;
 }

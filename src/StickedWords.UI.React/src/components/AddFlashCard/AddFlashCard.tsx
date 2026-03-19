@@ -16,7 +16,7 @@ function AddFlashCard() {
 
     const navigate = useNavigate();
     const service = new FlashCardService();
-    const isFormValid = word && translation;
+    const isFormValid = !!word && !!translation;
 
         
     function resetForm() {
@@ -68,7 +68,8 @@ function AddFlashCard() {
                     <button className="add-flash-card__back-button secondary"
                         onClick={ ev => goToCardList() }
                     >Back</button>
-                    <button className={ `add-flash-card__add-button primary ${isFormValid ? '' : 'disabled'}` }
+                    <button className="add-flash-card__add-button primary"
+                        disabled={ !isFormValid }
                         onClick={ ev => onAddClicked() }
                     >Add</button>
                 </div>
