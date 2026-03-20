@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router';
 import { ErrorHandler } from '../../services/ErrorHandler';
 import { LearningSessionState } from '../../models/LearningSession';
 import { LearningSessionService } from '../../services/LearningSessionService';
+import { useEnterKey } from '../../services/hooks';
 
 import './LearningSessionResults.scss'
 
@@ -42,9 +43,10 @@ function LearningSessionResults({ sessionId }: Props) {
         navigate("/");
     }
 
+    useEnterKey(onCompleteClicked);
+
     useEffect(() => {
         loadData(sessionId);
-        console.log('use effect');
     }, [sessionId]);
 
     if (sessionState === LearningSessionState.Expired) {
