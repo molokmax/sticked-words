@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 export const useEnterKey = (callback: () => void) => {
     useEffect(() => {
@@ -13,3 +13,14 @@ export const useEnterKey = (callback: () => void) => {
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, [callback]);
 }
+
+
+export const useFocus = () => {
+    const ref = useRef<HTMLInputElement>(null);
+
+    useEffect(() => {
+        ref.current?.focus();
+    }, []);
+
+    return ref;
+};

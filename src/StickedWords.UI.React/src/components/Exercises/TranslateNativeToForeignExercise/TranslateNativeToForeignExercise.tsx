@@ -3,7 +3,7 @@ import { ErrorHandler } from '../../../services/ErrorHandler';
 import { GuessResult, TranslateGuessResult } from '../../../models/exercises/TranslateGuessResult';
 import { TranslateNativeToForeignExerciseService } from '../../../services/exercises/TranslateNativeToForeignExerciseService';
 import { TranslateGuess } from '../../../models/exercises/TranslateGuess';
-import { useEnterKey } from '../../../services/hooks';
+import { useEnterKey, useFocus } from '../../../services/hooks';
 
 import './TranslateNativeToForeignExercise.scss';
 
@@ -75,6 +75,7 @@ function TranslateNativeToForeignExercise({ flashCardId, onNext }: Props) {
             .finally(() => setLoading(false));
     }
 
+    const autoFocusRef = useFocus();
     useEnterKey(isGuessChecked ? onNext : onCheckClicked);
 
     useEffect(() => loadData(flashCardId), [flashCardId]);
@@ -126,6 +127,7 @@ function TranslateNativeToForeignExercise({ flashCardId, onNext }: Props) {
             </div>
             <input
                 className="translate-native-to-foreign-exercise__answer"
+                ref={ autoFocusRef }
                 disabled={ isGuessChecked }
                 value={ answer }
                 onChange={ ev => setAnswer(ev.target.value) }
