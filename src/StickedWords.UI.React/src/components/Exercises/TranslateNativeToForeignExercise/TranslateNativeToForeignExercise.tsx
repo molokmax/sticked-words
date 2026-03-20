@@ -102,18 +102,19 @@ function TranslateNativeToForeignExercise({ flashCardId, onNext }: Props) {
         ? (
             <button
                 className="translate-native-to-foreign-exercise__check-button primary"
+                disabled={ loading }
                 onClick={ onNext }
             >
-                Next
+                { loading ? 'Loading...' : 'Next' }
             </button>
         )
         : (
             <button
                 className="translate-native-to-foreign-exercise__check-button primary"
-                disabled={ !isFormValid() }
+                disabled={ loading || !isFormValid() }
                 onClick={ onCheckClicked }
             >
-                Check
+                { loading ? 'Loading...' : 'Check' }
             </button>
         );
 
