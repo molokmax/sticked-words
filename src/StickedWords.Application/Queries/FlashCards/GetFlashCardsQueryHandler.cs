@@ -23,7 +23,11 @@ internal sealed class GetFlashCardsQueryHandler : IRequestHandler<GetFlashCardsQ
         GetFlashCardsQuery request,
         CancellationToken cancellationToken)
     {
-        var specification = new FlashCardsToRepeatSpecification(_timeProvider.GetUtcNow());
+        var specification = new FlashCardsToRepeatSpecification(
+            _timeProvider.GetUtcNow(),
+            request.PageQuery.Skip,
+            request.PageQuery.Take);
+
         return await _repository.GetBySpecification(
             specification,
             request.PageQuery.IncludeTotal,

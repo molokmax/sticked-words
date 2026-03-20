@@ -1,4 +1,4 @@
-import { UIEvent } from 'react';
+import { UIEvent, useRef } from 'react';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router';
 import FlashCardListItem from '../FlashCardListItem';
@@ -13,6 +13,7 @@ import './FlashCardList.scss'
 function FlashCardList() {
 
     const [loading, setLoading] = useState(false);
+    const scrollRef = useRef<HTMLDivElement>(null);
     const [total, setTotal] = useState(0);
     const [data, setData] = useState<FlashCardShort[]>([]);
     const [error, setError] = useState<string | null>(null);
@@ -20,31 +21,36 @@ function FlashCardList() {
     const service = new FlashCardService();
 
     const loadData = async (reload = false) => {
+        const scrollTop = scrollRef.current?.scrollTop ?? 0;
         try {
             setLoading(true);
             const skip = reload ? 0 : data.length;
             const query = new PageQuery(reload, skip);
             const page = await service.getByQuery(query);
-            const newData = reload ? page.data : [...data, ...page.data];
-            setData(newData);
+            reload ? setData(page.data) : setData(oldData => [...oldData, ...page.data]);
             if (page.total != null) { // null or undefined
                 setTotal(page.total);
             }
         } catch (err) {
-            setData([]);
-            setTotal(0);
+            if (reload) {
+                setData([]);
+                setTotal(0);
+            }
             setError(ErrorHandler.getMessage(err));
         } finally {
             setLoading(false);
+            if (scrollRef.current) {
+                scrollRef.current.scrollTop = scrollTop;
+            }
         }
     }
 
-    async function onScrolled(ev: UIEvent<HTMLDivElement>) {
+    function onScrolled(ev: UIEvent<HTMLDivElement>) {
         const container = ev.currentTarget;
         const threshold = 100;
         const toBottom = container.scrollHeight - (container.scrollTop + container.clientHeight);
         if (toBottom < threshold && !loading && data.length < total) {
-            await loadData();
+            loadData();
         }
     };
 
@@ -60,17 +66,20 @@ function FlashCardList() {
                 <div className="flash-card-list__words-count">Words: { total }</div>
             </div>
             {
-                loading
-                    ? <Loading />
-                    : (
-                        <div className="scroll-container" onScrollEnd={onScrolled}>
-                            {data.map(card => (
-                                <div className="flash-card-list__flash-card" key={card.id}>
-                                    <FlashCardListItem flashCard={card}></FlashCardListItem>
-                                </div>
-                            ))}
+                <div
+                    className="scroll-container"
+                    ref={ scrollRef }
+                    onScrollEnd={onScrolled}
+                >
+                    {data.map(card => (
+                        <div className="flash-card-list__flash-card" key={card.id}>
+                            <FlashCardListItem flashCard={card}></FlashCardListItem>
                         </div>
-                    )
+                    ))}
+                    {
+                        loading ? <Loading /> : null 
+                    }
+                </div>
             }
             
         </div>
