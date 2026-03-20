@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router';
 import { ErrorHandler } from '../../services/ErrorHandler';
 import { FlashCardService } from '../../services/FlashCardService';
 import { CreateFlashCardRequest } from '../../models/CreateFlashCardRequest';
-import { useEnterKey } from '../../services/hooks';
+import { useEnterKey, useFocus } from '../../services/hooks';
 
 import './AddFlashCard.scss'
 
@@ -22,6 +22,7 @@ function AddFlashCard() {
     function resetForm() {
         setWord("");
         setTranslation("");
+        autoFocusRef.current?.focus();
     }
 
     function goToCardList() {
@@ -47,6 +48,8 @@ function AddFlashCard() {
 
     useEnterKey(onAddClicked);
 
+    const autoFocusRef = useFocus();
+
     return (
         <main className="add-flash-card">
             <div className="add-flash-card__form">
@@ -54,6 +57,7 @@ function AddFlashCard() {
                     <div className="add-flash-card__form-field">
                         <span className="add-flash-card__form-field-label">Word: </span>
                         <input className="add-flash-card__form-field-value"
+                            ref={ autoFocusRef }
                             value={word}
                             onChange={ ev => setWord(ev.target.value) }
                         />
