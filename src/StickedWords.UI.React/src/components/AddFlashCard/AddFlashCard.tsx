@@ -1,9 +1,9 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router';
 import { ErrorHandler } from '../../services/ErrorHandler';
 import { FlashCardService } from '../../services/FlashCardService';
-import { useNavigate } from 'react-router';
-
 import { CreateFlashCardRequest } from '../../models/CreateFlashCardRequest';
+import { useEnterKey } from '../../services/hooks';
 
 import './AddFlashCard.scss'
 
@@ -44,6 +44,8 @@ function AddFlashCard() {
             .catch(err => setError(ErrorHandler.getMessage(err)))
             .finally(() => setLoading(false));
     }
+
+    useEnterKey(onAddClicked);
 
     return (
         <main className="add-flash-card">

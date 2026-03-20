@@ -3,6 +3,7 @@ import { ErrorHandler } from '../../../services/ErrorHandler';
 import { GuessResult, TranslateGuessResult } from '../../../models/exercises/TranslateGuessResult';
 import { TranslateNativeToForeignExerciseService } from '../../../services/exercises/TranslateNativeToForeignExerciseService';
 import { TranslateGuess } from '../../../models/exercises/TranslateGuess';
+import { useEnterKey } from '../../../services/hooks';
 
 import './TranslateNativeToForeignExercise.scss';
 
@@ -73,6 +74,8 @@ function TranslateNativeToForeignExercise({ flashCardId, onNext }: Props) {
             })
             .finally(() => setLoading(false));
     }
+
+    useEnterKey(isGuessChecked ? onNext : onCheckClicked);
 
     useEffect(() => loadData(flashCardId), [flashCardId]);
 
