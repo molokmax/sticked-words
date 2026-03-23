@@ -4,6 +4,7 @@ import { ErrorHandler } from '../../services/ErrorHandler';
 import { FlashCardService } from '../../services/FlashCardService';
 import { CreateFlashCardRequest } from '../../models/CreateFlashCardRequest';
 import { useEnterKey, useFocus } from '../../services/hooks';
+import { useErrorListContext } from '../ErrorList';
 
 import './AddFlashCard.scss'
 
@@ -12,7 +13,7 @@ function AddFlashCard() {
     const [loading, setLoading] = useState(false);
     const [word, setWord] = useState("");
     const [translation, setTranslation] = useState("");
-    const [error, setError] = useState<string | null>(null);
+    const { addError } = useErrorListContext();
 
     const navigate = useNavigate();
     const service = new FlashCardService();
@@ -42,7 +43,7 @@ function AddFlashCard() {
         setLoading(true);
         service.add(request)
             .then(() => resetForm())
-            .catch(err => setError(ErrorHandler.getMessage(err)))
+            .catch(err => addError(ErrorHandler.getMessage(err)))
             .finally(() => setLoading(false));
     }
 
@@ -72,11 +73,11 @@ function AddFlashCard() {
                 </div>
                 <div className="add-flash-card__form-buttons">
                     <button className="add-flash-card__back-button secondary"
-                        onClick={ ev => goToCardList() }
+                        onClick={ goToCardList }
                     >Back</button>
                     <button className="add-flash-card__add-button primary"
-                        disabled={ !isFormValid }
-                        onClick={ ev => onAddClicked() }
+                        disabled={ loading || !isFormValid }
+                        onClick={ onAddClicked }
                     >Add</button>
                 </div>
             </div>

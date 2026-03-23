@@ -4,6 +4,7 @@ import { ErrorHandler } from '../../services/ErrorHandler';
 import { LearningSessionState } from '../../models/LearningSession';
 import { LearningSessionService } from '../../services/LearningSessionService';
 import { useEnterKey } from '../../services/hooks';
+import { useErrorListContext } from '../ErrorList';
 
 import './LearningSessionResults.scss'
 
@@ -17,7 +18,7 @@ function LearningSessionResults({ sessionId }: Props) {
     const [loading, setLoading] = useState(false);
     const [sessionState, setSessionState] = useState(LearningSessionState.None);
     const [cardCount, setCardCount] = useState(0);
-    const [error, setError] = useState<string | null>(null);
+    const { addError } = useErrorListContext();
 
     const navigate = useNavigate();
     const service = new LearningSessionService();
@@ -33,7 +34,7 @@ function LearningSessionResults({ sessionId }: Props) {
             .catch(err => {
                 setSessionState(LearningSessionState.None);
                 setCardCount(0);
-                setError(ErrorHandler.getMessage(err));
+                addError(ErrorHandler.getMessage(err));
             })
             .finally(() => setLoading(false));
     }

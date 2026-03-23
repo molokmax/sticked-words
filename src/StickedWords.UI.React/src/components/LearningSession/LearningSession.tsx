@@ -6,16 +6,17 @@ import LearningSessionProgress from '../LearningSessionProgress';
 import { LearningSessionService } from '../../services/LearningSessionService';
 import TranslateForeignToNativeExercise from '../Exercises/TranslateForeignToNativeExercise';
 import TranslateNativeToForeignExercise from '../Exercises/TranslateNativeToForeignExercise';
+import Loading from '../Loading';
+import { useErrorListContext } from '../ErrorList';
 
 import './LearningSession.scss'
-import Loading from '../Loading';
 
 
 function LearningSession() {
 
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
     const [session, setSession] = useState<LearningSessionModel | null>(null);
+    const { addError } = useErrorListContext();
     
     const service = new LearningSessionService();
     
@@ -43,7 +44,7 @@ function LearningSession() {
             })
             .catch(err => {
                 setSession(null);
-                setError(ErrorHandler.getMessage(err));
+                addError(ErrorHandler.getMessage(err));
             })
             .finally(() => setLoading(false));
     }
