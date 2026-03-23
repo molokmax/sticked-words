@@ -4,6 +4,7 @@ import { GuessResult, TranslateGuessResult } from '../../../models/exercises/Tra
 import { TranslateNativeToForeignExerciseService } from '../../../services/exercises/TranslateNativeToForeignExerciseService';
 import { TranslateGuess } from '../../../models/exercises/TranslateGuess';
 import { useEnterKey, useFocus } from '../../../services/hooks';
+import { useErrorListContext } from '../../ErrorList';
 
 import './TranslateNativeToForeignExercise.scss';
 
@@ -21,7 +22,7 @@ function TranslateNativeToForeignExercise({ flashCardId, onNext }: Props) {
     const [correctAnswer, setCorrectAnswer] = useState<string | null>(null);
     const [isGuessChecked, setIsGuessChecked] = useState(false);
     const [isGuessCorrect, setIsGuessCorrect] = useState(false);
-    const [error, setError] = useState<string | null>(null);
+    const { addError } = useErrorListContext();
 
     const service = new TranslateNativeToForeignExerciseService();
 
@@ -47,7 +48,7 @@ function TranslateNativeToForeignExercise({ flashCardId, onNext }: Props) {
             .then(exercise => setWord(exercise.word))
             .catch(err => {
                 setWord("");
-                setError(ErrorHandler.getMessage(err))
+                addError(ErrorHandler.getMessage(err))
             })
             .finally(() => setLoading(false));
     }
@@ -70,7 +71,7 @@ function TranslateNativeToForeignExercise({ flashCardId, onNext }: Props) {
                 setCheckResult(response);
             })
             .catch(err => {
-                setError(ErrorHandler.getMessage(err))
+                addError(ErrorHandler.getMessage(err))
             })
             .finally(() => setLoading(false));
     }

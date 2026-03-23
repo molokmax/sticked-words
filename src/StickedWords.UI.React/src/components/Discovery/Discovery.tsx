@@ -7,6 +7,7 @@ import Loading from '../Loading';
 
 import { ExerciseType, LearningSession, LearningSessionState } from '../../models/LearningSession';
 import { FlashCardShort } from '../../models/FlashCardShort';
+import ErrorList from '../ErrorList/ErrorList';
 
 function Discovery() {
     const session: LearningSession = {
@@ -51,6 +52,12 @@ function Discovery() {
             <div>
                 <Loading></Loading>
             </div>
+
+            <h2>Errors</h2>
+            <ErrorList
+                errors={[{id: 1, message: 'Error message 1', timestamp: new Date()}, {id: 2, message: 'Error message 2', timestamp: new Date()}]}
+                onRemove={ () => {} }
+            ></ErrorList>
         </>
     );
 }

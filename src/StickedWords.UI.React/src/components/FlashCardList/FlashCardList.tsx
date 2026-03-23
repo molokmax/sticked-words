@@ -7,6 +7,7 @@ import { PageQuery } from '../../models/PageQuery';
 import { ErrorHandler } from '../../services/ErrorHandler';
 import { FlashCardService } from '../../services/FlashCardService';
 import { FlashCardShort } from '../../models/FlashCardShort';
+import { useErrorListContext } from '../ErrorList';
 
 import './FlashCardList.scss'
 
@@ -16,7 +17,7 @@ function FlashCardList() {
     const scrollRef = useRef<HTMLDivElement>(null);
     const [total, setTotal] = useState(0);
     const [data, setData] = useState<FlashCardShort[]>([]);
-    const [error, setError] = useState<string | null>(null);
+    const { addError } = useErrorListContext();
 
     const service = new FlashCardService();
 
@@ -36,7 +37,7 @@ function FlashCardList() {
                 setData([]);
                 setTotal(0);
             }
-            setError(ErrorHandler.getMessage(err));
+            addError(ErrorHandler.getMessage(err));
         } finally {
             setLoading(false);
             if (scrollRef.current) {
