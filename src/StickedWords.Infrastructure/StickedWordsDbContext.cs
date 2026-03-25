@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using StickedWords.Domain.Models;
 using TickerQ.EntityFrameworkCore.Configurations;
+using TickerQ.Utilities.Entities;
 
 namespace StickedWords.Infrastructure;
 
@@ -25,8 +26,8 @@ public sealed class StickedWordsDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.ApplyConfiguration(new TimeTickerConfigurations());
-        modelBuilder.ApplyConfiguration(new CronTickerConfigurations());
-        modelBuilder.ApplyConfiguration(new CronTickerOccurrenceConfigurations());
+        modelBuilder.ApplyConfiguration(new TimeTickerConfigurations<TimeTickerEntity>());
+        modelBuilder.ApplyConfiguration(new CronTickerConfigurations<CronTickerEntity>());
+        modelBuilder.ApplyConfiguration(new CronTickerOccurrenceConfigurations<CronTickerEntity>());
     }
 }

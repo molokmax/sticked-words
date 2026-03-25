@@ -24,6 +24,7 @@ namespace StickedWords.DbMigrations.Migrations.Sqlite
                     Request = table.Column<byte[]>(type: "BLOB", nullable: true),
                     Retries = table.Column<int>(type: "INTEGER", nullable: false),
                     RetryIntervals = table.Column<string>(type: "TEXT", nullable: true),
+                    IsEnabled = table.Column<bool>(type: "INTEGER", nullable: false),
                     Function = table.Column<string>(type: "TEXT", nullable: true),
                     Description = table.Column<string>(type: "TEXT", nullable: true),
                     InitIdentifier = table.Column<string>(type: "TEXT", nullable: true),
@@ -41,35 +42,35 @@ namespace StickedWords.DbMigrations.Migrations.Sqlite
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Status = table.Column<int>(type: "INTEGER", nullable: false),
-                    LockHolder = table.Column<string>(type: "TEXT", nullable: true),
-                    Request = table.Column<byte[]>(type: "BLOB", nullable: true),
-                    ExecutionTime = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    LockedAt = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    ExecutedAt = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    Exception = table.Column<string>(type: "TEXT", nullable: true),
-                    ElapsedTime = table.Column<long>(type: "INTEGER", nullable: false),
-                    Retries = table.Column<int>(type: "INTEGER", nullable: false),
-                    RetryCount = table.Column<int>(type: "INTEGER", nullable: false),
-                    RetryIntervals = table.Column<string>(type: "TEXT", nullable: true),
-                    BatchParent = table.Column<Guid>(type: "TEXT", nullable: true),
-                    BatchRunCondition = table.Column<int>(type: "INTEGER", nullable: true),
                     Function = table.Column<string>(type: "TEXT", nullable: true),
                     Description = table.Column<string>(type: "TEXT", nullable: true),
                     InitIdentifier = table.Column<string>(type: "TEXT", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
+                    UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    Status = table.Column<int>(type: "INTEGER", nullable: false),
+                    LockHolder = table.Column<string>(type: "TEXT", nullable: true),
+                    Request = table.Column<byte[]>(type: "BLOB", nullable: true),
+                    ExecutionTime = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    LockedAt = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    ExecutedAt = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    ExceptionMessage = table.Column<string>(type: "TEXT", nullable: true),
+                    SkippedReason = table.Column<string>(type: "TEXT", nullable: true),
+                    ElapsedTime = table.Column<long>(type: "INTEGER", nullable: false),
+                    Retries = table.Column<int>(type: "INTEGER", nullable: false),
+                    RetryCount = table.Column<int>(type: "INTEGER", nullable: false),
+                    RetryIntervals = table.Column<string>(type: "TEXT", nullable: true),
+                    ParentId = table.Column<Guid>(type: "TEXT", nullable: true),
+                    RunCondition = table.Column<int>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_TimeTickers", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_TimeTickers_TimeTickers_BatchParent",
-                        column: x => x.BatchParent,
+                        name: "FK_TimeTickers_TimeTickers_ParentId",
+                        column: x => x.ParentId,
                         principalSchema: "ticker",
                         principalTable: "TimeTickers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -84,9 +85,12 @@ namespace StickedWords.DbMigrations.Migrations.Sqlite
                     CronTickerId = table.Column<Guid>(type: "TEXT", nullable: false),
                     LockedAt = table.Column<DateTime>(type: "TEXT", nullable: true),
                     ExecutedAt = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    Exception = table.Column<string>(type: "TEXT", nullable: true),
+                    ExceptionMessage = table.Column<string>(type: "TEXT", nullable: true),
+                    SkippedReason = table.Column<string>(type: "TEXT", nullable: true),
                     ElapsedTime = table.Column<long>(type: "INTEGER", nullable: false),
-                    RetryCount = table.Column<int>(type: "INTEGER", nullable: false)
+                    RetryCount = table.Column<int>(type: "INTEGER", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -132,6 +136,12 @@ namespace StickedWords.DbMigrations.Migrations.Sqlite
                 column: "Expression");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Function_Expression",
+                schema: "ticker",
+                table: "CronTickers",
+                columns: new[] { "Function", "Expression" });
+
+            migrationBuilder.CreateIndex(
                 name: "IX_TimeTicker_ExecutionTime",
                 schema: "ticker",
                 table: "TimeTickers",
@@ -144,10 +154,10 @@ namespace StickedWords.DbMigrations.Migrations.Sqlite
                 columns: new[] { "Status", "ExecutionTime" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_TimeTickers_BatchParent",
+                name: "IX_TimeTickers_ParentId",
                 schema: "ticker",
                 table: "TimeTickers",
-                column: "BatchParent");
+                column: "ParentId");
         }
 
         /// <inheritdoc />

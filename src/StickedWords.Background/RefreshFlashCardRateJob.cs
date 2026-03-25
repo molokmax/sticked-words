@@ -13,7 +13,7 @@ public sealed class RefreshFlashCardRateJob
         _mediator = mediator;
     }
 
-    [TickerFunction(nameof(RefreshFlashCardRateJob), cronExpression: "10 * * * *")]
+    [TickerFunction(nameof(RefreshFlashCardRateJob), cronExpression: "10 * * * * *")]
     public async Task Run(CancellationToken cancellationToken)
     {
         await _mediator.Send(new RefreshFlashCardsRateCommand(), cancellationToken);
