@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/aspnet:9.0-alpine AS backend-base
+FROM mcr.microsoft.com/dotnet/aspnet:10.0-alpine AS backend-base
 USER $APP_UID
 WORKDIR /app
 EXPOSE 80
@@ -6,7 +6,7 @@ EXPOSE 8080
 EXPOSE 8082
 
 
-FROM mcr.microsoft.com/dotnet/sdk:9.0-alpine AS backend-build
+FROM mcr.microsoft.com/dotnet/sdk:10.0-alpine AS backend-build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["src/StickedWords.Shared/StickedWords.Shared.csproj", "./src/StickedWords.Shared/"]
@@ -25,7 +25,7 @@ COPY . .
 RUN dotnet build "./src/StickedWords.API/StickedWords.API.csproj" -c $BUILD_CONFIGURATION -o /app/build
 RUN dotnet publish "./src/StickedWords.API/StickedWords.API.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
-FROM node:24-slim AS frontend-build
+FROM node:25-slim AS frontend-build
 WORKDIR /src/StickedWords.UI.React
 COPY ["src/StickedWords.UI.React/package.json", "./"]
 COPY ["src/StickedWords.UI.React/package-lock.json", "./"]
