@@ -3,6 +3,7 @@ using Microsoft.Extensions.Hosting;
 using StickedWords.Infrastructure;
 using TickerQ.Dashboard.DependencyInjection;
 using TickerQ.DependencyInjection;
+using TickerQ.EntityFrameworkCore.Customizer;
 using TickerQ.EntityFrameworkCore.DependencyInjection;
 
 namespace StickedWords.Background;
@@ -13,21 +14,20 @@ public static class ServiceCollectionExtensions
     {
         builder.Services.AddTickerQ(options =>
         {
-            options.SetMaxConcurrency(10);
-            options.AddOperationalStore<StickedWordsDbContext>(opts =>
+            options.AddOperationalStore(efOptions =>
             {
-                opts.UseModelCustomizerForMigrations();
+                efOptions.UseApplicationDbContext<StickedWordsDbContext>(ConfigurationType.IgnoreModelCustomizer);
             });
             options.AddDashboard(opts =>
             {
-                opts.BasePath = "/tickerq";
+                opts.SetBasePath("/tickerq");
             });
         });
 
         return builder;
     }
 
-    public static IApplicationBuilder UseBackground(this IApplicationBuilder app)
+    public static IHost UseBackground(this IHost app)
     {
         app.UseTickerQ();
 

@@ -24,6 +24,7 @@ namespace StickedWords.DbMigrations.Postgres.Migrations
                     Request = table.Column<byte[]>(type: "bytea", nullable: true),
                     Retries = table.Column<int>(type: "integer", nullable: false),
                     RetryIntervals = table.Column<int[]>(type: "integer[]", nullable: true),
+                    IsEnabled = table.Column<bool>(type: "boolean", nullable: false),
                     Function = table.Column<string>(type: "text", nullable: true),
                     Description = table.Column<string>(type: "text", nullable: true),
                     InitIdentifier = table.Column<string>(type: "text", nullable: true),
@@ -41,35 +42,35 @@ namespace StickedWords.DbMigrations.Postgres.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Status = table.Column<int>(type: "integer", nullable: false),
-                    LockHolder = table.Column<string>(type: "text", nullable: true),
-                    Request = table.Column<byte[]>(type: "bytea", nullable: true),
-                    ExecutionTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    LockedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    ExecutedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    Exception = table.Column<string>(type: "text", nullable: true),
-                    ElapsedTime = table.Column<long>(type: "bigint", nullable: false),
-                    Retries = table.Column<int>(type: "integer", nullable: false),
-                    RetryCount = table.Column<int>(type: "integer", nullable: false),
-                    RetryIntervals = table.Column<int[]>(type: "integer[]", nullable: true),
-                    BatchParent = table.Column<Guid>(type: "uuid", nullable: true),
-                    BatchRunCondition = table.Column<int>(type: "integer", nullable: true),
                     Function = table.Column<string>(type: "text", nullable: true),
                     Description = table.Column<string>(type: "text", nullable: true),
                     InitIdentifier = table.Column<string>(type: "text", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    Status = table.Column<int>(type: "integer", nullable: false),
+                    LockHolder = table.Column<string>(type: "text", nullable: true),
+                    Request = table.Column<byte[]>(type: "bytea", nullable: true),
+                    ExecutionTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    LockedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    ExecutedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    ExceptionMessage = table.Column<string>(type: "text", nullable: true),
+                    SkippedReason = table.Column<string>(type: "text", nullable: true),
+                    ElapsedTime = table.Column<long>(type: "bigint", nullable: false),
+                    Retries = table.Column<int>(type: "integer", nullable: false),
+                    RetryCount = table.Column<int>(type: "integer", nullable: false),
+                    RetryIntervals = table.Column<int[]>(type: "integer[]", nullable: true),
+                    ParentId = table.Column<Guid>(type: "uuid", nullable: true),
+                    RunCondition = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_TimeTickers", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_TimeTickers_TimeTickers_BatchParent",
-                        column: x => x.BatchParent,
+                        name: "FK_TimeTickers_TimeTickers_ParentId",
+                        column: x => x.ParentId,
                         principalSchema: "ticker",
                         principalTable: "TimeTickers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -84,9 +85,12 @@ namespace StickedWords.DbMigrations.Postgres.Migrations
                     CronTickerId = table.Column<Guid>(type: "uuid", nullable: false),
                     LockedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     ExecutedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    Exception = table.Column<string>(type: "text", nullable: true),
+                    ExceptionMessage = table.Column<string>(type: "text", nullable: true),
+                    SkippedReason = table.Column<string>(type: "text", nullable: true),
                     ElapsedTime = table.Column<long>(type: "bigint", nullable: false),
-                    RetryCount = table.Column<int>(type: "integer", nullable: false)
+                    RetryCount = table.Column<int>(type: "integer", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -132,6 +136,12 @@ namespace StickedWords.DbMigrations.Postgres.Migrations
                 column: "Expression");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Function_Expression",
+                schema: "ticker",
+                table: "CronTickers",
+                columns: new[] { "Function", "Expression" });
+
+            migrationBuilder.CreateIndex(
                 name: "IX_TimeTicker_ExecutionTime",
                 schema: "ticker",
                 table: "TimeTickers",
@@ -144,10 +154,10 @@ namespace StickedWords.DbMigrations.Postgres.Migrations
                 columns: new[] { "Status", "ExecutionTime" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_TimeTickers_BatchParent",
+                name: "IX_TimeTickers_ParentId",
                 schema: "ticker",
                 table: "TimeTickers",
-                column: "BatchParent");
+                column: "ParentId");
         }
 
         /// <inheritdoc />
