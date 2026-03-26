@@ -20,6 +20,7 @@ COPY ["src/StickedWords.Application/StickedWords.Application.csproj", "./src/Sti
 COPY ["src/StickedWords.API/StickedWords.API.csproj", "./src/StickedWords.API/"]
 COPY ["StickedWords.sln", "./"]
 COPY ["Directory.Build.props", "./"]
+COPY ["Directory.Packages.props", "./"]
 RUN dotnet restore "./src/StickedWords.API/StickedWords.API.csproj"
 COPY . .
 RUN dotnet build "./src/StickedWords.API/StickedWords.API.csproj" -c $BUILD_CONFIGURATION -o /app/build

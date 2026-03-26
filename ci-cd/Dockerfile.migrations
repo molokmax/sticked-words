@@ -17,6 +17,7 @@ COPY ["src/StickedWords.Application/StickedWords.Application.csproj", "./src/Sti
 COPY ["src/StickedWords.API/StickedWords.API.csproj", "./src/StickedWords.API/"]
 COPY ["StickedWords.sln", "./"]
 COPY ["Directory.Build.props", "./"]
+COPY ["Directory.Packages.props", "./"]
 RUN dotnet restore "./src/StickedWords.DbMigrations.Postgres/StickedWords.DbMigrations.Postgres.csproj"
 COPY . .
 RUN cd ./src/StickedWords.DbMigrations.Postgres/ && dotnet ef migrations bundle --self-contained --output /app/efbundle
