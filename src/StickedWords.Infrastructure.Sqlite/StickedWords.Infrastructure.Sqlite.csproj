@@ -1,5 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<ItemGroup>
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" />
+		<PackageReference Include="CommunityToolkit.Aspire.Microsoft.EntityFrameworkCore.Sqlite"/>
 	</ItemGroup>
 </Project>

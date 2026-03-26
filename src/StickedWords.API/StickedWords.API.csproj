@@ -17,6 +17,7 @@
     <ProjectReference Include="..\StickedWords.Infrastructure.Postgres\StickedWords.Infrastructure.Postgres.csproj" />
     <ProjectReference Include="..\StickedWords.Infrastructure.Sqlite\StickedWords.Infrastructure.Sqlite.csproj" />
     <ProjectReference Include="..\StickedWords.Infrastructure\StickedWords.Infrastructure.csproj" />
+    <ProjectReference Include="..\StickedWords.ServiceDefaults\StickedWords.ServiceDefaults.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="logs\**" />

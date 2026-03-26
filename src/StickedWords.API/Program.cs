@@ -5,7 +5,7 @@ using StickedWords.Background;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddLogger();
-builder.Services.AddHealthChecks();
+builder.AddServiceDefaults();
 builder.Services.UseHttpClientMetrics();
 builder.Services.ConfigureHttp();
 
@@ -19,8 +19,8 @@ if (app.Configuration.GetValue("ApplyMigrations", false))
 }
 
 app.UseHttpsRedirection();
+app.MapDefaultEndpoints();
 app.UseHttpMetrics();
-app.MapHealthChecks("/health");
 app.MapMetrics("/metrics");
 app.UseBackground();
 app.RegisterSpa();

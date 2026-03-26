@@ -27,9 +27,10 @@ public class StickedWordsDbContextFactory : IDesignTimeDbContextFactory<StickedW
     }
 
     private static void ConfigureSqlite(
-        DbContextOptionsBuilder<StickedWordsDbContext> optionsBuilder, IConfiguration configuration)
+        DbContextOptionsBuilder<StickedWordsDbContext> optionsBuilder,
+        IConfiguration configuration)
     {
-        var connectionString = SqliteConnectionStringProvider.Get(configuration, nameof(StickedWordsDbContext));
+        var connectionString = SqliteConnectionStringProvider.Get(configuration, Consts.ConnectionName);
         optionsBuilder.UseSqlite(connectionString, opts => opts.MigrationsAssembly(AssemblyReference.Assembly));
     }
 }
