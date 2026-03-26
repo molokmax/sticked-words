@@ -1,25 +1,17 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace StickedWords.Infrastructure.Sqlite;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddSqliteDb<TContext>(
-        this IServiceCollection services, Action<SqliteDbContextOptionsBuilder>? configure)
+    public static IHostApplicationBuilder AddSqliteDb<TContext>(
+        this IHostApplicationBuilder builder, Action<SqliteDbContextOptionsBuilder>? configure)
         where TContext : DbContext
     {
-        services.AddDbContext<TContext>((serviceProvider, options) =>
-        {
-            var configuration = serviceProvider.GetRequiredService<IConfiguration>();
-            var contextName = typeof(TContext).Name;
-            var connectionString = SqliteConnectionStringProvider.Get(configuration, contextName);
+        builder.AddSqliteDbContext<TContext>("sqlite", null, opts => opts.UseSqlite(configure));
 
-            options.UseSqlite(connectionString, configure);
-        });
-
-        return services;
+        return builder;
     }
 }

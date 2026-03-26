@@ -30,7 +30,7 @@ public static class ServiceCollectionExtensions
         switch (dbProvider.ToUpper())
         {
             case Infrastructure.Sqlite.Consts.DbProviderName:
-                builder.Services.AddSqliteDb<StickedWordsDbContext>(opts => opts.MigrationsAssembly(DbMigrations.Sqlite.AssemblyReference.Assembly));
+                builder.AddSqliteDb<StickedWordsDbContext>(opts => opts.MigrationsAssembly(DbMigrations.Sqlite.AssemblyReference.Assembly));
                 break;
             case Infrastructure.Postgres.Consts.DbProviderName:
                 builder.Services.AddPostgresDb<StickedWordsDbContext>(opts => opts.MigrationsAssembly(DbMigrations.Postgres.AssemblyReference.Assembly));

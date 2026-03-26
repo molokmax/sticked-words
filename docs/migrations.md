@@ -12,7 +12,7 @@ dotnet ef migrations add InitialCreate
 ## Применить миграции
 Для локальной Sqlite базы:
 ```
-dotnet ef database update -- --ConnectionStrings:StickedWordsDbContext "Data Source=|DataDirectory|stickedwords.db"
+dotnet ef database update -- --ConnectionStrings:sqlite "Data Source=stickedwords.db"
 ```
 
 Запускать из каталога проекта /src/StickedWords.DbMigrations.Sqlite.
