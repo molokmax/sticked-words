@@ -58,7 +58,7 @@ internal sealed class CheckTranslateToForeignCommandHandler : IRequestHandler<Ch
 
         var result = guessResult is GuessResult.Correct
             ? TranslateGuessResult.Correct()
-            : TranslateGuessResult.Wrong(flashCard.Translation);
+            : TranslateGuessResult.Wrong(flashCard.Word);
 
         return result;
     }
