@@ -122,7 +122,7 @@ function TranslateNativeToForeignExercise({ flashCardId, onNext }: Props) {
     return (
         <main className="translate-native-to-foreign-exercise">
             <div className="translate-native-to-foreign-exercise__exercise-description">
-                Translate to native:
+                Translate to foreign:
             </div>
             <div className="translate-native-to-foreign-exercise__word">
                 { word }
