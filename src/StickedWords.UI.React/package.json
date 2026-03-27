@@ -1,6 +1,6 @@
 {
   "name": "sticked-words",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "private": true,
   "dependencies": {
     "@testing-library/dom": "^10.4.1",
@@ -23,6 +23,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "watch": "chokidar \"src/**/*.{js,jsx,ts,tsx,css,scss}\" -c \"npm run build\"",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -45,6 +46,7 @@
     ]
   },
   "devDependencies": {
-    "baseline-browser-mapping": "^2.10.8"
+    "baseline-browser-mapping": "^2.10.8",
+    "chokidar-cli": "^3.0.0"
   }
 }
