@@ -1,0 +1,24 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Folder Name="/src/">
+    <Project Path="src/StickedWords.API/StickedWords.API.csproj" />
+    <Project Path="src/StickedWords.AppHost/StickedWords.AppHost.csproj" />
+    <Project Path="src/StickedWords.Application/StickedWords.Application.csproj" />
+    <Project Path="src/StickedWords.Background/StickedWords.Background.csproj" />
+    <Project Path="src/StickedWords.DbMigrations.Postgres/StickedWords.DbMigrations.Postgres.csproj" />
+    <Project Path="src/StickedWords.DbMigrations.Sqlite/StickedWords.DbMigrations.Sqlite.csproj" />
+    <Project Path="src/StickedWords.Domain/StickedWords.Domain.csproj" />
+    <Project Path="src/StickedWords.Infrastructure.Postgres/StickedWords.Infrastructure.Postgres.csproj" />
+    <Project Path="src/StickedWords.Infrastructure.Sqlite/StickedWords.Infrastructure.Sqlite.csproj" />
+    <Project Path="src/StickedWords.Infrastructure/StickedWords.Infrastructure.csproj" />
+    <Project Path="src/StickedWords.ServiceDefaults/StickedWords.ServiceDefaults.csproj" />
+    <Project Path="src/StickedWords.Shared/StickedWords.Shared.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/StickedWords.UnitTests/StickedWords.UnitTests.csproj" />
+  </Folder>
+</Solution>

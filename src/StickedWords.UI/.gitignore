@@ -25,6 +25,7 @@ coverage
 *.ntvs*
 *.njsproj
 *.sln
+*.slnx
 *.sw?
 
 *.tsbuildinfo
