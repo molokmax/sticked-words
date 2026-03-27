@@ -7,4 +7,6 @@ public record LearningSessionStageDto
     public int OrdNumber { get; init; }
 
     public int CompletedFlashCardCount { get; init; }
+
+    public bool IsActive { get; init; }
 }

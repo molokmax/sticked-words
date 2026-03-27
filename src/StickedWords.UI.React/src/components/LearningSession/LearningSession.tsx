@@ -16,6 +16,7 @@ function LearningSession() {
 
     const [loading, setLoading] = useState(false);
     const [session, setSession] = useState<LearningSessionModel | null>(null);
+    const [showIntro, setShowIntro] = useState(false);
     const { addError } = useErrorListContext();
     
     const service = new LearningSessionService();
@@ -41,12 +42,39 @@ function LearningSession() {
         loadLearningSession()
             .then(res => {
                 setSession(res);
+                const isFirstCardInStage = res.stages.find(x => x.isActive)?.completedFlashCardCount === 0;
+                setShowIntro(isFirstCardInStage);
+                if (isFirstCardInStage) {
+                    setTimeout(() => setShowIntro(false), 3000);
+                }
             })
             .catch(err => {
                 setSession(null);
                 addError(ErrorHandler.getMessage(err));
             })
             .finally(() => setLoading(false));
+    }
+
+    const getExerciseElement = (session: LearningSessionModel) => {
+        if (session.flashCardId && session.exerciseType === ExerciseType.TranslateForeignToNative) {
+            return (
+                <TranslateForeignToNativeExercise
+                    flashCardId={ session.flashCardId }
+                    onNext={ loadData }
+                ></TranslateForeignToNativeExercise>
+            );
+        }
+
+        if (session.flashCardId && session.exerciseType === ExerciseType.TranslateNativeToForeign) {
+            return (
+                <TranslateNativeToForeignExercise
+                    flashCardId={ session.flashCardId }
+                    onNext={ loadData }
+                ></TranslateNativeToForeignExercise>
+            );
+        }
+        
+        return <div>Unknown Exercise</div>;
     }
 
     useEffect(() => loadData(), []);
@@ -67,29 +95,14 @@ function LearningSession() {
         );
     }
 
-    let exerciseElement = null;
-    if (session.flashCardId && session.exerciseType === ExerciseType.TranslateForeignToNative) {
-        exerciseElement = (
-            <TranslateForeignToNativeExercise
-                flashCardId={ session.flashCardId }
-                onNext={ loadData }
-            ></TranslateForeignToNativeExercise>
-        );
-    } else if (session.flashCardId && session.exerciseType === ExerciseType.TranslateNativeToForeign) {
-        exerciseElement = (
-            <TranslateNativeToForeignExercise
-                flashCardId={ session.flashCardId }
-                onNext={ loadData }
-            ></TranslateNativeToForeignExercise>
-        );
-    } else {
-        exerciseElement = <main className="learning-session">Unknown Exercise</main>;
-    }
-
     return (
         <main className="learning-session">
             <LearningSessionProgress session={ session }></LearningSessionProgress>
-            { exerciseElement }
+            {
+                showIntro
+                    ? <div className="learning-session__get-ready">Get Ready!</div>
+                    : getExerciseElement(session)
+            }
         </main>
     );
 }

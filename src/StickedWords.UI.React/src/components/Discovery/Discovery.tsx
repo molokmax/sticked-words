@@ -16,8 +16,8 @@ function Discovery() {
         exerciseType: ExerciseType.TranslateForeignToNative,
         flashCardCount: 10,
         stages: [
-            {id: 1, ordNumber: 0, completedFlashCardCount: 3},
-            {id: 2, ordNumber: 1, completedFlashCardCount: 0}
+            { id: 1, ordNumber: 0, completedFlashCardCount: 3, isActive: true },
+            { id: 2, ordNumber: 1, completedFlashCardCount: 0, isActive: false }
         ]
     };
 

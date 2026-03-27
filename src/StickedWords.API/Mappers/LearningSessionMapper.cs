@@ -23,7 +23,8 @@ internal static class LearningSessionMapper
                 {
                     Id = x.Id,
                     OrdNumber = x.OrdNumber,
-                    CompletedFlashCardCount = x.Guesses.Count
+                    CompletedFlashCardCount = x.Guesses.Count,
+                    IsActive = x.IsActive
                 })
                 .ToArray()
         };
