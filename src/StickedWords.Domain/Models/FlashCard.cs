@@ -3,7 +3,7 @@ using StickedWords.Domain.Exceptions;
 
 namespace StickedWords.Domain.Models;
 
-public class FlashCard
+public class FlashCard : ISoftDeletable
 {
     private FlashCard() { }
 
@@ -28,6 +28,10 @@ public class FlashCard
     public long RepeatAtUnixTime { get; private set; }
 
     public DateTimeOffset CreatedAt { get; private set; }
+
+    public bool IsDeleted { get; private set; }
+
+    public DateTimeOffset? DeletedAt { get; private set; }
 
     public void UpdateBaseRate(int rate, LearningSessionOptions options, TimeProvider timeProvider)
     {
@@ -59,6 +63,12 @@ public class FlashCard
 
         var rateDecrease = daySpan.TotalDays / options.RepeatFlashCardRateFactor;
         Rate = Math.Max(BaseRate - Convert.ToInt32(Math.Floor(rateDecrease)), 0);
+    }
+
+    public void Delete(TimeProvider timeProvider)
+    {
+        IsDeleted = true;
+        DeletedAt = timeProvider.GetUtcNow();
     }
 
     public static FlashCard Create(string word, string translation, TimeProvider timeProvider)

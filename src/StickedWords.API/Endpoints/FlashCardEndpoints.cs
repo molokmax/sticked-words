@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using StickedWords.API.Mappers;
 using StickedWords.API.Models;
+using StickedWords.Application.Commands.FlashCards;
 using StickedWords.Application.Queries.FlashCards;
 
 namespace StickedWords.API.Endpoints;
@@ -13,6 +14,7 @@ public static class FlashCardEndpoints
 
         group.MapGet("/", GetFlashCardList);
         group.MapPost("/", AddFlashCard);
+        group.MapDelete("/{id}", DeleteFlashCard);
 
         return builder;
     }
@@ -35,6 +37,17 @@ public static class FlashCardEndpoints
         CancellationToken cancellationToken)
     {
         var card = await mediator.Send(request.ToCommand(), cancellationToken);
+        var result = card.ToShortDto();
+
+        return result;
+    }
+
+    private static async Task<FlashCardShortDto> DeleteFlashCard(
+        long id,
+        IMediator mediator,
+        CancellationToken cancellationToken)
+    {
+        var card = await mediator.Send(new DeleteFlashCardCommand(id), cancellationToken);
         var result = card.ToShortDto();
 
         return result;

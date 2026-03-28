@@ -29,6 +29,12 @@ namespace StickedWords.DbMigrations.Migrations.Sqlite
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("TEXT");
 
+                    b.Property<DateTimeOffset?>("DeletedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("Rate")
                         .HasColumnType("INTEGER");
 
