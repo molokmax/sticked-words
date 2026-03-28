@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router';
 import { FlashCardShort } from '../../models/FlashCardShort';
 
 import './FlashCardListItem.scss'
@@ -9,6 +10,8 @@ interface Props {
 
 function FlashCardListItem({ flashCard }: Props) {
 
+    const navigate = useNavigate();
+    
     const getRateLevel = (rate: number) => {
         if (rate === 100) {
             return 3;
@@ -42,12 +45,19 @@ function FlashCardListItem({ flashCard }: Props) {
         return { icon: '', alt: '' };
     }
 
+    const onCardClicked = () => {
+        navigate(`details/${flashCard.id}`);
+    }
+
     const rate = getRate(flashCard);
     const rateLevel = getRateLevel(rate);
     const rateIcon = getRateIcon(rateLevel);
 
     return (
-        <div className="flash-card-list-item">
+        <div
+            className="flash-card-list-item"
+            onClick={ () => onCardClicked() }
+        >
             <div className="flash-card-list-item__title">
                 { flashCard.word }
             </div>

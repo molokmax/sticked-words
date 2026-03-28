@@ -26,6 +26,8 @@ public sealed class StickedWordsDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
+        modelBuilder.Entity<FlashCard>().HasQueryFilter(x => !x.IsDeleted);
+
         modelBuilder.ApplyConfiguration(new TimeTickerConfigurations<TimeTickerEntity>());
         modelBuilder.ApplyConfiguration(new CronTickerConfigurations<CronTickerEntity>());
         modelBuilder.ApplyConfiguration(new CronTickerOccurrenceConfigurations<CronTickerEntity>());

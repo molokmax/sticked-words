@@ -7,6 +7,12 @@
   align-items: center;
   justify-content: center;
   border: 1px solid var(--color-border);
+  cursor: pointer;
+
+  &:hover {
+    transition: 0.4s;
+    background: var(--color-background-hover);
+  }
 
   &__space {
     flex: 1;

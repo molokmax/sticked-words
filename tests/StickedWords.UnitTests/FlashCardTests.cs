@@ -75,6 +75,36 @@ public class FlashCardTests
         Assert.That(flashCard.Rate, Is.EqualTo(0));
     }
 
+    [Test]
+    public void Delete_DeletedIsTrue()
+    {
+        // Arrange
+        var now = DateTimeOffset.UtcNow;
+        var timeProvider = GetTimeProvider(now);
+        var flashCard = GetFlashCard();
+
+        // Act
+        flashCard.Delete(timeProvider);
+
+        // Assert
+        Assert.That(flashCard.IsDeleted, Is.True);
+    }
+
+    [Test]
+    public void Delete_DeletedAtIsCurrentTime()
+    {
+        // Arrange
+        var now = DateTimeOffset.UtcNow;
+        var timeProvider = GetTimeProvider(now);
+        var flashCard = GetFlashCard();
+
+        // Act
+        flashCard.Delete(timeProvider);
+
+        // Assert
+        Assert.That(flashCard.DeletedAt, Is.EqualTo(now));
+    }
+
     private static FlashCard GetFlashCard() =>
         FlashCard.Create("word1", "слово1", GetTimeProvider(DateTimeOffset.UtcNow));
 
