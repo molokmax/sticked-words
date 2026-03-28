@@ -16,6 +16,16 @@ internal static class FlashCardMapper
             RepeatAt = source.RepeatAt
         };
 
+    public static FlashCardDetailsDto ToDetailsDto(this FlashCard source) =>
+        new()
+        {
+            Id = source.Id,
+            Word = source.Word,
+            Translation = source.Translation,
+            Rate = source.Rate,
+            RepeatAt = source.RepeatAt
+        };
+
     public static CreateFlashCardCommand ToCommand(this CreateFlashCardRequestDto source) =>
         new()
         {
