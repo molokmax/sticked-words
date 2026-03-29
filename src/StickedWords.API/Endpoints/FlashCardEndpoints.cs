@@ -15,6 +15,7 @@ public static class FlashCardEndpoints
         group.MapGet("/", GetFlashCardList);
         group.MapGet("/{id}", GetFlashCard);
         group.MapPost("/", AddFlashCard);
+        group.MapPut("/", UpdateFlashCard);
         group.MapDelete("/{id}", DeleteFlashCard);
 
         return builder;
@@ -51,6 +52,17 @@ public static class FlashCardEndpoints
     {
         var card = await mediator.Send(request.ToCommand(), cancellationToken);
         var result = card.ToShortDto();
+
+        return result;
+    }
+
+    private static async Task<FlashCardDetailsDto> UpdateFlashCard(
+        UpdateFlashCardRequestDto request,
+        IMediator mediator,
+        CancellationToken cancellationToken)
+    {
+        var card = await mediator.Send(request.ToCommand(), cancellationToken);
+        var result = card.ToDetailsDto();
 
         return result;
     }

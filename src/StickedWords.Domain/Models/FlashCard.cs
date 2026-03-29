@@ -65,6 +65,12 @@ public class FlashCard : ISoftDeletable
         Rate = Math.Max(BaseRate - Convert.ToInt32(Math.Floor(rateDecrease)), 0);
     }
 
+    public void UpdateWord(FlashCardWord word, FlashCardWord translation)
+    {
+        Word = word.Word;
+        Translation = translation.Word;
+    }
+
     public void Delete(TimeProvider timeProvider)
     {
         IsDeleted = true;
