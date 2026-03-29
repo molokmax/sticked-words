@@ -4,6 +4,7 @@ import { FlashCardShort } from "../models/FlashCardShort";
 import { PageResult } from "../models/PageResult";
 import type { CreateFlashCardRequest } from "../models/CreateFlashCardRequest";
 import { FlashCardDetails } from "../models/FlashCardDetails";
+import { UpdateFlashCardRequest } from "../models/UpdateFlashCardRequest";
 
 export class FlashCardService {
 
@@ -48,6 +49,23 @@ export class FlashCardService {
     const json = await response.json();
 
     return FlashCardShort.fromJson(json);
+  }
+
+  async update(request: UpdateFlashCardRequest): Promise<FlashCardDetails> {
+    const response = await fetch(this._baseUrl, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(request)
+    });
+    if (!response.ok) {
+      throw new Error(`Response status: ${response.status}`);
+    }
+
+    const json = await response.json();
+
+    return FlashCardDetails.fromJson(json);
   }
 
   async delete(flashCardId: number): Promise<FlashCardShort> {

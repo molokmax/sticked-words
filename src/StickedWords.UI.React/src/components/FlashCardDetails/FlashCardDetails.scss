@@ -27,6 +27,12 @@
     justify-content: space-between;
   }
 
+  &__form-field-value {
+    text-align: right;
+    width: 175px;
+    height: 28px;
+  }
+
   &__form-buttons {
     display: flex;
     flex-direction: row;
