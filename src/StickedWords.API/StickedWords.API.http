@@ -27,6 +27,18 @@ Content-Type: application/json
 
 ###
 
+PUT {{StickedWords.API_HostAddress}}/flash-cards
+Accept: application/json
+Content-Type: application/json
+
+{
+    "id": 11,
+    "word": "Cup",
+    "translation": "Чашка"
+}
+
+###
+
 DELETE {{StickedWords.API_HostAddress}}/flash-cards/25
 Accept: application/json
 Content-Type: application/json

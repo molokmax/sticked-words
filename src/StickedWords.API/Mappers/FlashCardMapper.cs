@@ -32,4 +32,12 @@ internal static class FlashCardMapper
             Word = source.Word,
             Translation = source.Translation
         };
+
+    public static UpdateFlashCardCommand ToCommand(this UpdateFlashCardRequestDto source) =>
+        new()
+        {
+            FlashCardId = source.Id,
+            Word = source.Word,
+            Translation = source.Translation
+        };
 }
