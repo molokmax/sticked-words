@@ -14,4 +14,6 @@ public interface IFlashCardRepository
         CancellationToken cancellationToken);
 
     void Add(FlashCard flashCard);
+
+    void Update(FlashCard flashCard);
 }

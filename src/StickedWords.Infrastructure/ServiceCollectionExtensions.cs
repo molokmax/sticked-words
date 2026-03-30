@@ -13,6 +13,7 @@ public static class ServiceCollectionExtensions
 
         services.AddTransient<IFlashCardRepository, FlashCardRepository>();
         services.AddTransient<ILearningSessionRepository, LearningSessionRepository>();
+        services.AddTransient<IImageRepository, ImageRepository>();
 
         return services;
     }

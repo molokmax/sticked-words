@@ -17,6 +17,8 @@ public sealed class StickedWordsDbContext : DbContext
 
     public DbSet<Guess> Guesses { get; set; }
 
+    public DbSet<Image> Images { get; set; }
+
     public StickedWordsDbContext(DbContextOptions<StickedWordsDbContext> options)
         : base(options)
     {
@@ -26,7 +28,7 @@ public sealed class StickedWordsDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<FlashCard>().HasQueryFilter(x => !x.IsDeleted);
+        modelBuilder.ApplyConfigurationsFromAssembly(AssemblyReference.Assembly);
 
         modelBuilder.ApplyConfiguration(new TimeTickerConfigurations<TimeTickerEntity>());
         modelBuilder.ApplyConfiguration(new CronTickerConfigurations<CronTickerEntity>());

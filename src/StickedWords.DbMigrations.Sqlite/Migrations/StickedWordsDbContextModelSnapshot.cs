@@ -54,6 +54,9 @@ namespace StickedWords.DbMigrations.Migrations.Sqlite
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Word", "DeletedAt")
+                        .IsUnique();
+
                     b.ToTable("FlashCards");
                 });
 
@@ -79,6 +82,24 @@ namespace StickedWords.DbMigrations.Migrations.Sqlite
                     b.HasIndex("SessionStageId");
 
                     b.ToTable("Guesses");
+                });
+
+            modelBuilder.Entity("StickedWords.Domain.Models.Image", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Base64Data")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTimeOffset>("UploadedAt")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Images");
                 });
 
             modelBuilder.Entity("StickedWords.Domain.Models.LearningSession", b =>

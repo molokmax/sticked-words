@@ -24,6 +24,7 @@ internal sealed class UpdateFlashCardCommandHandler : IRequestHandler<UpdateFlas
         var flashCard = await _repository.GetById(command.FlashCardId, cancellationToken)
             ?? throw new FlashCardNotFoundException(command.FlashCardId);
         flashCard.UpdateWord(FlashCardWord.Create(command.Word), FlashCardWord.Create(command.Translation));
+        _repository.Update(flashCard);
         await _unitOfWork.SaveChanges(cancellationToken);
 
         return flashCard;
