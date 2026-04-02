@@ -1,0 +1,40 @@
+.image {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    border: 1px solid var(--color-border);
+    cursor: pointer;
+
+    &.disabled {
+        pointer-events: none;
+    }
+
+    &__placeholder {
+        height: 200px;
+        width: 200px;
+        background-size: cover;
+    }
+
+    &__delete-button {
+        display: none;
+        position: absolute;
+        top: 0;
+        right: 0;
+        margin: 5px;
+        height: 20px;
+        width: 20px;
+        align-items: center;
+        justify-content: center;
+
+        &:hover {
+            transition: 0.4s;
+            background: var(--color-background-hover);
+        }
+    }
+
+    &:hover &__delete-button {
+        display: flex;
+    }
+}

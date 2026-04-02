@@ -1,17 +1,21 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
+import Image from '../Image';
 import { ErrorHandler } from '../../services/ErrorHandler';
 import { FlashCardService } from '../../services/FlashCardService';
+import { ImageService } from '../../services/ImageService';
 import { CreateFlashCardRequest } from '../../models/CreateFlashCardRequest';
 import { useEnterKey, useFocus } from '../../services/hooks';
 import { useErrorListContext } from '../ErrorList';
 
 import './AddFlashCard.scss'
 
+
 function AddFlashCard() {
 
     const [loading, setLoading] = useState(false);
     const [word, setWord] = useState("");
+    const [imageId, setImageId] = useState<number | null>(null);
     const [translation, setTranslation] = useState("");
     const { addError } = useErrorListContext();
 
@@ -19,10 +23,10 @@ function AddFlashCard() {
     const service = new FlashCardService();
     const isFormValid = !!word && !!translation;
 
-        
     function resetForm() {
         setWord("");
         setTranslation("");
+        setImageId(null);
         autoFocusRef.current?.focus();
     }
 
@@ -38,7 +42,8 @@ function AddFlashCard() {
 
         const request : CreateFlashCardRequest = {
             word: word,
-            translation: translation
+            translation: translation,
+            imageId: imageId
         };
         setLoading(true);
         service.add(request)
@@ -55,6 +60,13 @@ function AddFlashCard() {
         <main className="add-flash-card">
             <div className="add-flash-card__form">
                 <div className="add-flash-card__form-fields">
+                    <div className="add-flash-card__image-wrapper">
+                        <Image
+                            readonly={loading}
+                            imageId={imageId}
+                            onChanged={id => setImageId(id)}
+                        ></Image>
+                    </div>
                     <div className="add-flash-card__form-field">
                         <span className="add-flash-card__form-field-label">Word: </span>
                         <input className="add-flash-card__form-field-value"

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { ErrorHandler } from '../../../services/ErrorHandler';
+import Image from '../../Image';
 import { GuessResult, TranslateGuessResult } from '../../../models/exercises/TranslateGuessResult';
 import { TranslateForeignToNativeExerciseService } from '../../../services/exercises/TranslateForeignToNativeExerciseService';
 import { TranslateGuess } from '../../../models/exercises/TranslateGuess';
@@ -19,6 +20,7 @@ function TranslateForeignToNativeExercise({ flashCardId, onNext }: Props) {
     const [loading, setLoading] = useState(false);
     const [word, setWord] = useState("");
     const [answer, setAnswer] = useState("");
+    const [imageId, setImageId] = useState<number | null>(null);
     const [correctAnswer, setCorrectAnswer] = useState<string | null>(null);
     const [isGuessChecked, setIsGuessChecked] = useState(false);
     const [isGuessCorrect, setIsGuessCorrect] = useState(false);
@@ -45,9 +47,13 @@ function TranslateForeignToNativeExercise({ flashCardId, onNext }: Props) {
         setLoading(true);
         resetForm();
         service.get(flashCardId)
-            .then(exercise => setWord(exercise.word))
+            .then(exercise => {
+                setWord(exercise.word);
+                setImageId(exercise.imageId);
+            })
             .catch(err => {
                 setWord("");
+                setImageId(null);
                 addError(ErrorHandler.getMessage(err))
             })
             .finally(() => setLoading(false));
@@ -124,6 +130,18 @@ function TranslateForeignToNativeExercise({ flashCardId, onNext }: Props) {
             <div className="translate-foreign-to-native-exercise__exercise-description">
                 Translate to native:
             </div>
+            {
+                imageId
+                    ? (
+                        <div className="translate-foreign-to-native-exercise__image-wrapper">
+                            <Image
+                                readonly={true}
+                                imageId={imageId}
+                            ></Image>
+                        </div>
+                    )
+                    : null
+            }
             <div className="translate-foreign-to-native-exercise__word">
                 { word }
             </div>

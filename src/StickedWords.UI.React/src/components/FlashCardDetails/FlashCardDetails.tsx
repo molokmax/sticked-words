@@ -2,12 +2,13 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import { useErrorListContext } from '../ErrorList';
 import { ErrorHandler } from '../../services/ErrorHandler';
+import Image from '../Image';
 import { FlashCardDetails as FlashCardDetailsModel } from '../../models/FlashCardDetails';
+import { UpdateFlashCardRequest } from '../../models/UpdateFlashCardRequest';
 import { FlashCardService } from '../../services/FlashCardService';
 import Loading from '../Loading';
 
 import './FlashCardDetails.scss';
-import { UpdateFlashCardRequest } from '../../models/UpdateFlashCardRequest';
 
 
 function FlashCardDetails() {
@@ -20,11 +21,14 @@ function FlashCardDetails() {
     const [flashCard, setFlashCard] = useState<FlashCardDetailsModel | null>(null);
     const [word, setWord] = useState("");
     const [translation, setTranslation] = useState("");
+    const [imageId, setImageId] = useState<number | null>(null);
     const { addError } = useErrorListContext();
 
     const service = new FlashCardService();
     const isFormValid = !!word && !!translation;
-    const isDirty = word !== flashCard?.word || translation !== flashCard?.translation;
+    const isDirty = word !== flashCard?.word
+        || translation !== flashCard?.translation
+        || imageId !== flashCard?.imageId;
 
     const loadData = () => {
         const flashCardIdRaw = params.flashCardId;
@@ -46,13 +50,18 @@ function FlashCardDetails() {
             .finally(() => setLoading(false));
     }
 
+    const resetForm = () => {
+        setWord(flashCard?.word ?? "");
+        setTranslation(flashCard?.translation ?? "");
+        setImageId(flashCard?.imageId ?? null);
+    }
+
     const goToCardList = () => {
         navigate("/");
     }
 
     const onEditClicked = () => {
-        setWord(flashCard?.word ?? "");
-        setTranslation(flashCard?.translation ?? "");
+        resetForm();
         setEditing(true);
     }
 
@@ -64,12 +73,14 @@ function FlashCardDetails() {
         const request : UpdateFlashCardRequest = {
             id: flashCard.id,
             word: word,
-            translation: translation
+            translation: translation,
+            imageId: imageId
         };
         setLoading(true);
         service.update(request)
             .then(res => {
                 setFlashCard(res);
+                resetForm();
                 setEditing(false);
             })
             .catch(err => {
@@ -79,6 +90,7 @@ function FlashCardDetails() {
     }
     
     const onCancelClicked = () => {
+        resetForm();
         setEditing(false);
     }
 
@@ -140,6 +152,13 @@ function FlashCardDetails() {
         <div className="flash-card-details">
             <div className="flash-card-details__form">
                 <div className="flash-card-details__form-fields">
+                    <div className="flash-card-details__image-wrapper">
+                        <Image
+                            readonly={!editing || loading}
+                            imageId={editing ? imageId : flashCard?.imageId ?? null}
+                            onChanged={id => setImageId(id)}
+                        ></Image>
+                    </div>
                     <div className="flash-card-details__form-field">
                         <span className="flash-card-details__form-field-label">Word: </span>
                         {
