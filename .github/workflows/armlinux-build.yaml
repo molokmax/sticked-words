@@ -9,7 +9,7 @@ env:
   DOTNET_VERSION: '9.0'
   NODE_VERSION: '22.14'
   API_PROJECT_PATH: 'src/StickedWords.API'
-  UI_PROJECT_PATH: 'src/StickedWords.UI'
+  UI_PROJECT_PATH: 'src/StickedWords.UI.React'
   RUNTIME_IDENTIFIER: 'linux-arm'
   OUTPUT_DIR: 'publish'
 
