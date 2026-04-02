@@ -19,6 +19,8 @@ public class FlashCard : ISoftDeletable
     /// </summary>
     public string Translation { get; private set; } = string.Empty;
 
+    public long? ImageId { get; private set; }
+
     public int BaseRate { get; private set; }
 
     public int Rate { get; private set; }
@@ -65,10 +67,11 @@ public class FlashCard : ISoftDeletable
         Rate = Math.Max(BaseRate - Convert.ToInt32(Math.Floor(rateDecrease)), 0);
     }
 
-    public void UpdateWord(FlashCardWord word, FlashCardWord translation)
+    public void UpdateWord(FlashCardWord word, FlashCardWord translation, long? imageId)
     {
         Word = word.Word;
         Translation = translation.Word;
+        ImageId = imageId;
     }
 
     public void Delete(TimeProvider timeProvider)
@@ -77,15 +80,17 @@ public class FlashCard : ISoftDeletable
         DeletedAt = timeProvider.GetUtcNow();
     }
 
-    public static FlashCard Create(string word, string translation, TimeProvider timeProvider)
+    public static FlashCard Create(
+        FlashCardWord word,
+        FlashCardWord translation,
+        long? imageId,
+        TimeProvider timeProvider)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(word);
-        ArgumentException.ThrowIfNullOrWhiteSpace(translation);
-
         return new()
         {
-            Word = word,
-            Translation = translation,
+            Word = word.Word,
+            Translation = translation.Word,
+            ImageId = imageId,
             CreatedAt = timeProvider.GetUtcNow(),
             RepeatAt = timeProvider.GetUtcNow(),
             Rate = 0

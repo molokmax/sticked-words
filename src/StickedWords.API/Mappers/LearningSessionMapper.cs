@@ -33,7 +33,8 @@ internal static class LearningSessionMapper
     public static TranslateExerciseDto ToDto(this TranslateExercise source) =>
         new()
         {
-            Word = source.Word
+            Word = source.Word,
+            ImageId = source.ImageId
         };
 
     public static LearningSessionResultsDto ToDto(this LearningSessionResults source)

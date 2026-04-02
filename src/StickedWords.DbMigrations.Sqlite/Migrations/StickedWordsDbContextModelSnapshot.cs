@@ -32,6 +32,9 @@ namespace StickedWords.DbMigrations.Migrations.Sqlite
                     b.Property<DateTimeOffset?>("DeletedAt")
                         .HasColumnType("TEXT");
 
+                    b.Property<long?>("ImageId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("INTEGER");
 
@@ -53,6 +56,9 @@ namespace StickedWords.DbMigrations.Migrations.Sqlite
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Word", "DeletedAt")
+                        .IsUnique();
 
                     b.ToTable("FlashCards");
                 });
@@ -79,6 +85,24 @@ namespace StickedWords.DbMigrations.Migrations.Sqlite
                     b.HasIndex("SessionStageId");
 
                     b.ToTable("Guesses");
+                });
+
+            modelBuilder.Entity("StickedWords.Domain.Models.Image", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Base64Data")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTimeOffset>("UploadedAt")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Images");
                 });
 
             modelBuilder.Entity("StickedWords.Domain.Models.LearningSession", b =>

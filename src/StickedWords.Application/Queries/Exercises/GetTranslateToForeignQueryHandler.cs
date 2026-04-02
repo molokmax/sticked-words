@@ -22,6 +22,10 @@ internal sealed class GetTranslateToForeignQueryHandler : IRequestHandler<GetTra
             throw new FlashCardNotFoundException(request.FlashCardId);
         }
 
-        return new() { Word = flashCard.Translation };
+        return new()
+        {
+            Word = flashCard.Translation,
+            ImageId = flashCard.ImageId
+        };
     }
 }

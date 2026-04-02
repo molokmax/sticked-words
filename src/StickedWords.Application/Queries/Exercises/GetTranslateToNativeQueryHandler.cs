@@ -22,6 +22,10 @@ internal sealed class GetTranslateToNativeQueryHandler : IRequestHandler<GetTran
             throw new FlashCardNotFoundException(request.FlashCardId);
         }
 
-        return new() { Word = flashCard.Word };
+        return new()
+        {
+            Word = flashCard.Word,
+            ImageId = flashCard.ImageId
+        };
     }
 }

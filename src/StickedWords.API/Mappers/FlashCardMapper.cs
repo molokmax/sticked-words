@@ -22,6 +22,7 @@ internal static class FlashCardMapper
             Id = source.Id,
             Word = source.Word,
             Translation = source.Translation,
+            ImageId = source.ImageId,
             Rate = source.Rate,
             RepeatAt = source.RepeatAt
         };
@@ -30,7 +31,8 @@ internal static class FlashCardMapper
         new()
         {
             Word = source.Word,
-            Translation = source.Translation
+            Translation = source.Translation,
+            ImageId = source.ImageId
         };
 
     public static UpdateFlashCardCommand ToCommand(this UpdateFlashCardRequestDto source) =>
@@ -38,6 +40,7 @@ internal static class FlashCardMapper
         {
             FlashCardId = source.Id,
             Word = source.Word,
-            Translation = source.Translation
+            Translation = source.Translation,
+            ImageId = source.ImageId
         };
 }

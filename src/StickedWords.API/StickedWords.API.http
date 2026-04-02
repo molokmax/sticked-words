@@ -63,3 +63,25 @@ GET {{StickedWords.API_HostAddress}}/api/exercises/translate-to-foreign?flashCar
 GET {{StickedWords.API_HostAddress}}/api/exercises/translate-to-native?flashCardId=14
 
 ###
+
+POST {{StickedWords.API_HostAddress}}/images
+Accept: application/json
+Content-Type: application/json
+
+{
+    "base64data": "test1"
+}
+
+###
+
+DELETE {{StickedWords.API_HostAddress}}/images/4
+Accept: application/json
+Content-Type: application/json
+
+###
+
+GET {{StickedWords.API_HostAddress}}/images/1
+Accept: application/json
+Content-Type: application/json
+
+###

@@ -8,7 +8,9 @@ internal sealed class FlashCardEntityConfiguration : IEntityTypeConfiguration<Fl
 {
     public void Configure(EntityTypeBuilder<FlashCard> builder)
     {
+        builder.HasQueryFilter(x => !x.IsDeleted);
+
         builder.HasKey(x => x.Id);
-        builder.HasIndex(x => x.Word).IsUnique(true);
+        builder.HasIndex(x => new { x.Word, x.DeletedAt }).IsUnique(true);
     }
 }

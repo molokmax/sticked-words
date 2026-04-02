@@ -43,6 +43,12 @@ internal class FlashCardRepository : IFlashCardRepository
         _context.FlashCards.Add(flashCard);
     }
 
+    public void Update(FlashCard flashCard)
+    {
+        _context.Attach(flashCard);
+        _context.Entry(flashCard).State = EntityState.Modified;
+    }
+
     private static async Task<int> GetTotal(
         IQueryable<FlashCard> query,
         ISpecification<FlashCard> specification,

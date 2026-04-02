@@ -39,6 +39,9 @@ namespace StickedWords.DbMigrations.Postgres.Migrations
                     b.Property<DateTimeOffset?>("DeletedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<long?>("ImageId")
+                        .HasColumnType("bigint");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
@@ -60,6 +63,9 @@ namespace StickedWords.DbMigrations.Postgres.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Word", "DeletedAt")
+                        .IsUnique();
 
                     b.ToTable("FlashCards");
                 });
@@ -88,6 +94,26 @@ namespace StickedWords.DbMigrations.Postgres.Migrations
                     b.HasIndex("SessionStageId");
 
                     b.ToTable("Guesses");
+                });
+
+            modelBuilder.Entity("StickedWords.Domain.Models.Image", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("Base64Data")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTimeOffset>("UploadedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Images");
                 });
 
             modelBuilder.Entity("StickedWords.Domain.Models.LearningSession", b =>
