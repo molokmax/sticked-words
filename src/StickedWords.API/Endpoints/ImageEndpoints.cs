@@ -19,7 +19,7 @@ public static class ImageEndpoints
         return builder;
     }
 
-    private static async Task<string> GetImage(
+    private static async Task<IResult> GetImage(
         long id,
         IMediator mediator,
         CancellationToken cancellationToken)
@@ -27,7 +27,7 @@ public static class ImageEndpoints
         var request = new GetImageByIdQuery(id);
         var result = await mediator.Send(request, cancellationToken);
 
-        return result;
+        return Results.FileFromBase64(result);
     }
 
     private static async Task<long> AddImage(

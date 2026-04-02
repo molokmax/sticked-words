@@ -18,4 +18,8 @@ public sealed record FlashCardWord
 
         return new() { Word = word.Trim() };
     }
+
+    public static implicit operator FlashCardWord(string source) => Create(source);
+
+    public static explicit operator string(FlashCardWord source) => source.Word;
 }

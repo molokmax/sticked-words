@@ -106,7 +106,7 @@ public class FlashCardTests
     }
 
     private static FlashCard GetFlashCard() =>
-        FlashCard.Create("word1", "слово1", GetTimeProvider(DateTimeOffset.UtcNow));
+        FlashCard.Create("word1", "слово1", null, GetTimeProvider(DateTimeOffset.UtcNow));
 
     private static LearningSessionOptions GetOptions(int period)
     {

@@ -23,7 +23,11 @@ internal sealed class CreateFlashCardCommandHandler : IRequestHandler<CreateFlas
 
     public async Task<FlashCard> Handle(CreateFlashCardCommand command, CancellationToken cancellationToken)
     {
-        var flashCard = FlashCard.Create(command.Word, command.Translation, _timeProvider);
+        var flashCard = FlashCard.Create(
+            command.Word,
+            command.Translation,
+            command.ImageId,
+            _timeProvider);
         _repository.Add(flashCard);
         await _unitOfWork.SaveChanges(cancellationToken);
 

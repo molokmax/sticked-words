@@ -113,7 +113,7 @@ public class LearningSessionTests
         return session;
     }
 
-    private static FlashCard GetFlashCard() => FlashCard.Create("word1", "слово1", _timeProvider);
+    private static FlashCard GetFlashCard() => FlashCard.Create("word1", "слово1", null, _timeProvider);
 
     private static LearningSessionOptions GetOptions()
     {

@@ -8,6 +8,8 @@ public record FlashCardDetailsDto
 
     public required string Translation { get; init; }
 
+    public required long? ImageId { get; init; }
+
     public required int Rate { get; init; }
 
     public required DateTimeOffset RepeatAt { get; init; }
