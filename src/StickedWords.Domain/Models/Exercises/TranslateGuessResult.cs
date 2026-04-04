@@ -1,6 +1,6 @@
 ﻿namespace StickedWords.Domain.Models.Exercises;
 
-public record TranslateGuessResult
+public record TranslateGuessResult : IExerciseResult
 {
     private TranslateGuessResult() { }
 
@@ -8,20 +8,24 @@ public record TranslateGuessResult
 
     public string? CorrectTranslation { get; init; }
 
-    public static TranslateGuessResult Correct()
+    public required bool IsExpired { get; init; }
+
+    public static TranslateGuessResult Correct(LearningSessionState sessionState)
     {
         return new()
         {
-            Result = GuessResult.Correct
+            Result = GuessResult.Correct,
+            IsExpired = sessionState is LearningSessionState.Expired
         };
     }
 
-    public static TranslateGuessResult Wrong(string translation)
+    public static TranslateGuessResult Wrong(FlashCardWord translation, LearningSessionState sessionState)
     {
         return new()
         {
             Result = GuessResult.Wrong,
-            CorrectTranslation = translation
+            CorrectTranslation = translation.Word,
+            IsExpired = sessionState is LearningSessionState.Expired
         };
     }
 }

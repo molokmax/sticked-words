@@ -54,11 +54,13 @@ internal sealed class CheckTranslateToForeignCommandHandler : IRequestHandler<Ch
             activeSession.Finish(_options, _timeProvider);
         }
 
+        activeSession.TryToExpire(_options, _timeProvider);
+
         await _unitOfWork.SaveChanges(cancellationToken);
 
         var result = guessResult is GuessResult.Correct
-            ? TranslateGuessResult.Correct()
-            : TranslateGuessResult.Wrong(flashCard.Word);
+            ? TranslateGuessResult.Correct(activeSession.State)
+            : TranslateGuessResult.Wrong(flashCard.Word, activeSession.State);
 
         return result;
     }

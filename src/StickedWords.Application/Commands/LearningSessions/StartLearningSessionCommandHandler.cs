@@ -33,7 +33,7 @@ internal sealed class StartLearningSessionCommandHandler : IRequestHandler<Start
 
     public async Task<LearningSession> Handle(StartLearningSessionCommand command, CancellationToken cancellationToken)
     {
-        var activeSession = await _sessionRepository.GetActive(cancellationToken);
+        var activeSession = await _sessionRepository.GetActiveNotExpired(_timeProvider.GetUtcNow(), cancellationToken);
         if (activeSession is not null)
         {
             throw new LearningSessionAlreadyExistsException();

@@ -15,6 +15,7 @@ import './LearningSession.scss'
 function LearningSession() {
 
     const [loading, setLoading] = useState(false);
+    const [isSessionExpired, setIsSessionExpired] = useState(false);
     const [session, setSession] = useState<LearningSessionModel | null>(null);
     const [showIntro, setShowIntro] = useState(false);
     const { addError } = useErrorListContext();
@@ -37,7 +38,12 @@ function LearningSession() {
         return session;
     }
 
-    const loadData = () => {
+    const loadData = (isSessionExpired = false) => {
+        if (isSessionExpired) {
+            setIsSessionExpired(isSessionExpired);
+            return;
+        }
+
         setLoading(true);
         loadLearningSession()
             .then(res => {
@@ -60,7 +66,7 @@ function LearningSession() {
             return (
                 <TranslateForeignToNativeExercise
                     flashCardId={ session.flashCardId }
-                    onNext={ loadData }
+                    onNext={ isExpired => loadData(isExpired) }
                 ></TranslateForeignToNativeExercise>
             );
         }
@@ -69,7 +75,7 @@ function LearningSession() {
             return (
                 <TranslateNativeToForeignExercise
                     flashCardId={ session.flashCardId }
-                    onNext={ loadData }
+                    onNext={ isExpired => loadData(isExpired) }
                 ></TranslateNativeToForeignExercise>
             );
         }
@@ -87,7 +93,10 @@ function LearningSession() {
         return <main className="learning-session">Unknown Exercise</main>;
     }
 
-    if (session.state === LearningSessionState.Finished || session.state === LearningSessionState.Expired) {
+    const isSessionCompleted = isSessionExpired
+        || session.state === LearningSessionState.Expired
+        || session.state === LearningSessionState.Finished;
+    if (isSessionCompleted) {
         return (
             <main className="learning-session">
                 <LearningSessionResults sessionId={ session.id }></LearningSessionResults>
