@@ -12,7 +12,7 @@ public record LearningSession
 
     public DateTimeOffset ExpiringAt { get; private set; }
 
-    public LearningSessionState State { get; private set; } // TODO: how to expire session?
+    public LearningSessionState State { get; private set; }
 
     public List<SessionStage> Stages { get; private set; } = [];
 
