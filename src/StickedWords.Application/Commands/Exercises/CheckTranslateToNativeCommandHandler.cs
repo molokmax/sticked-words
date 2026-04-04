@@ -59,11 +59,13 @@ internal sealed class CheckTranslateToNativeCommandHandler : IRequestHandler<Che
             activeSession.Finish(_options, _timeProvider);
         }
 
+        activeSession.TryToExpire(_options, _timeProvider);
+
         await _unitOfWork.SaveChanges(cancellationToken);
 
         var result = guessResult is GuessResult.Correct
-            ? TranslateGuessResult.Correct()
-            : TranslateGuessResult.Wrong(flashCard.Translation);
+            ? TranslateGuessResult.Correct(activeSession.State)
+            : TranslateGuessResult.Wrong(flashCard.Translation, activeSession.State);
 
         return result;
     }

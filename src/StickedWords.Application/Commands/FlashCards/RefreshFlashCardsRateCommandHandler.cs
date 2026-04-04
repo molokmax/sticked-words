@@ -30,7 +30,7 @@ internal sealed class RefreshFlashCardsRateCommandHandler : IRequestHandler<Refr
 
     public async Task Handle(RefreshFlashCardsRateCommand command, CancellationToken cancellationToken)
     {
-        var activeSession = await _sessionRepository.GetActive(cancellationToken);
+        var activeSession = await _sessionRepository.GetActiveNotExpired(_timeProvider.GetUtcNow(), cancellationToken);
         if (activeSession is not null)
         {
             return;

@@ -127,6 +127,9 @@ namespace StickedWords.DbMigrations.Postgres.Migrations
                     b.Property<DateTimeOffset>("ExpiringAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<long>("ExpiringAtUnixTime")
+                        .HasColumnType("bigint");
+
                     b.Property<DateTimeOffset>("StartedAt")
                         .HasColumnType("timestamp with time zone");
 

@@ -7,4 +7,6 @@ public record TranslateGuessResultDto
     public GuessResult Result { get; init; }
 
     public string? CorrectTranslation { get; init; }
+
+    public bool IsExpired { get; init; }
 }

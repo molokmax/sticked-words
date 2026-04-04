@@ -12,6 +12,8 @@ public record LearningSession
 
     public DateTimeOffset ExpiringAt { get; private set; }
 
+    public long ExpiringAtUnixTime { get; private set; }
+
     public LearningSessionState State { get; private set; } // TODO: how to expire session?
 
     public List<SessionStage> Stages { get; private set; } = [];
@@ -23,6 +25,7 @@ public record LearningSession
         State = LearningSessionState.Active;
         StartedAt = DateTimeOffset.UtcNow;
         ExpiringAt = DateTimeOffset.UtcNow.Add(expireAfter);
+        ExpiringAtUnixTime = ExpiringAt.ToUnixTime();
 
         var stage = Stages.OrderBy(x => x.OrdNumber).First();
         stage.Activate(FlashCards);
@@ -37,6 +40,31 @@ public record LearningSession
         var activeStage = GetActiveStage();
         activeStage.Unactivate();
         State = LearningSessionState.Finished;
+
+        foreach (var flashCard in FlashCards.Select(x => x.FlashCard))
+        {
+            var rate = GetFlashCardRate(flashCard);
+            flashCard.UpdateBaseRate(rate, options, timeProvider);
+        }
+    }
+
+    public void TryToExpire(LearningSessionOptions options, TimeProvider timeProvider)
+    {
+        if (State is LearningSessionState.Active && ExpiringAt < timeProvider.GetUtcNow())
+        {
+            Expire(options, timeProvider);
+        }
+    }
+
+    public void Expire(LearningSessionOptions options, TimeProvider timeProvider)
+    {
+        if (State is not LearningSessionState.Active)
+        {
+            throw new LearningSessionNotActiveException();
+        }
+        var activeStage = GetActiveStage();
+        activeStage.Unactivate();
+        State = LearningSessionState.Expired;
 
         foreach (var flashCard in FlashCards.Select(x => x.FlashCard))
         {

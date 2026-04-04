@@ -10,7 +10,8 @@ public static class TranslateGuessMapper
         return new()
         {
             Result = source.Result,
-            CorrectTranslation = source.CorrectTranslation
+            CorrectTranslation = source.CorrectTranslation,
+            IsExpired = source.IsExpired
         };
     }
 }
