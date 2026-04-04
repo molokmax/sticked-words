@@ -12,7 +12,7 @@ import './TranslateForeignToNativeExercise.scss';
 
 interface Props {
     flashCardId: number,
-    onNext: () => void
+    onNext: (isSessionExpired: boolean) => void
 };
 
 function TranslateForeignToNativeExercise({ flashCardId, onNext }: Props) {
@@ -24,6 +24,7 @@ function TranslateForeignToNativeExercise({ flashCardId, onNext }: Props) {
     const [correctAnswer, setCorrectAnswer] = useState<string | null>(null);
     const [isGuessChecked, setIsGuessChecked] = useState(false);
     const [isGuessCorrect, setIsGuessCorrect] = useState(false);
+    const [isSessionExpired, setIsSessionExpired] = useState(false);
     const { addError } = useErrorListContext();
 
     const service = new TranslateForeignToNativeExerciseService();
@@ -33,12 +34,14 @@ function TranslateForeignToNativeExercise({ flashCardId, onNext }: Props) {
         setIsGuessChecked(false);
         setIsGuessCorrect(false);
         setCorrectAnswer(null);
+        setIsSessionExpired(false);
     }
 
     const setCheckResult = (result: TranslateGuessResult) => {
         setIsGuessChecked(true);
         setIsGuessCorrect(result.result === GuessResult.Correct);
         setCorrectAnswer(result.correctTranslation ?? null);
+        setIsSessionExpired(result.isExpired);
     }
 
     const isFormValid = () => answer.trim().length > 0;
@@ -83,7 +86,7 @@ function TranslateForeignToNativeExercise({ flashCardId, onNext }: Props) {
     }
 
     const autoFocusRef = useFocus();
-    useEnterKey(isGuessChecked ? onNext : onCheckClicked);
+    useEnterKey(isGuessChecked ? () => onNext(isSessionExpired) : onCheckClicked);
 
     useEffect(() => loadData(flashCardId), [flashCardId]);
 
@@ -110,7 +113,7 @@ function TranslateForeignToNativeExercise({ flashCardId, onNext }: Props) {
             <button
                 className="translate-foreign-to-native-exercise__check-button primary"
                 disabled={ loading }
-                onClick={ onNext }
+                onClick={ e => onNext(isSessionExpired) }
             >
                 { loading ? 'Loading...' : 'Next' }
             </button>

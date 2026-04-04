@@ -8,12 +8,14 @@ export class TranslateGuessResult {
   
   result!: GuessResult;
   correctTranslation?: string;
+  isExpired!: boolean;
 
   static fromJson(json: any): TranslateGuessResult {
     const result = new TranslateGuessResult();
 
     result.result = TranslateGuessResult.mapGuessResult(json.result);
     result.correctTranslation = json.correctTranslation ?? null;
+    result.isExpired = json.isExpired ?? false;
 
     return result;
   }

@@ -39,12 +39,12 @@ function LearningSessionResults({ sessionId }: Props) {
             .finally(() => setLoading(false));
     }
 
-    const onCompleteClicked = () => {
+    const onContinueClicked = () => {
         service.deleteCurrentSessionId();
         navigate("/");
     }
 
-    useEnterKey(onCompleteClicked);
+    useEnterKey(onContinueClicked);
 
     useEffect(() => {
         loadData(sessionId);
@@ -55,6 +55,14 @@ function LearningSessionResults({ sessionId }: Props) {
             <main className="learning-session-results">
                 <div className="learning-session-results__title">
                     Session expired
+                </div>
+                <div className="learning-session-results__buttons">
+                    <button
+                        className="learning-session-results__ok-button primary"
+                        onClick={ onContinueClicked }
+                    >
+                        OK
+                    </button>
                 </div>
             </main>
         );
@@ -72,7 +80,7 @@ function LearningSessionResults({ sessionId }: Props) {
                 <div className="learning-session-results__buttons">
                     <button
                         className={ `learning-session-results__add-button primary ${ loading ? 'disabled' : '' }` }
-                        onClick={ ev => onCompleteClicked() }
+                        onClick={ onContinueClicked }
                     >
                         Complete
                     </button>
@@ -85,6 +93,14 @@ function LearningSessionResults({ sessionId }: Props) {
         <main className="learning-session-results">
             <div className="learning-session-results__title">
                 Unknown session state
+            </div>
+            <div className="learning-session-results__buttons">
+                <button
+                    className="learning-session-results__ok-button primary"
+                    onClick={ onContinueClicked }
+                >
+                    OK
+                </button>
             </div>
         </main>
     )
