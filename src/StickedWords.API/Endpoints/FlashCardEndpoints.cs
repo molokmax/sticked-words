@@ -10,7 +10,7 @@ public static class FlashCardEndpoints
 {
     public static IEndpointRouteBuilder RegisterFlashCardEndpoints(this IEndpointRouteBuilder builder)
     {
-        var group = builder.MapGroup("/api/flash-cards");
+        var group = builder.MapGroup("/api/flash-cards").RequireAuthorization();
 
         group.MapGet("/", GetFlashCardList);
         group.MapGet("/{id}", GetFlashCard);

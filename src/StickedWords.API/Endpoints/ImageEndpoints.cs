@@ -10,7 +10,7 @@ public static class ImageEndpoints
 {
     public static IEndpointRouteBuilder RegisterImageEndpoints(this IEndpointRouteBuilder builder)
     {
-        var group = builder.MapGroup("/api/images");
+        var group = builder.MapGroup("/api/images").RequireAuthorization();
 
         group.MapGet("/{id}", GetImage);
         group.MapPost("/", AddImage);

@@ -11,7 +11,7 @@ public static class TranslateToNativeExerciseEndpoints
 {
     public static IEndpointRouteBuilder RegisterTranslateToNativeExerciseEndpoints(this IEndpointRouteBuilder builder)
     {
-        var group = builder.MapGroup("/api/exercises/translate-to-native");
+        var group = builder.MapGroup("/api/exercises/translate-to-native").RequireAuthorization();
 
         group.MapGet("/", GetExercise);
         group.MapPost("/", CheckGuess);

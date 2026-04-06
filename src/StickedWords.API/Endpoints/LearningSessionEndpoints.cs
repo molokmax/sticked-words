@@ -9,7 +9,7 @@ public static class LearningSessionEndpoints
 {
     public static IEndpointRouteBuilder RegisterLearningSessionEndpoints(this IEndpointRouteBuilder builder)
     {
-        var group = builder.MapGroup("/api/learning-sessions");
+        var group = builder.MapGroup("/api/learning-sessions").RequireAuthorization();
 
         group.MapGet("/{id}", GetLearningSessionById);
         group.MapGet("/", GetActiveLearningSession);

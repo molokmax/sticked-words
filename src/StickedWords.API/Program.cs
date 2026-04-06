@@ -8,6 +8,7 @@ builder.AddLogger();
 builder.AddServiceDefaults();
 builder.Services.UseHttpClientMetrics();
 builder.Services.ConfigureHttp();
+builder.AddAuth();
 
 builder.AddServices();
 
@@ -19,6 +20,8 @@ if (app.Configuration.GetValue("ApplyMigrations", false))
 }
 
 app.UseHttpsRedirection();
+app.UseAuthentication();
+app.UseAuthorization();
 app.MapDefaultEndpoints();
 app.UseHttpMetrics();
 app.MapMetrics("/metrics");

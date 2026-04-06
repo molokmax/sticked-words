@@ -85,3 +85,15 @@ Accept: application/json
 Content-Type: application/json
 
 ###
+
+DELETE {{StickedWords.API_HostAddress}}/auth/logout
+Accept: application/json
+Content-Type: application/json
+
+###
+
+GET {{StickedWords.API_HostAddress}}/auth/me
+Accept: application/json
+Content-Type: application/json
+
+###
