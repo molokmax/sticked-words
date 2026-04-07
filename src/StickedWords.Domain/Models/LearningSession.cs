@@ -18,6 +18,8 @@ public record LearningSession
 
     public List<SessionStage> Stages { get; private set; } = [];
 
+    public long UserId { get; private set; }
+
     public List<SessionFlashCard> FlashCards { get; private set; } = []; // TODO: how to make this collection readonly?
 
     public void Start(TimeSpan expireAfter)
@@ -121,9 +123,12 @@ public record LearningSession
         return Convert.ToInt32(rate);
     }
 
-    public static LearningSession Create(IEnumerable<FlashCard> flashCards)
+    public static LearningSession Create(IEnumerable<FlashCard> flashCards, User user)
     {
-        var session = new LearningSession();
+        var session = new LearningSession
+        {
+            UserId = user.Id
+        };
         session.Stages = // TODO: types and ord numbers take from options. think about it
         [
             SessionStage.Create(0, ExerciseType.TranslateForeignToNative, session),

@@ -7,6 +7,7 @@ namespace StickedWords.UnitTests;
 public class LearningSessionTests
 {
     private static TimeProvider _timeProvider = new FakeTimeProvider(DateTimeOffset.UtcNow);
+    private static User _user = User.Create("123");
 
     [Test]
     public void Finish_StartedSession_StateFinished()
@@ -107,13 +108,13 @@ public class LearningSessionTests
 
     private static LearningSession GetStartedSession(FlashCard[] flashCards)
     {
-        var session = LearningSession.Create(flashCards);
+        var session = LearningSession.Create(flashCards, _user);
         session.Start(TimeSpan.FromMinutes(1));
 
         return session;
     }
 
-    private static FlashCard GetFlashCard() => FlashCard.Create("word1", "слово1", null, _timeProvider);
+    private static FlashCard GetFlashCard() => FlashCard.Create("word1", "слово1", null, _user, _timeProvider);
 
     private static LearningSessionOptions GetOptions()
     {

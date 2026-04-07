@@ -58,6 +58,9 @@ namespace StickedWords.DbMigrations.Postgres.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint");
+
                     b.Property<string>("Word")
                         .IsRequired()
                         .HasColumnType("text");
@@ -136,6 +139,9 @@ namespace StickedWords.DbMigrations.Postgres.Migrations
                     b.Property<int>("State")
                         .HasColumnType("integer");
 
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint");
+
                     b.HasKey("Id");
 
                     b.ToTable("LearningSessions");
@@ -194,6 +200,25 @@ namespace StickedWords.DbMigrations.Postgres.Migrations
                     b.HasIndex("LearningSessionId");
 
                     b.ToTable("SessionStages");
+                });
+
+            modelBuilder.Entity("StickedWords.Domain.Models.User", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("YandexId")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("YandexId")
+                        .IsUnique();
+
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("TickerQ.Utilities.Entities.CronTickerEntity", b =>

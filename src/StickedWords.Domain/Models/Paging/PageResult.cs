@@ -2,7 +2,11 @@
 
 public record PageResult<T>
 {
-    public PageResult() { }
+    public PageResult()
+    {
+        Data = [];
+        Total = 0;
+    }
 
     public PageResult(IReadOnlyCollection<T> data, int? total = null)
     {

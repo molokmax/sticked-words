@@ -8,6 +8,7 @@ builder.AddLogger();
 builder.AddServiceDefaults();
 builder.Services.UseHttpClientMetrics();
 builder.Services.ConfigureHttp();
+builder.Services.AddHttpContextAccessor();
 builder.AddAuth();
 
 builder.AddServices();

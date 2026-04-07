@@ -11,6 +11,7 @@ public static class ServiceCollectionExtensions
     {
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+        services.AddTransient<IUserRepository, UserRepository>();
         services.AddTransient<IFlashCardRepository, FlashCardRepository>();
         services.AddTransient<ILearningSessionRepository, LearningSessionRepository>();
         services.AddTransient<IImageRepository, ImageRepository>();

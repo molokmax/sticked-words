@@ -2,7 +2,9 @@
 using AspNet.Security.OAuth.Yandex;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using StickedWords.API.Mappers;
 using StickedWords.API.Models;
+using StickedWords.Domain;
 
 namespace StickedWords.API.Endpoints;
 
@@ -31,25 +33,9 @@ public static class AuthEndpoints
         return Results.Challenge(props, [YandexAuthenticationDefaults.AuthenticationScheme]);
     }
 
-    private static UserInfoDto? UserInfo(HttpContext context)
+    private static UserInfoDto? UserInfo(IUserInfoProvider userProvider)
     {
-        if (context.User.Identity?.IsAuthenticated != true)
-        {
-            return null;
-        }
-
-        var result = new UserInfoDto
-        {
-            Id = 0,
-            Login = context.User.FindFirstValue(CustomClaimTypes.Login) ?? string.Empty,
-            Surname = context.User.FindFirstValue(CustomClaimTypes.Surname),
-            GivenName = context.User.FindFirstValue(CustomClaimTypes.GivenName),
-            Email = context.User.FindFirstValue(CustomClaimTypes.Email),
-            ExternalId = context.User.FindFirstValue(CustomClaimTypes.Id) ?? string.Empty,
-            AuthProvider = context.User.FindFirstValue(CustomClaimTypes.Provider) ?? string.Empty
-        };
-
-        return result;
+        return userProvider.Get()?.ToDto();
     }
 
     private static async Task Logout(HttpContext context)

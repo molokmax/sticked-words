@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Options;
 using StickedWords.Application.Specifications;
 using StickedWords.Domain;
+using StickedWords.Domain.Exceptions;
 using StickedWords.Domain.Repositories;
 
 namespace StickedWords.Application.Commands.FlashCards;
@@ -10,6 +11,7 @@ internal sealed class RefreshFlashCardsRateCommandHandler : IRequestHandler<Refr
 {
     private readonly IFlashCardRepository _flashCardRepository;
     private readonly ILearningSessionRepository _sessionRepository;
+    private readonly IUserRepository _userRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly TimeProvider _timeProvider;
     private readonly LearningSessionOptions _options;
@@ -17,12 +19,14 @@ internal sealed class RefreshFlashCardsRateCommandHandler : IRequestHandler<Refr
     public RefreshFlashCardsRateCommandHandler(
         IFlashCardRepository flashCardRepository,
         ILearningSessionRepository sessionRepository,
+        IUserRepository userRepository,
         IUnitOfWork unitOfWork,
         TimeProvider timeProvider,
         IOptions<LearningSessionOptions> options)
     {
         _flashCardRepository = flashCardRepository;
         _sessionRepository = sessionRepository;
+        _userRepository = userRepository;
         _unitOfWork = unitOfWork;
         _timeProvider = timeProvider;
         _options = options.Value;
@@ -30,12 +34,6 @@ internal sealed class RefreshFlashCardsRateCommandHandler : IRequestHandler<Refr
 
     public async Task Handle(RefreshFlashCardsRateCommand command, CancellationToken cancellationToken)
     {
-        var activeSession = await _sessionRepository.GetActiveNotExpired(_timeProvider.GetUtcNow(), cancellationToken);
-        if (activeSession is not null)
-        {
-            return;
-        }
-
         var now = _timeProvider.GetUtcNow();
         var includeTotal = true;
         var processed = 0;
@@ -52,6 +50,10 @@ internal sealed class RefreshFlashCardsRateCommandHandler : IRequestHandler<Refr
             }
             foreach (var flashCard in page.Data)
             {
+                if (await HasActiveSession(flashCard.UserId, now, cancellationToken))
+                {
+                    continue;
+                }
                 flashCard.RefreshRate(_options, _timeProvider);
             }
             processed += page.Data.Count;
@@ -59,5 +61,14 @@ internal sealed class RefreshFlashCardsRateCommandHandler : IRequestHandler<Refr
 
 
         await _unitOfWork.SaveChanges(cancellationToken);
+    }
+
+    private async ValueTask<bool> HasActiveSession(long userId, DateTimeOffset now, CancellationToken cancellationToken)
+    {
+        // TODO: check in cache
+        var user = await _userRepository.GetById(userId, cancellationToken)
+            ?? throw new UserNotFoundException(userId);
+        var activeSession = await _sessionRepository.GetActiveNotExpired(user, now, cancellationToken);
+        return activeSession is not null;
     }
 }

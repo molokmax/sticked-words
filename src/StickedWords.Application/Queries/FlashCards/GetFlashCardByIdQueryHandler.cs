@@ -19,6 +19,7 @@ internal sealed class GetFlashCardByIdQueryHandler : IRequestHandler<GetFlashCar
         GetFlashCardByIdQuery request,
         CancellationToken cancellationToken)
     {
+        // TODO: check that user has permissions
         return await _repository.GetById(request.FlashCardId, cancellationToken)
             ?? throw new FlashCardNotFoundException(request.FlashCardId);
     }

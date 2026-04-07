@@ -16,6 +16,7 @@ internal sealed class GetLearningSessionResultsQueryHandler : IRequestHandler<Ge
 
     public async Task<LearningSessionResults> Handle(GetLearningSessionResultsQuery query, CancellationToken cancellationToken)
     {
+        // TODO: check that user has permissions
         var session = await _sessionRepository.GetById(query.LearningSessionId, cancellationToken);
         if (session is null)
         {

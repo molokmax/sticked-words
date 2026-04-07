@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using StickedWords.API.Endpoints;
 using StickedWords.Application;
 using StickedWords.Background;
+using StickedWords.Domain;
 using StickedWords.Domain.Exceptions;
 using StickedWords.Infrastructure;
 using StickedWords.Infrastructure.Postgres;
@@ -97,6 +98,8 @@ public static class ServiceCollectionExtensions
             });
 
         builder.Services.AddAuthorization();
+
+        builder.Services.AddScoped<IUserInfoProvider, UserInfoProvider>();
 
         return builder;
     }

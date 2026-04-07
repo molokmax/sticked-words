@@ -1,6 +1,6 @@
-﻿namespace StickedWords.API.Models;
+﻿namespace StickedWords.Domain.Models;
 
-public record UserInfoDto
+public record UserInfo
 {
     public required string Login { get; init; }
 

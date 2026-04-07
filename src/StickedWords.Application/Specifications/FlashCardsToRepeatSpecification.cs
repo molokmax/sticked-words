@@ -12,4 +12,11 @@ internal sealed class FlashCardsToRepeatSpecification : Specification<FlashCard>
         AddOrder(x => x.Rate);
         SetPaging(skip, take);
     }
+
+    public FlashCardsToRepeatSpecification(User user, DateTimeOffset now, int skip = 0, int? take = 100)
+    {
+        Criteria = x => x.UserId == user.Id && x.RepeatAtUnixTime < now.ToUnixTime();
+        AddOrder(x => x.Rate);
+        SetPaging(skip, take);
+    }
 }

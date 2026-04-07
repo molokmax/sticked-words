@@ -8,9 +8,9 @@ public interface ILearningSessionRepository
 {
     Task<LearningSession?> GetById(long sessionId, CancellationToken cancellationToken);
 
-    Task<LearningSession?> GetActive(CancellationToken cancellationToken);
+    Task<LearningSession?> GetActive(User user, CancellationToken cancellationToken);
 
-    Task<LearningSession?> GetActiveNotExpired(DateTimeOffset now, CancellationToken cancellationToken);
+    Task<LearningSession?> GetActiveNotExpired(User user, DateTimeOffset now, CancellationToken cancellationToken);
 
     Task<PageResult<LearningSession>> GetBySpecification(
         ISpecification<LearningSession> specification,
