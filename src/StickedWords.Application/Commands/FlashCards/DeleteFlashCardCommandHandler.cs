@@ -24,6 +24,7 @@ internal sealed class DeleteFlashCardCommandHandler : IRequestHandler<DeleteFlas
 
     public async Task<FlashCard> Handle(DeleteFlashCardCommand command, CancellationToken cancellationToken)
     {
+        // TODO: check that user has permissions
         var flashCard = await _repository.GetById(command.FlashCardId, cancellationToken)
             ?? throw new FlashCardNotFoundException(command.FlashCardId);
         flashCard.Delete(_timeProvider);

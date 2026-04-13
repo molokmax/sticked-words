@@ -16,6 +16,7 @@ internal sealed class GetTranslateToForeignQueryHandler : IRequestHandler<GetTra
 
     public async Task<TranslateExercise> Handle(GetTranslateToForeignQuery request, CancellationToken cancellationToken)
     {
+        // TODO: check that user has permissions
         var flashCard = await _repository.GetById(request.FlashCardId, cancellationToken);
         if (flashCard is null)
         {

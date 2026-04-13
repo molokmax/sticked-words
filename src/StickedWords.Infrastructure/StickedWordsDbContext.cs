@@ -19,6 +19,8 @@ public sealed class StickedWordsDbContext : DbContext
 
     public DbSet<Image> Images { get; set; }
 
+    public DbSet<User> Users { get; set; }
+
     public StickedWordsDbContext(DbContextOptions<StickedWordsDbContext> options)
         : base(options)
     {

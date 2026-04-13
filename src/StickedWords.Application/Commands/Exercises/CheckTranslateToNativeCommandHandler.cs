@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.Extensions.Options;
+using StickedWords.Application.Services;
 using StickedWords.Domain;
 using StickedWords.Domain.Exceptions;
 using StickedWords.Domain.Models;
@@ -12,24 +13,28 @@ internal sealed class CheckTranslateToNativeCommandHandler : IRequestHandler<Che
 {
     private readonly LearningSessionOptions _options;
     private readonly ILearningSessionRepository _sessionRepository;
+    private readonly UserService _userService;
     private readonly IUnitOfWork _unitOfWork;
     private readonly TimeProvider _timeProvider;
 
     public CheckTranslateToNativeCommandHandler(
         IOptions<LearningSessionOptions> options,
         ILearningSessionRepository sessionRepository,
+        UserService userService,
         IUnitOfWork unitOfWork,
         TimeProvider timeProvider)
     {
         _options = options.Value;
         _sessionRepository = sessionRepository;
+        _userService = userService;
         _unitOfWork = unitOfWork;
         _timeProvider = timeProvider;
     }
 
     public async Task<TranslateGuessResult> Handle(CheckTranslateToNativeCommand command, CancellationToken cancellationToken)
     {
-        var activeSession = await _sessionRepository.GetActive(cancellationToken);
+        var user = await _userService.Get(cancellationToken);
+        var activeSession = await _sessionRepository.GetActive(user, cancellationToken);
         if (activeSession is null)
         {
             throw new LearningSessionNotStartedException();

@@ -6,6 +6,8 @@ namespace StickedWords.UnitTests;
 
 public class FlashCardTests
 {
+    private static User _user = User.Create("123");
+
     [Test]
     public void RefreshRate_RateIs100_RepeatAtCalculated()
     {
@@ -106,7 +108,7 @@ public class FlashCardTests
     }
 
     private static FlashCard GetFlashCard() =>
-        FlashCard.Create("word1", "слово1", null, GetTimeProvider(DateTimeOffset.UtcNow));
+        FlashCard.Create("word1", "слово1", null, _user, GetTimeProvider(DateTimeOffset.UtcNow));
 
     private static LearningSessionOptions GetOptions(int period)
     {

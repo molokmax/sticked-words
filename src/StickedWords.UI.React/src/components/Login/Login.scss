@@ -1,0 +1,42 @@
+.login {
+
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  flex: 1;
+  padding: 50px;
+
+  &__title {
+    font-size: 16px;
+    font-weight: 500;
+    font-style: italic;
+    text-align: center;
+    margin-bottom: 50px;
+  }
+  
+  &__sub-title {
+    font-size: 14px;
+    text-align: center;
+    color: var(--vt-c-text-light-1);
+  }
+
+  &__buttons {
+    display: flex;
+    margin-top: 50px;
+    justify-content: center;
+  }
+
+  &__yandex-button {
+    background-color: black;
+    border-radius: 5px;
+    color: white;
+    display: flex;
+    align-items: center;
+
+    img {
+      height: 18px;
+      width: 18px;
+      margin-right: 5px;
+    }
+  }
+}

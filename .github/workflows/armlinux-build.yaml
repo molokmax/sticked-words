@@ -6,8 +6,8 @@ on:
   workflow_dispatch:
 
 env:
-  DOTNET_VERSION: '9.0'
-  NODE_VERSION: '22.14'
+  DOTNET_VERSION: '10.0'
+  NODE_VERSION: '25'
   API_PROJECT_PATH: 'src/StickedWords.API'
   UI_PROJECT_PATH: 'src/StickedWords.UI.React'
   RUNTIME_IDENTIFIER: 'linux-arm'

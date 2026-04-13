@@ -16,6 +16,7 @@ internal sealed class GetTranslateToNativeQueryHandler : IRequestHandler<GetTran
 
     public async Task<TranslateExercise> Handle(GetTranslateToNativeQuery request, CancellationToken cancellationToken)
     {
+        // TODO: check that user has permissions
         var flashCard = await _repository.GetById(request.FlashCardId, cancellationToken);
         if (flashCard is null)
         {

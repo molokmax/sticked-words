@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using StickedWords.Application.Services;
 using StickedWords.Domain;
 using StickedWords.Shared;
 
@@ -11,6 +12,8 @@ public static class ServiceCollectionExtensions
     {
         builder.ConfigureFromConfiguration<LearningSessionOptions>();
         builder.Services.AddMediatR(opts => opts.RegisterServicesFromAssembly(AssemblyReference.Assembly));
+
+        builder.Services.AddTransient<UserService>();
 
         return builder;
     }

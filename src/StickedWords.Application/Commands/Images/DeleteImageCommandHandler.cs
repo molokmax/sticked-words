@@ -20,6 +20,7 @@ internal sealed class DeleteImageCommandHandler : IRequestHandler<DeleteImageCom
 
     public async Task Handle(DeleteImageCommand command, CancellationToken cancellationToken)
     {
+        // TODO: check that user has permissions
         var image = await _repository.GetById(command.ImageId, cancellationToken)
             ?? throw new ImageNotFoundException(command.ImageId);
         _repository.Delete(image);

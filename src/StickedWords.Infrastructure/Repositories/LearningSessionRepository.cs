@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query;
 using StickedWords.Domain;
 using StickedWords.Domain.Models;
 using StickedWords.Domain.Models.Paging;
@@ -23,16 +22,19 @@ internal class LearningSessionRepository : ILearningSessionRepository
             .FirstOrDefaultAsync(x => x.Id == sessionId, cancellationToken);
     }
 
-    public async Task<LearningSession?> GetActive(CancellationToken cancellationToken)
+    public async Task<LearningSession?> GetActive(User user, CancellationToken cancellationToken)
     {
         return await WithIncludes(_context.LearningSessions)
-            .FirstOrDefaultAsync(x => x.State == LearningSessionState.Active);
+            .FirstOrDefaultAsync(x => x.UserId == user.Id
+                && x.State == LearningSessionState.Active);
     }
 
-    public async Task<LearningSession?> GetActiveNotExpired(DateTimeOffset now, CancellationToken cancellationToken)
+    public async Task<LearningSession?> GetActiveNotExpired(User user, DateTimeOffset now, CancellationToken cancellationToken)
     {
         return await WithIncludes(_context.LearningSessions)
-            .FirstOrDefaultAsync(x => x.State == LearningSessionState.Active && x.ExpiringAtUnixTime > now.ToUnixTime());
+            .FirstOrDefaultAsync(x => x.UserId == user.Id
+                && x.State == LearningSessionState.Active
+                && x.ExpiringAtUnixTime > now.ToUnixTime());
     }
 
     public async Task<PageResult<LearningSession>> GetBySpecification(

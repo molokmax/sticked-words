@@ -19,6 +19,7 @@ internal sealed class GetImageByIdQueryHandler : IRequestHandler<GetImageByIdQue
         GetImageByIdQuery request,
         CancellationToken cancellationToken)
     {
+        // TODO: check that user has permissions
         var image = await _repository.GetById(request.ImageId, cancellationToken)
             ?? throw new ImageNotFoundException(request.ImageId);
 

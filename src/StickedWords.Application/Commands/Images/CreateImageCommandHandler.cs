@@ -23,6 +23,7 @@ internal sealed class CreateImageCommandHandler : IRequestHandler<CreateImageCom
 
     public async Task<Image> Handle(CreateImageCommand command, CancellationToken cancellationToken)
     {
+        // TODO: add link to user
         var image = Image.Create(command.Base64Data, _timeProvider);
         _repository.Add(image);
         await _unitOfWork.SaveChanges(cancellationToken);

@@ -11,7 +11,7 @@ public static class TranslateToForeignExerciseEndpoints
 {
     public static IEndpointRouteBuilder RegisterTranslateToForeignExerciseEndpoints(this IEndpointRouteBuilder builder)
     {
-        var group = builder.MapGroup("/api/exercises/translate-to-foreign");
+        var group = builder.MapGroup("/api/exercises/translate-to-foreign").RequireAuthorization();
 
         group.MapGet("/", GetExercise);
         group.MapPost("/", CheckGuess);

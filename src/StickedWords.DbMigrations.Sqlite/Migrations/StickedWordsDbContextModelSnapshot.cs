@@ -51,6 +51,9 @@ namespace StickedWords.DbMigrations.Migrations.Sqlite
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<long>("UserId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Word")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -123,6 +126,9 @@ namespace StickedWords.DbMigrations.Migrations.Sqlite
                     b.Property<int>("State")
                         .HasColumnType("INTEGER");
 
+                    b.Property<long>("UserId")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("Id");
 
                     b.ToTable("LearningSessions");
@@ -177,6 +183,23 @@ namespace StickedWords.DbMigrations.Migrations.Sqlite
                     b.HasIndex("LearningSessionId");
 
                     b.ToTable("SessionStages");
+                });
+
+            modelBuilder.Entity("StickedWords.Domain.Models.User", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("YandexId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("YandexId")
+                        .IsUnique();
+
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("TickerQ.Utilities.Entities.CronTickerEntity", b =>

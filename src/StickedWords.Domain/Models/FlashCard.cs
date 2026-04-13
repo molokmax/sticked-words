@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using StickedWords.Domain.Exceptions;
+﻿using StickedWords.Domain.Exceptions;
 
 namespace StickedWords.Domain.Models;
 
@@ -28,6 +27,8 @@ public class FlashCard : ISoftDeletable
     public DateTimeOffset RepeatAt { get; private set; }
 
     public long RepeatAtUnixTime { get; private set; }
+
+    public long UserId { get; private set; }
 
     public DateTimeOffset CreatedAt { get; private set; }
 
@@ -84,6 +85,7 @@ public class FlashCard : ISoftDeletable
         FlashCardWord word,
         FlashCardWord translation,
         long? imageId,
+        User user,
         TimeProvider timeProvider)
     {
         return new()
@@ -93,7 +95,8 @@ public class FlashCard : ISoftDeletable
             ImageId = imageId,
             CreatedAt = timeProvider.GetUtcNow(),
             RepeatAt = timeProvider.GetUtcNow(),
-            Rate = 0
+            Rate = 0,
+            UserId = user.Id
         };
     }
 }
