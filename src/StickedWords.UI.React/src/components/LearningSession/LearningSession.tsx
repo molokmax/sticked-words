@@ -1,15 +1,15 @@
-import { useEffect, useState } from 'react';
-import { ErrorHandler } from '../../services/ErrorHandler';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { ExerciseType, LearningSession as LearningSessionModel, LearningSessionState } from '../../models/LearningSession';
-import LearningSessionResults from '../LearningSessionResults';
-import LearningSessionProgress from '../LearningSessionProgress';
+import { ErrorHandler } from '../../services/ErrorHandler';
 import { LearningSessionService } from '../../services/LearningSessionService';
+import { useErrorListContext } from '../ErrorList';
 import TranslateForeignToNativeExercise from '../Exercises/TranslateForeignToNativeExercise';
 import TranslateNativeToForeignExercise from '../Exercises/TranslateNativeToForeignExercise';
+import LearningSessionProgress from '../LearningSessionProgress';
+import LearningSessionResults from '../LearningSessionResults';
 import Loading from '../Loading';
-import { useErrorListContext } from '../ErrorList';
 
-import './LearningSession.scss'
+import './LearningSession.scss';
 
 
 function LearningSession() {
@@ -20,28 +20,27 @@ function LearningSession() {
     const [showIntro, setShowIntro] = useState(false);
     const { addError } = useErrorListContext();
     
-    const service = new LearningSessionService();
-    
-        
-    const loadLearningSession = async () => {
-        const sessionId = service.getCurrentSessionId();
-        if (sessionId) {
-            const session = await service.getById(sessionId);
-            if (session) {
-                return session;
-            }
-        }
+    const service = useMemo(() => new LearningSessionService(), []);
 
-        const session = await service.getActive() ?? await service.start();
-        service.saveCurrentSessionId(session.id);
-
-        return session;
-    }
-
-    const loadData = (isSessionExpired = false) => {
+    const loadData = useCallback((isSessionExpired = false) => {
         if (isSessionExpired) {
             setIsSessionExpired(isSessionExpired);
             return;
+        }
+
+        const loadLearningSession = async () => {
+            const sessionId = service.getCurrentSessionId();
+            if (sessionId) {
+                const session = await service.getById(sessionId);
+                if (session) {
+                    return session;
+                }
+            }
+
+            const session = await service.getActive() ?? await service.start();
+            service.saveCurrentSessionId(session.id);
+
+            return session;
         }
 
         setLoading(true);
@@ -59,7 +58,7 @@ function LearningSession() {
                 addError(ErrorHandler.getMessage(err));
             })
             .finally(() => setLoading(false));
-    }
+    }, [service, addError]);
 
     const getExerciseElement = (session: LearningSessionModel) => {
         if (session.flashCardId && session.exerciseType === ExerciseType.TranslateForeignToNative) {
@@ -83,7 +82,9 @@ function LearningSession() {
         return <div>Unknown Exercise</div>;
     }
 
-    useEffect(() => loadData(), []);
+    useEffect(() => {
+        loadData();
+    }, [loadData]);
 
     if (loading) {
         return <main className="learning-session"><Loading /></main>;

@@ -1,15 +1,14 @@
-import { UIEvent, useRef } from 'react';
-import { useEffect, useState } from 'react';
+import { UIEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router';
-import FlashCardListItem from '../FlashCardListItem';
-import Loading from '../Loading';
+import { FlashCardShort } from '../../models/FlashCardShort';
 import { PageQuery } from '../../models/PageQuery';
 import { ErrorHandler } from '../../services/ErrorHandler';
 import { FlashCardService } from '../../services/FlashCardService';
-import { FlashCardShort } from '../../models/FlashCardShort';
 import { useErrorListContext } from '../ErrorList';
+import FlashCardListItem from '../FlashCardListItem';
+import Loading from '../Loading';
 
-import './FlashCardList.scss'
+import './FlashCardList.scss';
 
 function FlashCardList() {
 
@@ -19,32 +18,41 @@ function FlashCardList() {
     const [data, setData] = useState<FlashCardShort[]>([]);
     const { addError } = useErrorListContext();
 
-    const service = new FlashCardService();
+    const service = useMemo(() => new FlashCardService(), []);
+    const dataLength = useMemo(() => data.length, [data.length]);
 
-    const loadData = async (reload = false) => {
+    // Sync ref with state
+    // useEffect(() => {
+    //     dataLengthRef.current = data.length;
+    // }, [data.length]);
+    // TODO: убрать код выше
+
+    const loadData = useCallback((reload = false) => {
         const scrollTop = scrollRef.current?.scrollTop ?? 0;
-        try {
-            setLoading(true);
-            const skip = reload ? 0 : data.length;
-            const query = new PageQuery(reload, skip);
-            const page = await service.getByQuery(query);
-            reload ? setData(page.data) : setData(oldData => [...oldData, ...page.data]);
-            if (page.total != null) { // null or undefined
-                setTotal(page.total);
-            }
-        } catch (err) {
-            if (reload) {
-                setData([]);
-                setTotal(0);
-            }
-            addError(ErrorHandler.getMessage(err));
-        } finally {
-            setLoading(false);
-            if (scrollRef.current) {
-                scrollRef.current.scrollTop = scrollTop;
-            }
-        }
-    }
+        const skip = reload ? 0 : dataLength;
+        const query = new PageQuery(reload, skip);
+        setLoading(true);
+        service.getByQuery(query)
+            .then(page => {
+                reload ? setData(page.data) : setData(oldData => [...oldData, ...page.data]);
+                if (page.total != null) { // null or undefined
+                    setTotal(page.total);
+                }
+            })
+            .catch(err => {
+                if (reload) {
+                    setData([]);
+                    setTotal(0);
+                }
+                addError(ErrorHandler.getMessage(err));
+            })
+            .finally(() => {
+                setLoading(false);
+                if (scrollRef.current) {
+                    scrollRef.current.scrollTop = scrollTop;
+                }
+            });
+    }, [service, addError, dataLength]);
 
     function onScrolled(ev: UIEvent<HTMLDivElement>) {
         const container = ev.currentTarget;
@@ -55,9 +63,7 @@ function FlashCardList() {
         }
     };
 
-    useEffect(() => {
-        loadData(true);
-    }, []);
+    useEffect(() => loadData(true), [loadData]);
 
     return (
         <div className="flash-card-list">

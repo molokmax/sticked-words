@@ -1,11 +1,11 @@
-import { useEffect, useState } from 'react';
-import { ErrorHandler } from '../../../services/ErrorHandler';
-import Image from '../../Image';
-import { GuessResult, TranslateGuessResult } from '../../../models/exercises/TranslateGuessResult';
-import { TranslateNativeToForeignExerciseService } from '../../../services/exercises/TranslateNativeToForeignExerciseService';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { TranslateGuess } from '../../../models/exercises/TranslateGuess';
+import { GuessResult, TranslateGuessResult } from '../../../models/exercises/TranslateGuessResult';
+import { ErrorHandler } from '../../../services/ErrorHandler';
+import { TranslateNativeToForeignExerciseService } from '../../../services/exercises/TranslateNativeToForeignExerciseService';
 import { useEnterKey, useFocus } from '../../../services/hooks';
 import { useErrorListContext } from '../../ErrorList';
+import Image from '../../Image';
 
 import './TranslateNativeToForeignExercise.scss';
 
@@ -27,15 +27,7 @@ function TranslateNativeToForeignExercise({ flashCardId, onNext }: Props) {
     const [isSessionExpired, setIsSessionExpired] = useState(false);
     const { addError } = useErrorListContext();
 
-    const service = new TranslateNativeToForeignExerciseService();
-
-    const resetForm = () => {
-        setAnswer("");
-        setIsGuessChecked(false);
-        setIsGuessCorrect(false);
-        setCorrectAnswer(null);
-        setIsSessionExpired(false);
-    }
+    const service = useMemo(() => new TranslateNativeToForeignExerciseService(), []);
 
     const setCheckResult = (result: TranslateGuessResult) => {
         setIsGuessChecked(true);
@@ -46,7 +38,16 @@ function TranslateNativeToForeignExercise({ flashCardId, onNext }: Props) {
 
     const isFormValid = () => answer.trim().length > 0;
 
-    const loadData = (flashCardId: number) => {
+    const loadData = useCallback((flashCardId: number) => {
+            
+        const resetForm = () => {
+            setAnswer("");
+            setIsGuessChecked(false);
+            setIsGuessCorrect(false);
+            setCorrectAnswer(null);
+            setIsSessionExpired(false);
+        }
+
         setLoading(true);
         resetForm();
         service.get(flashCardId)
@@ -60,7 +61,7 @@ function TranslateNativeToForeignExercise({ flashCardId, onNext }: Props) {
                 addError(ErrorHandler.getMessage(err))
             })
             .finally(() => setLoading(false));
-    }
+    }, [service, addError]);
 
     const onCheckClicked = () => {
         if (!isFormValid()) {
@@ -88,7 +89,7 @@ function TranslateNativeToForeignExercise({ flashCardId, onNext }: Props) {
     const autoFocusRef = useFocus();
     useEnterKey(isGuessChecked ? () => onNext(isSessionExpired) : onCheckClicked);
 
-    useEffect(() => loadData(flashCardId), [flashCardId]);
+    useEffect(() => loadData(flashCardId), [loadData, flashCardId]);
 
     let resultsElement = null;
     if (isGuessChecked && isGuessCorrect) {

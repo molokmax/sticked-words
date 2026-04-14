@@ -1,11 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
-import { useErrorListContext } from '../ErrorList';
-import { ErrorHandler } from '../../services/ErrorHandler';
-import Image from '../Image';
 import { FlashCardDetails as FlashCardDetailsModel } from '../../models/FlashCardDetails';
 import { UpdateFlashCardRequest } from '../../models/UpdateFlashCardRequest';
+import { ErrorHandler } from '../../services/ErrorHandler';
 import { FlashCardService } from '../../services/FlashCardService';
+import { useErrorListContext } from '../ErrorList';
+import Image from '../Image';
 import Loading from '../Loading';
 
 import './FlashCardDetails.scss';
@@ -24,20 +24,22 @@ function FlashCardDetails() {
     const [imageId, setImageId] = useState<number | null>(null);
     const { addError } = useErrorListContext();
 
-    const service = new FlashCardService();
+    const service = useMemo(() => new FlashCardService(), []);
+    const flashCardIdParam = useMemo(() => params.flashCardId, [params]);
+
     const isFormValid = !!word && !!translation;
     const isDirty = word !== flashCard?.word
         || translation !== flashCard?.translation
         || imageId !== flashCard?.imageId;
 
-    const loadData = () => {
-        const flashCardIdRaw = params.flashCardId;
-        if (!flashCardIdRaw) {
+    const loadData = useCallback(() => {
+        // const flashCardIdRaw = flashCardIdParam;
+        if (!flashCardIdParam) {
             setFlashCard(null);
             addError('Flash Card identifier is not specified');
             return;
         }
-        const flashCardId = Number.parseInt(flashCardIdRaw, 10);
+        const flashCardId = Number.parseInt(flashCardIdParam, 10);
         setLoading(true);
         service.getById(flashCardId)
             .then(res => {
@@ -48,13 +50,13 @@ function FlashCardDetails() {
                 addError(ErrorHandler.getMessage(err))
             })
             .finally(() => setLoading(false));
-    }
+    }, [service, addError, flashCardIdParam]);
 
-    const resetForm = () => {
+    const resetForm = useCallback(() => {
         setWord(flashCard?.word ?? "");
         setTranslation(flashCard?.translation ?? "");
         setImageId(flashCard?.imageId ?? null);
-    }
+    }, [flashCard]);
 
     const goToCardList = () => {
         navigate("/");
@@ -142,7 +144,7 @@ function FlashCardDetails() {
         )
     }
 
-    useEffect(() => loadData(), []);
+    useEffect(() => loadData(), [loadData]);
 
     if (loading) {
         return <main className="flash-card-details"><Loading /></main>;

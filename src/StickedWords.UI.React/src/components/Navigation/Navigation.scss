@@ -27,15 +27,21 @@
     &:first-of-type {
       border: 0;
     }
-      
-    &.logout-link {
-      display: flex;
-      align-items: center;
+  }
 
-      img {
-        height: 16px;
-        width: 16px;
-      }
+  &__logout-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    img {
+      height: 16px;
+      width: 16px;
+    }
+
+    &:hover {
+      transition: 0.4s;
+      background: var(--color-background-hover);
     }
   }
 }
