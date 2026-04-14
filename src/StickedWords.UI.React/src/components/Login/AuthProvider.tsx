@@ -1,9 +1,9 @@
-import { createContext, useState, useCallback, useMemo, ReactNode, useContext, useEffect } from 'react';
+import { createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { UserInfo } from '../../models/UserInfo';
 import { AuthService } from '../../services/AuthService';
+import { ErrorHandler } from '../../services/ErrorHandler';
 import { useErrorListContext } from '../ErrorList';
 import Login, { LoginProvider } from './Login';
-import { ErrorHandler } from '../../services/ErrorHandler';
 
 interface AuthContextValue {
     user: UserInfo | null;
@@ -46,7 +46,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
             .then(setUser)
             .catch(err => addError(ErrorHandler.getMessage(err)))
             .finally(() => setLoading(false));
-    }, []);
+    }, [service, addError]);
 
     const value: AuthContextValue = {
         user,

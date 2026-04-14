@@ -1,4 +1,4 @@
-import { createContext, useState, useCallback, useMemo, ReactNode, useContext } from 'react';
+import { createContext, ReactNode, useCallback, useContext, useMemo, useState } from 'react';
 import ErrorList, { type Error } from './ErrorList';
 
 interface ErrorListContextValue {
@@ -37,6 +37,10 @@ export const ErrorListProvider = ({ children }: ErrorListProviderProps) => {
 export const useErrorList = () => {
     const [errors, setErrors] = useState<Error[]>([]);
 
+    const removeError = useCallback((id: number) => {
+        setErrors(prev => prev.filter(e => e.id !== id));
+    }, []);
+
     const addError = useCallback((message: string | null, options: AddErrorOptions = {}) => {
         if (!message) {
             return 0;
@@ -60,11 +64,7 @@ export const useErrorList = () => {
         }, duration);
 
         return id;
-    }, []);
-
-    const removeError = useCallback((id: number) => {
-        setErrors(prev => prev.filter(e => e.id !== id));
-    }, []);
+    }, [removeError]);
 
     return {
         errors,

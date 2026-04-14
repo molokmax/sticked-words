@@ -1,12 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router';
-import { ErrorHandler } from '../../services/ErrorHandler';
 import { LearningSessionState } from '../../models/LearningSession';
+import { ErrorHandler } from '../../services/ErrorHandler';
 import { LearningSessionService } from '../../services/LearningSessionService';
 import { useEnterKey } from '../../services/hooks';
 import { useErrorListContext } from '../ErrorList';
 
-import './LearningSessionResults.scss'
+import './LearningSessionResults.scss';
 
 
 interface Props {
@@ -21,10 +21,10 @@ function LearningSessionResults({ sessionId }: Props) {
     const { addError } = useErrorListContext();
 
     const navigate = useNavigate();
-    const service = new LearningSessionService();
+    const service = useMemo(() => new LearningSessionService(), []);
 
 
-    const loadData = (sessionId: number) => {
+    const loadData = useCallback((sessionId: number) => {
         setLoading(true);
         service.getResults(sessionId)
             .then(res => {
@@ -37,7 +37,7 @@ function LearningSessionResults({ sessionId }: Props) {
                 addError(ErrorHandler.getMessage(err));
             })
             .finally(() => setLoading(false));
-    }
+    }, [service, addError])
 
     const onContinueClicked = () => {
         service.deleteCurrentSessionId();
@@ -48,7 +48,7 @@ function LearningSessionResults({ sessionId }: Props) {
 
     useEffect(() => {
         loadData(sessionId);
-    }, [sessionId]);
+    }, [sessionId, loadData]);
 
     if (sessionState === LearningSessionState.Expired) {
         return (

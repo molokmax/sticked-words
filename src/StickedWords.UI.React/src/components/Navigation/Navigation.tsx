@@ -1,7 +1,7 @@
 import { NavLink } from 'react-router';
 import { useAuthContext } from '../Login/AuthProvider';
 
-import './Navigation.scss'
+import './Navigation.scss';
 
 
 function Navigation() {
@@ -11,9 +11,9 @@ function Navigation() {
     return (
         <nav className="navigation">
             <NavLink to="/">All Cards</NavLink>
-            <a className="logout-link" onClick={logout}>
-                <img src="logout.svg" />
-            </a>
+            <button className="navigation__logout-link" onClick={logout}>
+                <img src="logout.svg" alt="exit"/>
+            </button>
         </nav>
     );
 }

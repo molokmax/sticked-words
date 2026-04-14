@@ -1,7 +1,7 @@
 import { useEnterKey } from '../../services/hooks';
 import Loading from '../Loading';
 
-import './Login.scss'
+import './Login.scss';
 
 
 export type LoginProvider = 'yandex';
@@ -35,7 +35,7 @@ function Login({ loading, login }: Props) {
                                     className="login__yandex-button"
                                     onClick={ onYandexClicked }
                                 >
-                                    <img src="ya.svg" />
+                                    <img src="ya.svg" alt=""/>
                                     Yandex ID
                                 </button>
                             </div>
