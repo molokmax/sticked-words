@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { TranslateGuess } from '../../../models/exercises/TranslateGuess';
-import { GuessResult, TranslateGuessResult } from '../../../models/exercises/TranslateGuessResult';
+import { Guess } from '../../../models/exercises/Guess';
+import { GuessResult, Verdict } from '../../../models/exercises/GuessResult';
 import { ErrorHandler } from '../../../services/ErrorHandler';
 import { TranslateNativeToForeignExerciseService } from '../../../services/exercises/TranslateNativeToForeignExerciseService';
 import { useEnterKey, useFocus } from '../../../services/hooks';
@@ -29,9 +29,9 @@ function TranslateNativeToForeignExercise({ flashCardId, onNext }: Props) {
 
     const service = useMemo(() => new TranslateNativeToForeignExerciseService(), []);
 
-    const setCheckResult = (result: TranslateGuessResult) => {
+    const setCheckResult = (result: GuessResult) => {
         setIsGuessChecked(true);
-        setIsGuessCorrect(result.result === GuessResult.Correct);
+        setIsGuessCorrect(result.result === Verdict.Correct);
         setCorrectAnswer(result.correctTranslation ?? null);
         setIsSessionExpired(result.isExpired);
     }
@@ -68,14 +68,14 @@ function TranslateNativeToForeignExercise({ flashCardId, onNext }: Props) {
             return;
         }
 
-        const request : TranslateGuess = {
+        const request : Guess = {
             flashCardId: flashCardId,
             answer: answer
         };
         setLoading(true);
         service.check(request)
             .then(response => {
-                if (response.result === GuessResult.None) {
+                if (response.result === Verdict.None) {
                     throw new Error(`Guess result '${response.result}' is not supported`);
                 }
                 setCheckResult(response);
