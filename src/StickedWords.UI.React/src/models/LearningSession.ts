@@ -3,7 +3,9 @@ import { LearningSessionStage } from "./LearningSessionStage";
 export enum ExerciseType {
   None = "None",
   TranslateForeignToNative = "TranslateForeignToNative",
-  TranslateNativeToForeign = "TranslateNativeToForeign"
+  TranslateNativeToForeign = "TranslateNativeToForeign",
+  ChooseFromNative = "ChooseFromNative",
+  ChooseFromForeign = "ChooseFromForeign"
 }
 
 export enum LearningSessionState {
