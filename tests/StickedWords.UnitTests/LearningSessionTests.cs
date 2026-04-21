@@ -13,8 +13,8 @@ public class LearningSessionTests
     public void Finish_StartedSession_StateFinished()
     {
         // Arrange
-        var session = GetStartedSession([GetFlashCard()]);
         var options = GetOptions();
+        var session = GetStartedSession([GetFlashCard()], options);
 
         // Act
         session.Finish(options, _timeProvider);
@@ -27,8 +27,8 @@ public class LearningSessionTests
     public void Finish_StartedSession_StagesUnactive()
     {
         // Arrange
-        var session = GetStartedSession([GetFlashCard()]);
         var options = GetOptions();
+        var session = GetStartedSession([GetFlashCard()], options);
 
         // Act
         session.Finish(options, _timeProvider);
@@ -45,8 +45,8 @@ public class LearningSessionTests
     {
         // Arrange
         var flashCard = GetFlashCard();
-        var session = GetStartedSession([flashCard]);
         var options = GetOptions();
+        var session = GetStartedSession([flashCard], options);
         session.TryMoveToNextFlashCard(Verdict.Correct);
         session.TryMoveToNextFlashCard(Verdict.Correct);
 
@@ -62,8 +62,8 @@ public class LearningSessionTests
     {
         // Arrange
         var flashCard = GetFlashCard();
-        var session = GetStartedSession([flashCard]);
         var options = GetOptions();
+        var session = GetStartedSession([flashCard], options);
         session.TryMoveToNextFlashCard(Verdict.Correct);
         session.TryMoveToNextFlashCard(Verdict.Wrong);
 
@@ -79,8 +79,8 @@ public class LearningSessionTests
     {
         // Arrange
         var flashCard = GetFlashCard();
-        var session = GetStartedSession([flashCard]);
         var options = GetOptions();
+        var session = GetStartedSession([flashCard], options);
         session.TryMoveToNextFlashCard(Verdict.Wrong);
         session.TryMoveToNextFlashCard(Verdict.Wrong);
 
@@ -96,8 +96,8 @@ public class LearningSessionTests
     {
         // Arrange
         var flashCard = GetFlashCard();
-        var session = GetStartedSession([flashCard]);
         var options = GetOptions();
+        var session = GetStartedSession([flashCard], options);
 
         // Act
         session.Finish(options, _timeProvider);
@@ -106,9 +106,9 @@ public class LearningSessionTests
         Assert.That(flashCard.Rate, Is.EqualTo(0));
     }
 
-    private static LearningSession GetStartedSession(FlashCard[] flashCards)
+    private static LearningSession GetStartedSession(FlashCard[] flashCards, LearningSessionOptions options)
     {
-        var session = LearningSession.Create(flashCards, _user);
+        var session = LearningSession.Create(flashCards, _user, options.Exercises);
         session.Start(TimeSpan.FromMinutes(1));
 
         return session;
@@ -120,7 +120,12 @@ public class LearningSessionTests
     {
         return new()
         {
-            RepeatFlashCardPeriod = TimeSpan.FromMinutes(5)
+            RepeatFlashCardPeriod = TimeSpan.FromMinutes(5),
+            Exercises =
+            [
+                ExerciseType.TranslateForeignToNative,
+                ExerciseType.TranslateNativeToForeign
+            ]
         };
     }
 }
