@@ -1,4 +1,5 @@
 ﻿using StickedWords.API.Models;
+using StickedWords.API.Models.Exercises;
 using StickedWords.Domain.Models;
 using StickedWords.Domain.Models.Exercises;
 
@@ -35,6 +36,14 @@ internal static class LearningSessionMapper
         {
             Word = source.Word,
             ImageId = source.ImageId
+        };
+
+    public static ChooseExerciseDto ToDto(this ChooseExercise source) =>
+        new()
+        {
+            Word = source.Word,
+            ImageId = source.ImageId,
+            Options = source.Options
         };
 
     public static LearningSessionResultsDto ToDto(this LearningSessionResults source)
