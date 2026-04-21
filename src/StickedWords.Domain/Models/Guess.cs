@@ -12,5 +12,5 @@ public record Guess
 
     public required virtual FlashCard FlashCard { get; init; }
 
-    public GuessResult Result { get; init; }
+    public Verdict Result { get; init; }
 }

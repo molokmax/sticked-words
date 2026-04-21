@@ -1,6 +1,6 @@
 ﻿namespace StickedWords.Domain.Models;
 
-public enum GuessResult
+public enum Verdict
 {
     None,
     Correct,

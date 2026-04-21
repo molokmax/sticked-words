@@ -24,7 +24,7 @@ public record SessionStage
 
     public List<Guess> Guesses { get; private set; } = [];
 
-    public void AddGuessResult(GuessResult guessResult)
+    public void AddGuessResult(Verdict guessResult)
     {
         if (CurrentFlashCard is null)
         {

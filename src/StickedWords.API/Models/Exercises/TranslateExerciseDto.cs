@@ -1,4 +1,4 @@
-﻿namespace StickedWords.API.Models;
+﻿namespace StickedWords.API.Models.Exercises;
 
 public record TranslateExerciseDto
 {

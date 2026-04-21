@@ -78,7 +78,7 @@ public record LearningSession
     public SessionStage GetActiveStage() =>
         Stages.FirstOrDefault(x => x.IsActive) ?? throw new ActiveStageNotFoundException();
 
-    public bool TryMoveToNextFlashCard(GuessResult guessResult)
+    public bool TryMoveToNextFlashCard(Verdict guessResult)
     {
         var activeStage = GetActiveStage();
         activeStage.AddGuessResult(guessResult);
@@ -113,7 +113,7 @@ public record LearningSession
         foreach (var stage in Stages)
         {
             var guess = stage.Guesses.FirstOrDefault(x => x.FlashCardId == flashCard.Id);
-            if (guess?.Result is GuessResult.Correct)
+            if (guess?.Result is Verdict.Correct)
             {
                 correctGuessCount += 1;
             }

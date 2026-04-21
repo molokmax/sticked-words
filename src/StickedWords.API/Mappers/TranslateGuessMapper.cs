@@ -5,7 +5,7 @@ namespace StickedWords.API.Mappers;
 
 public static class TranslateGuessMapper
 {
-    public static TranslateGuessResultDto ToDto(this TranslateGuessResult source)
+    public static GuessResultDto ToDto(this GuessResult source)
     {
         return new()
         {

@@ -2,7 +2,7 @@
 
 public interface IExerciseResult
 {
-    GuessResult Result { get; }
+    Verdict Result { get; }
 
     bool IsExpired { get; }
 }

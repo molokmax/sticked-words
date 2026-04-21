@@ -9,7 +9,7 @@ using StickedWords.Domain.Repositories;
 
 namespace StickedWords.Application.Commands.Exercises;
 
-internal sealed class CheckTranslateToNativeCommandHandler : IRequestHandler<CheckTranslateToNativeCommand, TranslateGuessResult>
+internal sealed class CheckTranslateToNativeCommandHandler : IRequestHandler<CheckTranslateToNativeCommand, GuessResult>
 {
     private readonly LearningSessionOptions _options;
     private readonly ILearningSessionRepository _sessionRepository;
@@ -31,7 +31,7 @@ internal sealed class CheckTranslateToNativeCommandHandler : IRequestHandler<Che
         _timeProvider = timeProvider;
     }
 
-    public async Task<TranslateGuessResult> Handle(CheckTranslateToNativeCommand command, CancellationToken cancellationToken)
+    public async Task<GuessResult> Handle(CheckTranslateToNativeCommand command, CancellationToken cancellationToken)
     {
         var user = await _userService.Get(cancellationToken);
         var activeSession = await _sessionRepository.GetActive(user, cancellationToken);
@@ -57,7 +57,7 @@ internal sealed class CheckTranslateToNativeCommandHandler : IRequestHandler<Che
         }
 
         var flashCard = activeStage.CurrentFlashCard.FlashCard;
-        var guessResult = GetGuessResult(flashCard, FlashCardWord.Create(command.Answer));
+        var guessResult = GetVerdict(flashCard, FlashCardWord.Create(command.Answer));
 
         if (!activeSession.TryMoveToNextFlashCard(guessResult))
         {
@@ -68,17 +68,17 @@ internal sealed class CheckTranslateToNativeCommandHandler : IRequestHandler<Che
 
         await _unitOfWork.SaveChanges(cancellationToken);
 
-        var result = guessResult is GuessResult.Correct
-            ? TranslateGuessResult.Correct(activeSession.State)
-            : TranslateGuessResult.Wrong(flashCard.Translation, activeSession.State);
+        var result = guessResult is Verdict.Correct
+            ? GuessResult.Correct(activeSession.State)
+            : GuessResult.Wrong(flashCard.Translation, activeSession.State);
 
         return result;
     }
 
-    private static GuessResult GetGuessResult(FlashCard flashCard, FlashCardWord translation)
+    private static Verdict GetVerdict(FlashCard flashCard, FlashCardWord translation)
     {
         var isCorrect = FlashCardWord.Create(flashCard.Translation) == translation;
 
-        return isCorrect ? GuessResult.Correct : GuessResult.Wrong;
+        return isCorrect ? Verdict.Correct : Verdict.Wrong;
     }
 }
