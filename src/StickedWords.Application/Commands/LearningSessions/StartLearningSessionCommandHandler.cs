@@ -47,8 +47,12 @@ internal sealed class StartLearningSessionCommandHandler : IRequestHandler<Start
         // TODO: more intellectual method to select words
         var specification = new FlashCardsToRepeatSpecification(user, now, take: _options.FlashCardCount);
         var flashCards = await _flashCardRepository.GetBySpecification(specification, false, cancellationToken);
-        // TODO: what if there is no words to learn?
-        var learningSession = LearningSession.Create(flashCards.Data, user);
+        if (flashCards.Data.Count == 0)
+        {
+            throw new NoFlashCardsToLearnException();
+        }
+
+        var learningSession = LearningSession.Create(flashCards.Data, user, _options.Exercises);
         learningSession.Start(_options.ExpireAfter);
         _sessionRepository.Add(learningSession);
         await _unitOfWork.SaveChanges(cancellationToken);
