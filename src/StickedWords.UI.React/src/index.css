@@ -23,6 +23,9 @@
   --vt-c-text-green: #6a994e;
   --vt-c-text-orange: #f28c28;
   --vt-c-text-red: #bc4749;
+
+  --vt-c-background-green: #f1f5ee;
+  --vt-c-background-red: #f8ecec;
 }
 
 /* semantic color variables for this project */
@@ -41,6 +44,9 @@
 
   --color-text-good: var(--vt-c-text-green);
   --color-text-bad: var(--vt-c-text-red);
+
+  --color-background-good: var(--vt-c-background-green);
+  --color-background-bad: var(--vt-c-background-red);
 
   --section-gap: 160px;
 }

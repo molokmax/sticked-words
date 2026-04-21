@@ -3,7 +3,7 @@ using StickedWords.Domain.Models.Exercises;
 
 namespace StickedWords.Application.Commands.Exercises;
 
-public record CheckTranslateToNativeCommand : IRequest<TranslateGuessResult>
+public record CheckTranslateToNativeCommand : IRequest<GuessResult>
 {
     public long FlashCardId { get; init; }
 

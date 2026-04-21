@@ -1,4 +1,4 @@
-export class TranslateGuess {
+export class Guess {
   flashCardId!: number;
   answer!: string;
 }

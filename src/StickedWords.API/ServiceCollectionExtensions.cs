@@ -120,6 +120,8 @@ public static class ServiceCollectionExtensions
         app.RegisterLearningSessionEndpoints();
         app.RegisterTranslateToNativeExerciseEndpoints();
         app.RegisterTranslateToForeignExerciseEndpoints();
+        app.RegisterChooseFromNativeExerciseEndpoints();
+        app.RegisterChooseFromForeignExerciseEndpoints();
         app.RegisterImageEndpoints();
 
         return app;

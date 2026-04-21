@@ -21,12 +21,6 @@ function FlashCardList() {
     const service = useMemo(() => new FlashCardService(), []);
     const dataLength = useMemo(() => data.length, [data.length]);
 
-    // Sync ref with state
-    // useEffect(() => {
-    //     dataLengthRef.current = data.length;
-    // }, [data.length]);
-    // TODO: убрать код выше
-
     const loadData = useCallback((reload = false) => {
         const scrollTop = scrollRef.current?.scrollTop ?? 0;
         const skip = reload ? 0 : dataLength;

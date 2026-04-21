@@ -1,4 +1,5 @@
-﻿using StickedWords.Shared;
+﻿using StickedWords.Domain.Models;
+using StickedWords.Shared;
 
 namespace StickedWords.Domain;
 
@@ -15,4 +16,12 @@ public record LearningSessionOptions : IConfigurationOptions
     public TimeSpan RepeatFlashCardPeriod { get; init; } = TimeSpan.FromDays(7);
 
     public int RepeatFlashCardRateFactor = 1;
+
+    public ExerciseType[] Exercises { get; init; } =
+    [
+        ExerciseType.ChooseFromNative,
+        ExerciseType.ChooseFromForeign,
+        ExerciseType.TranslateForeignToNative,
+        ExerciseType.TranslateNativeToForeign
+    ];
 }

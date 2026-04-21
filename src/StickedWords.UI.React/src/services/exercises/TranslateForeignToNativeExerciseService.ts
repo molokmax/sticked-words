@@ -1,7 +1,7 @@
 import { environments } from "../../environments";
-import { TranslateGuess } from "../../models/exercises/TranslateGuess";
-import { TranslateGuessResult } from "../../models/exercises/TranslateGuessResult";
-import { TranslateExercise } from "../../models/TranslateExercise";
+import { Guess } from "../../models/exercises/Guess";
+import { GuessResult } from "../../models/exercises/GuessResult";
+import { TranslateExercise } from "../../models/exercises/TranslateExercise";
 
 export class TranslateForeignToNativeExerciseService {
 
@@ -21,7 +21,7 @@ export class TranslateForeignToNativeExerciseService {
     return TranslateExercise.fromJson(json);
   }
 
-  async check(request: TranslateGuess): Promise<TranslateGuessResult> {
+  async check(request: Guess): Promise<GuessResult> {
     const response = await fetch(this._baseUrl, {
       method: "POST",
       headers: {
@@ -35,6 +35,6 @@ export class TranslateForeignToNativeExerciseService {
 
     const json = await response.json();
 
-    return TranslateGuessResult.fromJson(json);
+    return GuessResult.fromJson(json);
   }
 }

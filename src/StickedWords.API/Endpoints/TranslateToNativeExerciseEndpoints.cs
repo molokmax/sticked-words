@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using StickedWords.API.Mappers;
-using StickedWords.API.Models;
 using StickedWords.API.Models.Exercises;
 using StickedWords.Application.Commands.Exercises;
 using StickedWords.Application.Queries.Exercises;
@@ -31,8 +30,8 @@ public static class TranslateToNativeExerciseEndpoints
         return result;
     }
 
-    private static async Task<TranslateGuessResultDto> CheckGuess(
-        TranslateGuessDto guess,
+    private static async Task<GuessResultDto> CheckGuess(
+        GuessDto guess,
         IMediator mediator,
         CancellationToken cancellationToken)
     {

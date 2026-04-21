@@ -78,7 +78,7 @@ public record LearningSession
     public SessionStage GetActiveStage() =>
         Stages.FirstOrDefault(x => x.IsActive) ?? throw new ActiveStageNotFoundException();
 
-    public bool TryMoveToNextFlashCard(GuessResult guessResult)
+    public bool TryMoveToNextFlashCard(Verdict guessResult)
     {
         var activeStage = GetActiveStage();
         activeStage.AddGuessResult(guessResult);
@@ -113,7 +113,7 @@ public record LearningSession
         foreach (var stage in Stages)
         {
             var guess = stage.Guesses.FirstOrDefault(x => x.FlashCardId == flashCard.Id);
-            if (guess?.Result is GuessResult.Correct)
+            if (guess?.Result is Verdict.Correct)
             {
                 correctGuessCount += 1;
             }
@@ -123,17 +123,18 @@ public record LearningSession
         return Convert.ToInt32(rate);
     }
 
-    public static LearningSession Create(IEnumerable<FlashCard> flashCards, User user)
+    public static LearningSession Create(
+        IReadOnlyCollection<FlashCard> flashCards,
+        User user,
+        IReadOnlyCollection<ExerciseType> exercises)
     {
         var session = new LearningSession
         {
             UserId = user.Id
         };
-        session.Stages = // TODO: types and ord numbers take from options. think about it
-        [
-            SessionStage.Create(0, ExerciseType.TranslateForeignToNative, session),
-            SessionStage.Create(1, ExerciseType.TranslateNativeToForeign, session)
-        ];
+        session.Stages = exercises
+            .Select((exerciseType, index) => SessionStage.Create(index, exerciseType, session))
+            .ToList();
         session.FlashCards = flashCards
             .Select(x => new SessionFlashCard { FlashCard = x, LearningSession = session })
             .ToList();

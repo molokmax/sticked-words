@@ -4,5 +4,7 @@ public enum ExerciseType
 {
     None,
     TranslateForeignToNative,
-    TranslateNativeToForeign
+    TranslateNativeToForeign,
+    ChooseFromNative,
+    ChooseFromForeign
 }

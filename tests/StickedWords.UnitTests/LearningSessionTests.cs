@@ -47,8 +47,8 @@ public class LearningSessionTests
         var flashCard = GetFlashCard();
         var session = GetStartedSession([flashCard]);
         var options = GetOptions();
-        session.TryMoveToNextFlashCard(GuessResult.Correct);
-        session.TryMoveToNextFlashCard(GuessResult.Correct);
+        session.TryMoveToNextFlashCard(Verdict.Correct);
+        session.TryMoveToNextFlashCard(Verdict.Correct);
 
         // Act
         session.Finish(options, _timeProvider);
@@ -64,8 +64,8 @@ public class LearningSessionTests
         var flashCard = GetFlashCard();
         var session = GetStartedSession([flashCard]);
         var options = GetOptions();
-        session.TryMoveToNextFlashCard(GuessResult.Correct);
-        session.TryMoveToNextFlashCard(GuessResult.Wrong);
+        session.TryMoveToNextFlashCard(Verdict.Correct);
+        session.TryMoveToNextFlashCard(Verdict.Wrong);
 
         // Act
         session.Finish(options, _timeProvider);
@@ -81,8 +81,8 @@ public class LearningSessionTests
         var flashCard = GetFlashCard();
         var session = GetStartedSession([flashCard]);
         var options = GetOptions();
-        session.TryMoveToNextFlashCard(GuessResult.Wrong);
-        session.TryMoveToNextFlashCard(GuessResult.Wrong);
+        session.TryMoveToNextFlashCard(Verdict.Wrong);
+        session.TryMoveToNextFlashCard(Verdict.Wrong);
 
         // Act
         session.Finish(options, _timeProvider);

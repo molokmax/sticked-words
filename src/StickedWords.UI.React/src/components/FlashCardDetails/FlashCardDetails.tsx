@@ -33,7 +33,6 @@ function FlashCardDetails() {
         || imageId !== flashCard?.imageId;
 
     const loadData = useCallback(() => {
-        // const flashCardIdRaw = flashCardIdParam;
         if (!flashCardIdParam) {
             setFlashCard(null);
             addError('Flash Card identifier is not specified');

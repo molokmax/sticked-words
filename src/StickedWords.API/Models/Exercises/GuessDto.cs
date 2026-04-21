@@ -1,6 +1,6 @@
 ﻿namespace StickedWords.API.Models.Exercises;
 
-public record TranslateGuessDto
+public record GuessDto
 {
     public long FlashCardId { get; init; }
 

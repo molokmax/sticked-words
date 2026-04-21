@@ -3,12 +3,13 @@ import { ExerciseType, LearningSession as LearningSessionModel, LearningSessionS
 import { ErrorHandler } from '../../services/ErrorHandler';
 import { LearningSessionService } from '../../services/LearningSessionService';
 import { useErrorListContext } from '../ErrorList';
+import ChooseFromForeignExercise from '../Exercises/ChooseFromForeignExercise';
+import ChooseFromNativeExercise from '../Exercises/ChooseFromNativeExercise';
 import TranslateForeignToNativeExercise from '../Exercises/TranslateForeignToNativeExercise';
 import TranslateNativeToForeignExercise from '../Exercises/TranslateNativeToForeignExercise';
 import LearningSessionProgress from '../LearningSessionProgress';
 import LearningSessionResults from '../LearningSessionResults';
 import Loading from '../Loading';
-
 import './LearningSession.scss';
 
 
@@ -76,6 +77,24 @@ function LearningSession() {
                     flashCardId={ session.flashCardId }
                     onNext={ isExpired => loadData(isExpired) }
                 ></TranslateNativeToForeignExercise>
+            );
+        }
+
+        if (session.flashCardId && session.exerciseType === ExerciseType.ChooseFromNative) {
+            return (
+                <ChooseFromNativeExercise
+                    flashCardId={ session.flashCardId }
+                    onNext={ isExpired => loadData(isExpired) }
+                ></ChooseFromNativeExercise>
+            );
+        }
+
+        if (session.flashCardId && session.exerciseType === ExerciseType.ChooseFromForeign) {
+            return (
+                <ChooseFromForeignExercise
+                    flashCardId={ session.flashCardId }
+                    onNext={ isExpired => loadData(isExpired) }
+                ></ChooseFromForeignExercise>
             );
         }
         

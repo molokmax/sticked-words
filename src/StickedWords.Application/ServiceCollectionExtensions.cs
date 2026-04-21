@@ -14,6 +14,7 @@ public static class ServiceCollectionExtensions
         builder.Services.AddMediatR(opts => opts.RegisterServicesFromAssembly(AssemblyReference.Assembly));
 
         builder.Services.AddTransient<UserService>();
+        builder.Services.AddTransient<AccessPolicy>();
 
         return builder;
     }
