@@ -1,7 +1,7 @@
 services:
 
   app:
-    image: "molokmax/sticked-words:v0.1.16"
+    image: "molokmax/sticked-words:v0.1.17"
     ports:
       - "8080:8080"
     environment:

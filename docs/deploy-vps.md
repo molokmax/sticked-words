@@ -2,9 +2,6 @@
 
 Артифакт с новой версией сервиса собирается с помощью GitHub Actions - `.github\workflows\self-contained-build.yaml`.
 
-TODO: Команда подключения по ssh с использованием сертификата - `ssh -i "%USERPROFILE%\.ssh\id_rsa" USERNAME@ORANGEPI_IP`
-TODO: сформировать настройки серверов
-
 ## Подготовка VPS к хостингу сервиса
 
 ### Устанновить Ubuntu 24 на VPS.
