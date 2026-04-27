@@ -10,12 +10,15 @@ env:
   NODE_VERSION: '25'
   API_PROJECT_PATH: 'src/StickedWords.API'
   UI_PROJECT_PATH: 'src/StickedWords.UI.React'
-  RUNTIME_IDENTIFIER: 'linux-arm'
   OUTPUT_DIR: 'publish'
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        runtime: [linux-arm, linux-x64]
+      fail-fast: false
 
     steps:
     - name: Checkout code
@@ -50,11 +53,11 @@ jobs:
         dotnet publish ${{ env.API_PROJECT_PATH }} \
           --configuration Release \
           --output ${{ env.OUTPUT_DIR }} \
-          --runtime ${{ env.RUNTIME_IDENTIFIER }} \
+          --runtime ${{ matrix.runtime }} \
           --self-contained true
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
       with:
-        name: sticked-words-${{ env.RUNTIME_IDENTIFIER }}
+        name: sticked-words-${{ matrix.runtime }}
         path: ${{ env.OUTPUT_DIR }}/
