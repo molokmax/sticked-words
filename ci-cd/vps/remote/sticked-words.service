@@ -1,5 +1,5 @@
 [Unit]
-Description=Sticke Words Service
+Description=Sticked Words Service
 After=network.target
 
 [Service]

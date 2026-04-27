@@ -44,10 +44,13 @@
 ### Инфраструктура
 Приложение готово к развертыванию в Kubernetes. Есть возможность развернуть сервис на Orange Pi.
 
+### Деплой
+- [В облако](./docs/deploy.md)
+- [На выделенный сервер](./docs/deploy-vps.md)
+
 ### Подробнее
 
 - [Работа с миграциями](./docs/migrations.md)
-- [Деплой](./docs/deploy.md)
 - [Мониторинг](./docs/observability.md)
 - [Road Map](./docs/roadmap.md)
 
