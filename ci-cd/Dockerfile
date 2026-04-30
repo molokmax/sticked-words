@@ -3,7 +3,8 @@ USER $APP_UID
 WORKDIR /app
 EXPOSE 80
 EXPOSE 8080
-EXPOSE 8082
+EXPOSE 443
+EXPOSE 8443
 
 
 FROM mcr.microsoft.com/dotnet/sdk:10.0-alpine AS backend-build
@@ -40,6 +41,7 @@ COPY --from=backend-build /app/publish .
 # COPY --from=frontend-build /src/StickedWords.API/wwwroot ./wwwroot/
 # file .env ignored for docker so build forder is default
 COPY --from=frontend-build /src/StickedWords.UI.React/build ./wwwroot/
-ENV ASPNETCORE_HTTP_PORTS=80;8080;8082
+ENV ASPNETCORE_HTTP_PORTS=80;8080
+ENV ASPNETCORE_HTTPS_PORTS=443;8443
 
 ENTRYPOINT ["dotnet", "StickedWords.API.dll"]

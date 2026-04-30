@@ -85,5 +85,7 @@ scp -i $USER_CERT_PATH "./remote/sticked-words.service" $REMOTE_USER@$SERVER_IP:
 scp -i $USER_CERT_PATH "./remote/deploy.sh" $REMOTE_USER@$SERVER_IP:$SERVER_DEPLOY_DIR || exit 1
 scp -i $USER_CERT_PATH "./remote/setup.sh" $REMOTE_USER@$SERVER_IP:$SERVER_DEPLOY_DIR || exit 1
 ssh -i $USER_CERT_PATH $REMOTE_USER@$SERVER_IP "chmod +x $SERVER_DEPLOY_DIR/setup.sh" || exit 1
+scp -i $USER_CERT_PATH "./remote/clean.sh" $REMOTE_USER@$SERVER_IP:$SERVER_DEPLOY_DIR || exit 1
+ssh -i $USER_CERT_PATH $REMOTE_USER@$SERVER_IP "chmod +x $SERVER_DEPLOY_DIR/clean.sh" || exit 1
 
 echo "Done"

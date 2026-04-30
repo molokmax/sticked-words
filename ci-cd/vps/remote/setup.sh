@@ -10,16 +10,26 @@ while true; do
     if [ -z $OPEN_PASS ]; then
         echo "Password can't be empty"
     else
-        break
+        read -sp "Repeat password: " REPEAT_PASS
+        echo
+        if [ "$OPEN_PASS" != "$REPEAT_PASS" ]; then
+            echo "Passwords are different"
+        else
+            break
+        fi
     fi
 done
 
-read -sp "Repeat password: " REPEAT_PASS
-echo
-if [ "$OPEN_PASS" != "$REPEAT_PASS" ]; then
-    echo "Passwords are different"
-    exit 1
-fi
+while true; do
+    read -sp "Enter Yandex auth secret: " YANDEX_AUTH_SECRET
+    echo
+    
+    if [ -z $YANDEX_AUTH_SECRET ]; then
+        echo "Secret can't be empty"
+    else
+        break
+    fi
+done
 
 echo "Adding account $USERNAME ..."
 groupadd $GROUPNAME
@@ -42,13 +52,35 @@ chmod +x /home/$USERNAME/deploy/deploy.sh || exit 1
 mkdir -p "/home/$USERNAME/app/" || exit 1
 mkdir -p "/home/$USERNAME/db/" || exit 1
 mkdir -p "/home/$USERNAME/logs/" || exit 1
+mkdir -p "/home/$USERNAME/secrets/" || exit 1
+
+read -rp "Enter domain name for TLS certificate: " DOMAIN_NAME
+echo
+
+if [ -z $DOMAIN_NAME ]; then
+    echo "Skipping"
+else
+    openssl req -x509 -newkey rsa:2048 -nodes \
+        -out "/home/$USERNAME/secrets/$DOMAIN_NAME.crt" \
+        -keyout "/home/$USERNAME/secrets/$DOMAIN_NAME.key" \
+        -days 365 \
+        -subj "/CN=$DOMAIN_NAME" \
+        -addext "subjectAltName=DNS:$DOMAIN_NAME"
+fi
+
 chown -R $USERNAME:$GROUPNAME "/home/$USERNAME/" || exit 1
 
 echo "Configuring service ..."
 cp ./10-sticked-words.rules /etc/polkit-1/rules.d/10-sticked-words.rules || exit 1
 chmod 755 /etc/polkit-1/rules.d/ || exit 1
 chmod 644 /etc/polkit-1/rules.d/10-sticked-words.rules || exit 1
-cp ./sticked-words.service /etc/systemd/system/sticked-words.service || exit 1
+
+cp "./sticked-words.service" "./sticked-words.service.tmp"
+sed -i "s|\${YandexAuthSecret}|${YANDEX_AUTH_SECRET}|g" "./sticked-words.service.tmp" || exit 1
+sed -i "s|\${TlsCertPath}|/home/$USERNAME/secrets/$DOMAIN_NAME.crt|g" "./sticked-words.service.tmp" || exit 1
+sed -i "s|\${TlsCertKeyPath}|/home/$USERNAME/secrets/$DOMAIN_NAME.key|g" "./sticked-words.service.tmp" || exit 1
+mv "./sticked-words.service.tmp" "/etc/systemd/system/sticked-words.service" || exit 1
+
 systemctl enable sticked-words || exit 1
 systemctl daemon-reload || exit 1
 
