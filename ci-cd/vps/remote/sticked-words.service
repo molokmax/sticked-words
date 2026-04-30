@@ -7,7 +7,11 @@ WorkingDirectory=/home/sticked-words/app/
 ExecStart=/home/sticked-words/app/StickedWords.API
 User=sticked-words
 Group=sticked-words
-Environment="ASPNETCORE_ENVIRONMENT=OrangePi"
+Environment="ASPNETCORE_ENVIRONMENT=VPS"
+Environment="Auth__Yandex__Secret=${YandexAuthSecret}"
+Environment="Kestrel__Certificates__Default__Path=${TlsCertPath}"
+Environment="Kestrel__Certificates__Default__KeyPath=${TlsCertKeyPath}"
+AmbientCapabilities=CAP_NET_BIND_SERVICE
 
 [Install]
 WantedBy=multi-user.target
